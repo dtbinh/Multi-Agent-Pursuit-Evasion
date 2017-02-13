@@ -1,31 +1,126 @@
 package com.dke.pursuitevasion.Editor;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.VertexAttributes;
+import com.badlogic.gdx.graphics.g3d.*;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Plane;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.dke.pursuitevasion.PursuitEvasion;
+
+import java.util.ArrayList;
 
 /**
  * Created by jeeza on 10-2-17.
  */
-public class MapBuilderScreen implements Screen {
+public class MapBuilderScreen implements Screen, InputProcessor {
     private final PursuitEvasion game;
+    PerspectiveCamera camera;
+    InputMultiplexer inputMultiplexer;
+    Stage stage;
+    Environment environ;
+    ModelBatch modelBatch;
+    ModelBuilder modelBuilder;
+    ArrayList<ModelInstance> instances;
+    ShaderProgram shader;
+    String vertexShader = "attribute vec4 a_position;    \n" +
+            "attribute vec4 a_color;\n" +
+            "attribute vec2 a_texCoord0;\n" +
+            "uniform mat4 u_worldView;\n" +
+            "varying vec4 v_color;" +
+            "varying vec2 v_texCoords;" +
+            "void main()                  \n" +
+            "{                            \n" +
+            "   v_color = vec4(1, 1, 1, 1); \n" +
+            "   v_texCoords = a_texCoord0; \n" +
+            "   gl_Position =  u_worldView * a_position;  \n"      +
+            "}                            \n" ;
+    String fragmentShader = "#ifdef GL_ES\n" +
+            "precision mediump float;\n" +
+            "#endif\n" +
+            "varying vec4 v_color;\n" +
+            "varying vec2 v_texCoords;\n" +
+            "uniform sampler2D u_texture;\n" +
+            "void main()                                  \n" +
+            "{                                            \n" +
+            "  gl_FragColor = v_color * texture2D(u_texture, v_texCoords);\n" +
+            "}";
+
 
     public MapBuilderScreen(PursuitEvasion game) {
         this.game = game;
+        stage = new Stage();
+
+        //shader = new ShaderProgram(vertexShader, fragmentShader);
+
+        //Setting default camera position. Top down view I think
+        camera = new PerspectiveCamera(35, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera.position.set(0f, 10f, 0f);
+        camera.lookAt(0, 0, 0);
+        camera.near = 1f;
+        camera.far = 300f;
+
+        //Accept input on stage and screen
+        inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(stage);
+        inputMultiplexer.addProcessor(this);
+
+        environ = new Environment();
+        environ.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
+        environ.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+
+        modelBatch = new ModelBatch();
+        modelBuilder = new ModelBuilder();
+
+        instances = new ArrayList<ModelInstance>();
     }
 
     @Override
     public void show() {
-
+        Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
     @Override
     public void render(float delta) {
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+        stage.act(delta);
+        stage.draw();
+
+        //Some texture shit
+        /*shader.begin();
+        shader.setUniformMatrix("u_worldView", camera.combined);
+        shader.setUniformi("u_texture", 0);
+        shader.end();*/
+
+        modelBatch.begin(camera);
+        for (int i=0;i<instances.size();i++)
+        {
+            modelBatch.render(instances.get(i), environ);
+        }
+        modelBatch.end();
 
     }
 
     @Override
     public void resize(int width, int height) {
-
+        Gdx.gl.glViewport(0, 0, width, height);
+        stage.getViewport().update(width, height);
+        camera.viewportHeight = height;
+        camera.viewportWidth = width;
+        camera.update();
     }
 
     @Override
@@ -46,5 +141,57 @@ public class MapBuilderScreen implements Screen {
     @Override
     public void dispose() {
 
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        //Translate user click to point on the plane
+        Ray pickRay = camera.getPickRay(screenX, screenY);
+        Vector3 intersection = new Vector3();
+        Intersector.intersectRayPlane(pickRay, new Plane(new Vector3(0f, 1f, 0f), 0f), intersection);
+        System.out.println(intersection);
+
+        //Create a model at position
+        Model vertexPos = modelBuilder.createSphere(0.22f, 0.22f, 0.22f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.LIGHT_GRAY)),
+                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+        ModelInstance vPosInst = new ModelInstance(vertexPos,intersection);
+        instances.add(vPosInst);
+
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
     }
 }
