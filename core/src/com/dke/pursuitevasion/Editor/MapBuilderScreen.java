@@ -1,9 +1,6 @@
 package com.dke.pursuitevasion.Editor;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -18,9 +15,10 @@ import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.dke.pursuitevasion.PursuitEvasion;
+import com.dke.pursuitevasion.TrackingCameraController;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -35,6 +33,8 @@ public class MapBuilderScreen implements Screen, InputProcessor {
     ModelBatch modelBatch;
     ModelBuilder modelBuilder;
     ArrayList<ModelInstance> instances;
+    TrackingCameraController trackingCameraController;
+    Boolean leftPressed;
     ShaderProgram shader;
     String vertexShader = "attribute vec4 a_position;    \n" +
             "attribute vec4 a_color;\n" +
@@ -59,23 +59,23 @@ public class MapBuilderScreen implements Screen, InputProcessor {
             "  gl_FragColor = v_color * texture2D(u_texture, v_texCoords);\n" +
             "}";
 
-
     public MapBuilderScreen(PursuitEvasion game) {
         this.game = game;
         stage = new Stage();
-
         //shader = new ShaderProgram(vertexShader, fragmentShader);
 
-        //Setting default camera position. Top down view I think
+        //Setting default camera position
         camera = new PerspectiveCamera(35, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.position.set(0f, 10f, 0f);
         camera.lookAt(0, 0, 0);
         camera.near = 1f;
         camera.far = 300f;
+        trackingCameraController = new TrackingCameraController(camera);
 
         //Accept input on stage and screen
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(stage);
+        inputMultiplexer.addProcessor(trackingCameraController);
         inputMultiplexer.addProcessor(this);
 
         environ = new Environment();
@@ -96,6 +96,9 @@ public class MapBuilderScreen implements Screen, InputProcessor {
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+        Gdx.gl20.glEnable(GL20.GL_DEPTH_TEST);
+        camera.update();
+        trackingCameraController.update(delta);
         stage.act(delta);
         stage.draw();
 
@@ -111,7 +114,6 @@ public class MapBuilderScreen implements Screen, InputProcessor {
             modelBatch.render(instances.get(i), environ);
         }
         modelBatch.end();
-
     }
 
     @Override
@@ -160,23 +162,29 @@ public class MapBuilderScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            leftPressed = true;
+        }
+            return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        //Translate user click to point on the plane
-        Ray pickRay = camera.getPickRay(screenX, screenY);
-        Vector3 intersection = new Vector3();
-        Intersector.intersectRayPlane(pickRay, new Plane(new Vector3(0f, 1f, 0f), 0f), intersection);
-        System.out.println(intersection);
+        if (leftPressed) {
+            //Translate user click to point on the plane
+            Ray pickRay = camera.getPickRay(screenX, screenY);
+            Vector3 intersection = new Vector3();
+            Intersector.intersectRayPlane(pickRay, new Plane(new Vector3(0f, 1f, 0f), 0f), intersection);
+            System.out.println(intersection);
 
-        //Create a model at position
-        Model vertexPos = modelBuilder.createSphere(0.22f, 0.22f, 0.22f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.LIGHT_GRAY)),
-                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
-        ModelInstance vPosInst = new ModelInstance(vertexPos,intersection);
-        instances.add(vPosInst);
+            //Create a model at position
+            Model vertexPos = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.LIGHT_GRAY)),
+                    VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+            ModelInstance vPosInst = new ModelInstance(vertexPos, intersection);
+            instances.add(vPosInst);
+        }
 
+        leftPressed = false;
         return false;
     }
 
