@@ -13,23 +13,33 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.ShortArray;
 import com.dke.pursuitevasion.PursuitEvasion;
 import com.dke.pursuitevasion.TrackingCameraController;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Vector;
 
 /**
  * Created by jeeza on 10-2-17.
  */
 public class MapBuilderScreen implements Screen, InputProcessor {
+    enum Mode {
+        DO_NOTHING,
+        POINT_EDITOR
+    }
     private final PursuitEvasion game;
+    Mode mode = Mode.DO_NOTHING;
     PerspectiveCamera camera;
     InputMultiplexer inputMultiplexer;
     Stage stage;
+    Skin skin;
     Environment environ;
     ModelBatch modelBatch;
     ModelBuilder modelBuilder;
@@ -70,7 +80,7 @@ public class MapBuilderScreen implements Screen, InputProcessor {
         this.game = game;
         stage = new Stage();
         //shader = new ShaderProgram(vertexShader, fragmentShader);
-
+        createUI();
         //Setting default camera position
         camera = new PerspectiveCamera(35, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.position.set(0f, 10f, 0f);
@@ -105,7 +115,39 @@ public class MapBuilderScreen implements Screen, InputProcessor {
         instances = new ArrayList<ModelInstance>();
         instanceVectors = new ArrayList<Vector3>();
     }
-    public boolean nearNeighbor(Vector3 vec){
+
+    private void createUI() {
+        skin = new Skin(Gdx.files.internal("uiskin.json"));
+        Window windowDesign = new Window("Design", skin);
+
+        TextButton addOutVertexButton = new TextButton("Add Outer Vertex", skin);
+
+        addOutVertexButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (mode == Mode.DO_NOTHING)
+                    mode = Mode.POINT_EDITOR;
+            }
+        });
+
+        // Add buttons
+        windowDesign.add(addOutVertexButton);
+
+        // Screen and window variables
+        int windowHeight = 100;
+        int screenHeight = Gdx.graphics.getHeight();
+        int gutter = 10;
+        int offset = 15;
+
+        // Dimensions
+        windowDesign.setSize(650, windowHeight);
+        windowDesign.setPosition(offset, screenHeight - windowHeight - offset);
+
+        // Add windows
+        stage.addActor(windowDesign);
+    }
+
+    private boolean nearNeighbor(Vector3 vec){
         for(int i=0;i<instanceVectors.size();i++){
             Vector3 v = instanceVectors.get(i);
             if (vec.x<v.x+0.5 && vec.x>v.x-0.5 && vec.z<v.z+0.5 && vec.z>v.z-0.5){
@@ -116,7 +158,7 @@ public class MapBuilderScreen implements Screen, InputProcessor {
         return false;
     }
 
-    public void remakeMesh(){
+    private void remakeMesh(){
         //Remove y float from vertList
         int newLength = (2*vertList.length)/3;
         int forLoopNum = (vertList.length/3);
@@ -154,7 +196,7 @@ public class MapBuilderScreen implements Screen, InputProcessor {
         meshMap = new ModelInstance(model, 0,0,0);
     }
 
-    public void resizeArray(float[] oldVertList) {
+    private void resizeArray(float[] oldVertList) {
         // create a new array of size+3
         int newSize = oldVertList.length + 3;
         float[] newArray = new float[newSize];
@@ -250,29 +292,32 @@ public class MapBuilderScreen implements Screen, InputProcessor {
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         if (leftPressed) {
-            //Translate user click to point on the plane
-            Ray pickRay = camera.getPickRay(screenX, screenY);
-            Vector3 intersection = new Vector3();
-            Intersector.intersectRayPlane(pickRay, new Plane(new Vector3(0f, 1f, 0f), 0f), intersection);
+            switch (mode) {
+                case POINT_EDITOR:
+                    //Translate user click to point on the plane
+                    Ray pickRay = camera.getPickRay(screenX, screenY);
+                    Vector3 intersection = new Vector3();
+                    Intersector.intersectRayPlane(pickRay, new Plane(new Vector3(0f, 1f, 0f), 0f), intersection);
 
-            String verts = intersection.toString();
-            verts = verts.replaceAll("[()]","");
-            verts = verts.replaceAll("[,]",", ");
-            String[] Array = verts.split(",");
-            resizeArray(vertList);
-            for(int i = 0; i < 3; i++) {
-                vertList[listSize+i] = Float.parseFloat(Array[i]);
-            }
-            listSize+=3;
+                    String verts = intersection.toString();
+                    verts = verts.replaceAll("[()]","");
+                    verts = verts.replaceAll("[,]",", ");
+                    String[] Array = verts.split(",");
+                    resizeArray(vertList);
+                    for(int i = 0; i < 3; i++) {
+                        vertList[listSize+i] = Float.parseFloat(Array[i]);
+                    }
+                    listSize+=3;
 
-            //Create a model at position
-            Model vertexPos = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.LIGHT_GRAY)),
-                    VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+                    //Create a model at position
+                    Model vertexPos = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.LIGHT_GRAY)),
+                            VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
 
-            if(!nearNeighbor(intersection)) {
-                ModelInstance vPosInst = new ModelInstance(vertexPos, intersection);
-                instances.add(vPosInst);
-                instanceVectors.add(intersection);
+                    if(!nearNeighbor(intersection)) {
+                        ModelInstance vPosInst = new ModelInstance(vertexPos, intersection);
+                        instances.add(vPosInst);
+                        instanceVectors.add(intersection);
+                    }
             }
         }
 
