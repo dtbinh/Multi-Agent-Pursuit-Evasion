@@ -32,7 +32,8 @@ import java.util.ArrayList;
 public class MapBuilderScreen implements Screen, InputProcessor {
     enum Mode {
         DO_NOTHING,
-        POINT_EDITOR
+        POINT_EDITOR,
+        WALL_EDITOR
     }
     private final PursuitEvasion game;
     Mode mode = Mode.DO_NOTHING;
@@ -158,6 +159,9 @@ public class MapBuilderScreen implements Screen, InputProcessor {
         return false;
     }
 
+    /**
+     * remake the base polygon.
+     */
     private void remakeMesh(){
         //Remove y float from vertList
         int newLength = (2*vertList.length)/3;
@@ -191,7 +195,7 @@ public class MapBuilderScreen implements Screen, InputProcessor {
         mesh.setIndices(indices);
         Material material = new Material(ColorAttribute.createDiffuse(Color.GOLD));
         modelBuilder.begin();
-        modelBuilder.part("Course", mesh, GL20.GL_TRIANGLES, material);
+        modelBuilder.part("Map", mesh, GL20.GL_TRIANGLES, material);
         model = modelBuilder.end();
         meshMap = new ModelInstance(model, 0,0,0);
     }
@@ -286,7 +290,7 @@ public class MapBuilderScreen implements Screen, InputProcessor {
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             leftPressed = true;
         }
-            return false;
+        return false;
     }
 
     @Override
@@ -318,6 +322,10 @@ public class MapBuilderScreen implements Screen, InputProcessor {
                         instances.add(vPosInst);
                         instanceVectors.add(intersection);
                     }
+                    break;
+                case WALL_EDITOR:
+
+                    break;
             }
         }
 
