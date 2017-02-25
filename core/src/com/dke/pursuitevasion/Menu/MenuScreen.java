@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.dke.pursuitevasion.Editor.MapBuilderScreen;
+import com.dke.pursuitevasion.Editor.MapEditorScreen;
 import com.dke.pursuitevasion.PursuitEvasion;
 
 /**
@@ -40,7 +40,7 @@ public class MenuScreen implements Screen {
     }
 
     private void newMapBuilder() {
-        game.setScreen(new MapBuilderScreen(game));
+        game.setScreen(new MapEditorScreen(game));
     }
 
     @Override
