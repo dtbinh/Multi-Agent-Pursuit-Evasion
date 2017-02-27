@@ -114,15 +114,14 @@ public class MapEditorScreen implements Screen, InputProcessor {
         Gdx.gl20.glEnable(GL20.GL_DEPTH_TEST);
         camera.update();
         trackingCameraController.update(delta);
-        stage.act(delta);
-        stage.draw();
         modelBatch.begin(camera);
         modelBatch.render(controller.getPolygonModel(), environ);
         for (ModelInstance instance : controller.getInstances()) {
             modelBatch.render(instance, environ);
         }
-
         modelBatch.end();
+        stage.act(delta);
+        stage.draw();
     }
 
     @Override
