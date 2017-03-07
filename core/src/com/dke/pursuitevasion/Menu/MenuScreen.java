@@ -2,6 +2,7 @@ package com.dke.pursuitevasion.Menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -11,12 +12,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.dke.pursuitevasion.Editor.MapEditorScreen;
 import com.dke.pursuitevasion.PursuitEvasion;
+import com.dke.pursuitevasion.UI.FileChooser;
 
 /**
  * Created by jeeza on 10-2-17.
  */
 public class MenuScreen implements Screen {
     private final PursuitEvasion game;
+    private NewSimulationWindow newSimulationWindow;
     private SpriteBatch batch;
     private Stage stage;
     private Skin skin;
@@ -27,7 +30,7 @@ public class MenuScreen implements Screen {
         stage = new Stage();
         skin = new Skin(Gdx.files.internal("uiskin.json"));
 
-        TextButton buttonMapBuilder = new TextButton("Map Builder", skin);
+        TextButton buttonMapBuilder = new TextButton("Map Editor", skin);
         buttonMapBuilder.setPosition(550, 350);
         buttonMapBuilder.setSize(200, 50);
         stage.addActor(buttonMapBuilder);
@@ -42,6 +45,23 @@ public class MenuScreen implements Screen {
     private void newMapBuilder() {
         game.setScreen(new MapEditorScreen(game));
     }
+
+
+
+    public void chooseFile() {
+        FileChooser files = new FileChooser("Select Course File", skin) {
+            @Override
+            protected void result(Object object) {
+                if (object.equals("OK")) {
+                    FileHandle file = getFile();
+                    newSimulationWindow.setFile(file);
+                }
+            }
+        };
+        files.setDirectory(Gdx.files.local("courses/"));
+        files.show(stage);
+    }
+
 
     @Override
     public void show() {

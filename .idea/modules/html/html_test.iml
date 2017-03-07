@@ -3,6 +3,8 @@
   <component name="FacetManager">
     <facet type="gwt" name="GWT">
       <configuration>
+        <setting name="compilerMaxHeapSize" value="1024" />
+        <setting name="gwtScriptOutputStyle" value="DETAILED" />
         <setting name="gwtSdkUrl" value="file://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.gwt/gwt-dev/2.8.0" />
         <setting name="gwtSdkType" value="gradle" />
       </configuration>
@@ -92,6 +94,7 @@
     <orderEntry type="library" name="Gradle: org.mortbay.jasper:apache-el:8.0.9.M3" level="project" />
     <orderEntry type="library" name="Gradle: org.eclipse.jetty.websocket:websocket-api:9.2.13.v20150730" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: com.google.gwt:gwt-servlet:2.8.0" level="project" />
+    <orderEntry type="library" name="gson-2.6.2" level="project" />
   </component>
   <component name="TestModuleProperties" production-module="html_main" />
 </module>

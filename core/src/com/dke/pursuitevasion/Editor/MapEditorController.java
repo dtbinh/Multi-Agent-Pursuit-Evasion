@@ -1,5 +1,6 @@
 package com.dke.pursuitevasion.Editor;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -11,7 +12,11 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ShortArray;
+import com.dke.pursuitevasion.PolyMap;
+import com.dke.pursuitevasion.UI.FileSaver;
 
 import java.util.ArrayList;
 
@@ -150,6 +155,21 @@ public class MapEditorController {
         float[] newArray = new float[newSize];
         System.arraycopy(oldVertList, 0, newArray, 0, oldVertList.length);
         vertList = newArray;
+    }
+
+    public void saveFile(Stage stage, Skin skin) {
+        FileSaver files = new FileSaver("Save Map File", skin) {
+            @Override
+            protected void result(Object object) {
+                String fileName = getFileName();
+                System.out.println("File Name: " + fileName);
+                PolyMap map = new PolyMap(fileName);
+                map.setPolygonMesh(polygonMesh);
+                map.export();
+            }
+        };
+        files.setDirectory(Gdx.files.local("maps/"));
+        files.show(stage);
     }
 
 

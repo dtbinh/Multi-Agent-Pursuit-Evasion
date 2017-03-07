@@ -77,6 +77,9 @@ public class MapEditorScreen implements Screen, InputProcessor {
         Window windowDesign = new Window("Design", skin);
 
         TextButton addOuterVertexButton = new TextButton("Add Outer Vertex", skin);
+        TextButton makePolygonButton = new TextButton("Apply Triangulation", skin);
+        TextButton exportMapButton = new TextButton("Export Map", skin);
+
 
         addOuterVertexButton.addListener(new ChangeListener() {
             @Override
@@ -86,8 +89,25 @@ public class MapEditorScreen implements Screen, InputProcessor {
             }
         });
 
+        makePolygonButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                controller.setMode(Mode.DO_NOTHING);
+                controller.remakePolygonMesh();
+            }
+        });
+
+        exportMapButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                controller.saveFile(stage, skin);
+            }
+        });
+
         // Add buttons
         windowDesign.add(addOuterVertexButton);
+        windowDesign.add(makePolygonButton);
+        windowDesign.add(exportMapButton);
 
         // Screen and window variables
         int windowHeight = 100;
@@ -159,10 +179,6 @@ public class MapEditorScreen implements Screen, InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
-        if (keycode == Input.Keys.ENTER) {
-            controller.remakePolygonMesh();
-            return true;
-        }
         return false;
     }
 
@@ -184,6 +200,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
             switch (controller.getMode()) {
                 case POINT_EDITOR:
                     controller.addOuterVertex(screenX, screenY, camera);
+                    leftPressed = false;
                     break;
             }
         }
