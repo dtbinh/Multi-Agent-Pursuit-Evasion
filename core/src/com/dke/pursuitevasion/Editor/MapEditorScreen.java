@@ -8,6 +8,10 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Plane;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -36,6 +40,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
     private boolean leftPressed;
     private PerspectiveCamera camera;
     private TrackingCameraController trackingCameraController;
+    private Vector3 wallVec;
 
     public MapEditorScreen(PursuitEvasion pursuitEvasion) {
         this.pursuitEvasion = pursuitEvasion;
@@ -79,6 +84,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
         TextButton addOuterVertexButton = new TextButton("Add Outer Vertex", skin);
         TextButton makePolygonButton = new TextButton("Apply Triangulation", skin);
         TextButton exportMapButton = new TextButton("Export Map", skin);
+        TextButton wallEditorButton = new TextButton("Add Walls", skin);
 
 
         addOuterVertexButton.addListener(new ChangeListener() {
@@ -103,10 +109,18 @@ public class MapEditorScreen implements Screen, InputProcessor {
                 controller.saveFile(stage, skin);
             }
         });
+        wallEditorButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if(controller.getMode() == Mode.DO_NOTHING)
+                    controller.setMode(Mode.WALL_EDITOR);
+            }
+        });
 
         // Add buttons
         windowDesign.add(addOuterVertexButton);
         windowDesign.add(makePolygonButton);
+        windowDesign.add(wallEditorButton);
         windowDesign.add(exportMapButton);
 
         // Screen and window variables
@@ -138,6 +152,9 @@ public class MapEditorScreen implements Screen, InputProcessor {
         modelBatch.render(controller.getPolygonModel(), environ);
         for (ModelInstance instance : controller.getInstances()) {
             modelBatch.render(instance, environ);
+        }
+        if(controller.mWall!=null){
+            modelBatch.render(controller.mWall);
         }
         modelBatch.end();
         stage.act(delta);
@@ -189,8 +206,16 @@ public class MapEditorScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT))
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             leftPressed = true;
+            Ray pickRay = camera.getPickRay(screenX, screenY);
+            if(controller.getMode() == Mode.WALL_EDITOR) {
+                if (wallVec == null) {
+                    wallVec = new Vector3();
+                    Intersector.intersectRayTriangles(pickRay,controller.getVertList(), controller.getmIndices(), 3, wallVec);
+                }
+            }
+        }
         return false;
     }
 
@@ -202,6 +227,12 @@ public class MapEditorScreen implements Screen, InputProcessor {
                     controller.addOuterVertex(screenX, screenY, camera);
                     leftPressed = false;
                     break;
+                case WALL_EDITOR:
+                    System.out.println("UP");
+                    controller.addWallToArray();
+                    leftPressed = false;
+                    wallVec = null;
+                    break;
             }
         }
         return false;
@@ -209,6 +240,18 @@ public class MapEditorScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        if (leftPressed) {
+            switch (controller.getMode()) {
+                case WALL_EDITOR:
+                    Ray pickRay = camera.getPickRay(screenX, screenY);
+                    Vector3 intersection = new Vector3();
+                    Intersector.intersectRayTriangles(pickRay,controller.getVertList(), controller.getmIndices(), 3, intersection);
+                    if(wallVec.x !=0 && wallVec.z!=0 && intersection.x!=0 && intersection.z!=0) {
+                        controller.addWall(wallVec.cpy(), intersection.cpy());
+                    }
+                    break;
+            }
+        }
         return false;
     }
 

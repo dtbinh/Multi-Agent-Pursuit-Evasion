@@ -28,11 +28,13 @@ public class MapEditorController {
     private ArrayList<ModelInstance> instances;
     private ArrayList<Vector3> instanceVectors;
     private float[] vertList = new float[0];
+    private short[] mIndices;
     private int vertListSize;
 
     private ModelBuilder modelBuilder;
     private Mesh polygonMesh;
     private ModelInstance polygonModel;
+    ModelInstance mWall, mWallPerm;
 
     public MapEditorController() {
         instances= new ArrayList<ModelInstance>();
@@ -76,10 +78,8 @@ public class MapEditorController {
         for (int i=0; i<meshIndices.size;i++)
         {
             indices[i] = meshIndices.get(i);
-            System.out.print(indices[i]+ " ");
-            System.out.println(meshIndices.get(i));
         }
-
+        mIndices = indices;
         polygonMesh = new Mesh(true, vertList.length, meshIndices.size,
                 new VertexAttribute(VertexAttributes.Usage.Position, 3, "a_position"));
         polygonMesh.setVertices(vertList);
@@ -149,6 +149,49 @@ public class MapEditorController {
         }
     }
 
+    public void addWall(Vector3 click, Vector3 clickDrag){
+        Vector3 cClick = click.cpy();
+        Vector3 cClickDrag = clickDrag.cpy();
+        float width = Math.abs(click.x - clickDrag.x);
+        float depth = Math.abs(click.z - clickDrag.z);
+        float distance = click.dst(clickDrag);
+
+        if(width<0.1f)
+            width = 0.1f;
+        if(depth<0.1f)
+            depth = 0.1f;
+        float height = 0.125f;
+        Vector3 midPoint = ((click.sub(clickDrag)).scl(0.5f)).add(clickDrag);
+        midPoint.y +=height/2;
+
+        Model wall = modelBuilder.createBox(distance, height, 0.08f,new Material(ColorAttribute.createDiffuse(Color.SCARLET)),
+                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+        mWall = new ModelInstance(wall, midPoint);
+        Model wallPerm = modelBuilder.createBox(distance, height, 0.08f,new Material(ColorAttribute.createDiffuse(Color.DARK_GRAY)),
+                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+        mWallPerm = new ModelInstance(wallPerm, midPoint);
+
+
+        Vector3 difference = (cClick.sub(cClickDrag));
+        Vector3 xAxis = new Vector3(1, 0, 0);
+        float dotProd = difference.dot(xAxis);
+        Vector3 origin = new Vector3(0, 0, 0);
+        dotProd = dotProd / (difference.dst(origin) * xAxis.dst(origin));
+        double dotResult = (double) dotProd;
+        double angle = Math.acos(dotResult);
+        float floatAngle = (float) angle;
+        if (difference.z > 0)
+            floatAngle *= -1;
+        mWall.transform.rotateRad(new Vector3(0, 1, 0), floatAngle);
+        mWallPerm.transform.rotateRad(new Vector3(0, 1, 0), floatAngle);
+    }
+
+    public void addWallToArray(){
+        mWall = null;
+        if(mWallPerm!=null)
+        instances.add(mWallPerm);
+    }
+
     private void resizeArray(float[] oldVertList) {
         // create a new array of size+3
         int newSize = oldVertList.length + 3;
@@ -176,4 +219,13 @@ public class MapEditorController {
     public void dispose() {
         polygonMesh.dispose();
     }
+
+    public short[] getmIndices(){
+        return mIndices;
+    }
+
+    public float[] getVertList(){
+        return vertList;
+    }
 }
+
