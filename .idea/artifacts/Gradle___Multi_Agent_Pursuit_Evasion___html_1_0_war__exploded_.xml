@@ -23,6 +23,7 @@
           </element>
           <element id="library" level="project" name="Gradle: com.badlogicgames.gdx:gdx:1.9.5" />
           <element id="library" level="project" name="Gradle: com.badlogicgames.gdx:gdx-box2d:1.9.5" />
+          <element id="library" level="project" name="Gradle: com.badlogicgames.ashley:ashley:1.7.0" />
           <element id="library" level="project" name="Gradle: com.badlogicgames.gdx:gdx-backend-gwt:1.9.5" />
           <element id="library" level="project" name="Gradle: com.badlogicgames.gdx:gdx-backend-gwt:sources:1.9.5" />
           <element id="library" level="project" name="Gradle: com.badlogicgames.gdx:gdx:sources:1.9.5" />
@@ -36,6 +37,7 @@
           <element id="library" level="project" name="Gradle: javax.validation:validation-api:sources:1.0.0.GA" />
           <element id="library" level="project" name="Gradle: javax.servlet:javax.servlet-api:3.1.0" />
           <element id="library" level="project" name="Gradle: org.w3c.css:sac:1.3" />
+          <element id="file-copy" path="$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.8.0/gson-2.8.0.jar" />
         </element>
       </element>
       <element id="gwt-compiler-output" facet="html_main/gwt/GWT" />

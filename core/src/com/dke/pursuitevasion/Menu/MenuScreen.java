@@ -29,7 +29,10 @@ public class MenuScreen implements Screen {
         batch = new SpriteBatch();
         stage = new Stage();
         skin = new Skin(Gdx.files.internal("uiskin.json"));
+        initGUI();
+    }
 
+    private void initGUI() {
         TextButton buttonMapBuilder = new TextButton("Map Editor", skin);
         buttonMapBuilder.setPosition(550, 350);
         buttonMapBuilder.setSize(200, 50);
@@ -40,12 +43,28 @@ public class MenuScreen implements Screen {
                 newMapBuilder();
             }
         });
+
+        TextButton buttonStartSim = new TextButton("Start Simulation", skin);
+        buttonStartSim.setPosition(550, 450);
+        buttonStartSim.setSize(200, 50);
+        stage.addActor(buttonStartSim);
+        buttonStartSim.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                newSimWindow();
+            }
+        });
     }
 
     private void newMapBuilder() {
         game.setScreen(new MapEditorScreen(game));
     }
 
+    private void newSimWindow() {
+        newSimulationWindow = new NewSimulationWindow(skin, game, this);
+        stage.addActor(newSimulationWindow);
+        newSimulationWindow.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 1);
+    }
 
 
     public void chooseFile() {
@@ -55,10 +74,11 @@ public class MenuScreen implements Screen {
                 if (object.equals("OK")) {
                     FileHandle file = getFile();
                     newSimulationWindow.setFile(file);
+                    newSimulationWindow.setMapSelected();
                 }
             }
         };
-        files.setDirectory(Gdx.files.local("courses/"));
+        files.setDirectory(Gdx.files.local("maps/"));
         files.show(stage);
     }
 
@@ -99,5 +119,6 @@ public class MenuScreen implements Screen {
     @Override
     public void dispose() {
         batch.dispose();
+        stage.dispose();
     }
 }
