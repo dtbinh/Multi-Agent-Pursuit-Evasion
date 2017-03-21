@@ -7,5 +7,5 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
  * Created by Nicola Gheza on 17/03/2017.
  */
 public class GraphicsComponent implements Component {
-    private ModelInstance modelInstance;
+    public ModelInstance modelInstance;
 }
