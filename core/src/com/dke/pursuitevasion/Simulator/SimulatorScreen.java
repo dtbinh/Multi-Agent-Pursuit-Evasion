@@ -56,19 +56,20 @@ public class SimulatorScreen implements Screen {
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(trackingCameraController);
 
-        Engine engine = new Engine();
+        engine = new Engine();
         engine.addSystem(new GraphicsSystem(cam, env));
 
         entityFactory = new EntityFactory();
 
         engine.addEntity(entityFactory.createTerrain(map.getPolygonMesh()));
+        engine.addEntity(entityFactory.test());
 
 
     }
 
     @Override
     public void show() {
-
+        Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
     @Override

@@ -31,7 +31,7 @@ public class PolyMap {
     }
 
     public Mesh getPolygonMesh() {
-        VertexAttributes attributes = new VertexAttributes(VertexAttribute.Position(), VertexAttribute.TexCoords(0), VertexAttribute.Normal());
+        VertexAttributes attributes = new VertexAttributes(VertexAttribute.Position());
         Mesh mesh = new Mesh(true,polyVertexArray.length, polyIndexArray.length, attributes);
         mesh.setVertices(polyVertexArray);
         mesh.setIndices(polyIndexArray);

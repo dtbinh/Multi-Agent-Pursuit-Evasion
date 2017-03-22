@@ -1,8 +1,7 @@
 package com.dke.pursuitevasion.Entities;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
@@ -25,8 +24,27 @@ public class EntityFactory {
         return instance = new EntityFactory();
     }
 
+    public Entity test() {
+        Entity entity = new Entity();
+        ModelBuilder modelBuilder = new ModelBuilder();
+        Model ball = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.LIGHT_GRAY)),
+                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+
+        ModelInstance ballModel = new ModelInstance(ball, 1,1,1);
+
+        GraphicsComponent graphicsComponent = new GraphicsComponent();
+        graphicsComponent.modelInstance = ballModel;
+        entity.add(graphicsComponent);
+
+        VisibleComponent visibleComponent = new VisibleComponent();
+        entity.add(visibleComponent);
+
+        return entity;
+    }
+
     public Entity createTerrain(Mesh mesh) {
         Entity entity = new Entity();
+
         //Creating a model builder every time is inefficient, but so is talking about this. (JUST WERKS)
         ModelBuilder modelBuilder = new ModelBuilder();
         modelBuilder.begin();
@@ -35,6 +53,7 @@ public class EntityFactory {
 
         ModelInstance polygonModel = new ModelInstance(model, 0,0,0);
 
+        //Add model to the entity
         GraphicsComponent graphicsComponent = new GraphicsComponent();
         graphicsComponent.modelInstance = polygonModel;
         entity.add(graphicsComponent);
@@ -42,7 +61,6 @@ public class EntityFactory {
         //Make it visible
         VisibleComponent visibleComponent = new VisibleComponent();
         entity.add(visibleComponent);
-
         return entity;
     }
 }

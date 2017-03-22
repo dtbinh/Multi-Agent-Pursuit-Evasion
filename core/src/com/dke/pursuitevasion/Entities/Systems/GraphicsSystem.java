@@ -79,7 +79,6 @@ public class GraphicsSystem extends EntitySystem {
             }
             */
             modelBatch.render(graphics.modelInstance, env);
-
         }
         modelBatch.end();
     }
