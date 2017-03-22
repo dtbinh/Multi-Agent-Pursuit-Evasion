@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.dke.pursuitevasion.Entities.EntityFactory;
+import com.dke.pursuitevasion.Entities.Systems.GraphicsSystem;
 import com.dke.pursuitevasion.PolyMap;
 import com.dke.pursuitevasion.PursuitEvasion;
 import com.dke.pursuitevasion.TrackingCameraController;
@@ -25,7 +27,9 @@ public class SimulatorScreen implements Screen {
     private PerspectiveCamera cam;
     private TrackingCameraController trackingCameraController;
     private InputMultiplexer inputMultiplexer;
-    private Engine engine;
+
+    private Engine engine; // move to controller
+    private EntityFactory entityFactory; // move to controller
 
     public SimulatorScreen(PursuitEvasion game, FileHandle mapFile) {
 
@@ -44,17 +48,21 @@ public class SimulatorScreen implements Screen {
 
         trackingCameraController = new TrackingCameraController(cam);
 
-        engine = new Engine();
-
-
         /* Set up the environment */
         Environment env = new Environment();
         env.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.6f, 0.6f, 0.7f, 1f));
         env.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, 0, -0.8f, 0));
 
         inputMultiplexer = new InputMultiplexer();
-        // inputMultiplexer.addProcessor(this);
         inputMultiplexer.addProcessor(trackingCameraController);
+
+        Engine engine = new Engine();
+        engine.addSystem(new GraphicsSystem(cam, env));
+
+        entityFactory = new EntityFactory();
+
+        engine.addEntity(entityFactory.createTerrain(map.getPolygonMesh()));
+
 
     }
 
@@ -69,6 +77,7 @@ public class SimulatorScreen implements Screen {
 
         trackingCameraController.update(delta);
 
+        engine.update(delta);
     }
 
     @Override

@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.dke.pursuitevasion.Entities.Components.GraphicsComponent;
-import com.dke.pursuitevasion.Entities.Components.StateComponent;
 import com.dke.pursuitevasion.Entities.Components.VisibleComponent;
 
 /**
@@ -61,7 +60,7 @@ public class GraphicsSystem extends EntitySystem {
     }
 
     public void addedToEngine(Engine engine) {
-        entities = engine.getEntitiesFor(Family.all(StateComponent.class, GraphicsComponent.class, VisibleComponent.class).get());
+        entities = engine.getEntitiesFor(Family.all(GraphicsComponent.class, VisibleComponent.class).get());
     }
 
     /**
@@ -80,6 +79,7 @@ public class GraphicsSystem extends EntitySystem {
             }
             */
             modelBatch.render(graphics.modelInstance, env);
+
         }
         modelBatch.end();
     }
