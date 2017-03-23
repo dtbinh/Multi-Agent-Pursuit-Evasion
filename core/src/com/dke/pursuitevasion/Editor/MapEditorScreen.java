@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.dke.pursuitevasion.Menu.MenuScreen;
 import com.dke.pursuitevasion.PursuitEvasion;
 import com.dke.pursuitevasion.TrackingCameraController;
 
@@ -196,6 +197,10 @@ public class MapEditorScreen implements Screen, InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
+        if (keycode == Input.Keys.ESCAPE) {
+            pursuitEvasion.showPauseMenu();
+            return true;
+        }
         return false;
     }
 
@@ -228,7 +233,6 @@ public class MapEditorScreen implements Screen, InputProcessor {
                     leftPressed = false;
                     break;
                 case WALL_EDITOR:
-                    System.out.println("UP");
                     controller.addWallToArray();
                     leftPressed = false;
                     wallVec = null;

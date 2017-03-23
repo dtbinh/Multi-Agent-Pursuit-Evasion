@@ -47,9 +47,9 @@ public class MapEditorController {
     private void initMesh() {
         polygonMesh = new Mesh(true, 4, 6, new VertexAttribute(VertexAttributes.Usage.Position, 3, "a_position"));
         //mesh.setVertices(new float[]{-1f, -1f, 0f,0f, -1f, 0f,0f, 0f, 0f,-1f, 0f, 0f,});
-        polygonMesh.setVertices(new float[]{0f, 0f, 0f,0f, 0f, 0,0f, 0f, 0f,0f, 0f, 0f,});
+        polygonMesh.setVertices(new float[]{1f, 1f, 0f, 1f, -1f, 0f, -1f, -1f, 0f, -1f, 1f, 0f,});
         polygonMesh.setIndices(new short[] {0, 1, 2, 2, 3, 0,});
-        Material material = new Material(ColorAttribute.createDiffuse(Color.WHITE));
+        Material material = new Material(ColorAttribute.createDiffuse(Color.RED));
         modelBuilder.begin();
         modelBuilder.part("Temp", polygonMesh, GL20.GL_TRIANGLES, material);
         Model tmp_model = modelBuilder.end();

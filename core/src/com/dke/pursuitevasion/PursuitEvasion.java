@@ -14,4 +14,9 @@ public class PursuitEvasion extends Game {
 		setScreen(menuScreen);
 	}
 
+	public void showPauseMenu() {
+		previousScreen = getScreen();
+		setScreen(menuScreen);
+	}
+
 }

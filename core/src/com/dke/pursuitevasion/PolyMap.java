@@ -23,7 +23,7 @@ public class PolyMap {
     public void setPolygonMesh(Mesh mesh) {
         polyIndexArray = new short[mesh.getNumIndices()];
         mesh.getIndices(polyIndexArray);
-        polyVertexArray = new float[mesh.getNumVertices() * (mesh.getNumVertices()/4)];
+        polyVertexArray = new float[mesh.getNumVertices() * 3];
 
         System.out.printf("Vertex num %s vertex size %s float size %s", mesh.getNumVertices(), mesh.getVertexSize(), 4);
 
