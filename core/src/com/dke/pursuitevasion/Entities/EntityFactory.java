@@ -7,8 +7,11 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.math.Vector3;
 import com.dke.pursuitevasion.Entities.Components.GraphicsComponent;
+import com.dke.pursuitevasion.Entities.Components.StateComponent;
 import com.dke.pursuitevasion.Entities.Components.VisibleComponent;
+import com.dke.pursuitevasion.WallInfo;
 
 import static com.badlogic.gdx.graphics.GL20.GL_TRIANGLES;
 
@@ -22,24 +25,6 @@ public class EntityFactory {
         if (instance != null)
             return instance;
         return instance = new EntityFactory();
-    }
-
-    public Entity test() {
-        Entity entity = new Entity();
-        ModelBuilder modelBuilder = new ModelBuilder();
-        Model ball = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.LIGHT_GRAY)),
-                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
-
-        ModelInstance ballModel = new ModelInstance(ball, 1,1,1);
-
-        GraphicsComponent graphicsComponent = new GraphicsComponent();
-        graphicsComponent.modelInstance = ballModel;
-        entity.add(graphicsComponent);
-
-        VisibleComponent visibleComponent = new VisibleComponent();
-        entity.add(visibleComponent);
-
-        return entity;
     }
 
     public Entity createTerrain(Mesh mesh) {
@@ -61,6 +46,30 @@ public class EntityFactory {
         //Make it visible
         VisibleComponent visibleComponent = new VisibleComponent();
         entity.add(visibleComponent);
+        return entity;
+    }
+
+    public Entity createWall(WallInfo wallInfo) {
+        Entity entity = new Entity();
+
+        StateComponent transformComponent = new StateComponent();
+        transformComponent.transform.setToTranslation(wallInfo.position);
+        transformComponent.transform.rotateRad(new Vector3(0, 1, 0), wallInfo.rotAngle);
+        transformComponent.autoTransformUpdate = false;
+        entity.add(transformComponent);
+
+        ModelBuilder modelBuilder = new ModelBuilder();
+        Model wall = modelBuilder.createBox(wallInfo.length,wallInfo.height,0.08f,new Material(ColorAttribute.createDiffuse(Color.LIGHT_GRAY)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+        ModelInstance wallInstance = new ModelInstance(wall);
+        wallInstance.transform = transformComponent.transform;
+
+        GraphicsComponent graphicsComponent = new GraphicsComponent();
+        graphicsComponent.modelInstance = wallInstance;
+        entity.add(graphicsComponent);
+
+        VisibleComponent visibleComponent = new VisibleComponent();
+        entity.add(visibleComponent);
+
         return entity;
     }
 }

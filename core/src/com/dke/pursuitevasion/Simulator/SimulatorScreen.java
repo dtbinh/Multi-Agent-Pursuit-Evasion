@@ -62,8 +62,10 @@ public class SimulatorScreen implements Screen {
         entityFactory = new EntityFactory();
 
         engine.addEntity(entityFactory.createTerrain(map.getPolygonMesh()));
-        engine.addEntity(entityFactory.test());
 
+        for (int i=0; i<map.getwI().length; i++) {
+            engine.addEntity(entityFactory.createWall(map.getwI()[i]));
+        }
 
     }
 
