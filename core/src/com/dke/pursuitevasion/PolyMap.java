@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.VertexAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
+
 /**
  * Created by jeeza on 23-2-17.
  */
@@ -15,6 +17,7 @@ public class PolyMap {
 
     private float[] polyVertexArray;
     private short[] polyIndexArray;
+    private WallInfo[] wI;
 
     public PolyMap(String name) {
         this.name = name;
@@ -46,5 +49,12 @@ public class PolyMap {
         Gdx.files.local("maps/" + name).writeString(gson.toJson(this),false);
     }
 
+    public void setWalls(ArrayList<WallInfo> wallInfo){
+        wI = wallInfo.toArray(new WallInfo[wallInfo.size()]);
+    }
+
+    public WallInfo[] getwI() {
+        return wI;
+    }
 
 }

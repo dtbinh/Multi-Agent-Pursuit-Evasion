@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ShortArray;
 import com.dke.pursuitevasion.PolyMap;
 import com.dke.pursuitevasion.UI.FileSaver;
+import com.dke.pursuitevasion.WallInfo;
 
 import java.util.ArrayList;
 
@@ -27,9 +28,20 @@ public class MapEditorController {
 
     private ArrayList<ModelInstance> instances;
     private ArrayList<Vector3> instanceVectors;
+    private ArrayList<WallInfo> wallInfo;
+
     private float[] vertList = new float[0];
     private short[] mIndices;
     private int vertListSize;
+
+    //for wall info
+    private float Distance;
+    private float Height;
+    private Vector3 Midpoint;
+    private float Angle;
+    private Vector3 currentVector;
+    private Vector3 nextVector;
+
 
     private ModelBuilder modelBuilder;
     private Mesh polygonMesh;
@@ -39,6 +51,7 @@ public class MapEditorController {
     public MapEditorController() {
         instances= new ArrayList<ModelInstance>();
         instanceVectors = new ArrayList<Vector3>();
+        wallInfo = new ArrayList<WallInfo>();
         modelBuilder = new ModelBuilder();
 
         initMesh();
@@ -160,7 +173,7 @@ public class MapEditorController {
             width = 0.1f;
         if(depth<0.1f)
             depth = 0.1f;
-        float height = 0.125f;
+        float height = 0.06f;
         Vector3 midPoint = ((click.sub(clickDrag)).scl(0.5f)).add(clickDrag);
         midPoint.y +=height/2;
 
@@ -184,12 +197,21 @@ public class MapEditorController {
             floatAngle *= -1;
         mWall.transform.rotateRad(new Vector3(0, 1, 0), floatAngle);
         mWallPerm.transform.rotateRad(new Vector3(0, 1, 0), floatAngle);
+
+
+        Distance = distance;
+        Height = height;
+        Angle = floatAngle;
+        Midpoint = midPoint;
+        currentVector = cClick;
+        nextVector = cClickDrag;
     }
 
     public void addWallToArray(){
         mWall = null;
         if(mWallPerm!=null)
         instances.add(mWallPerm);
+        setWallInfo(Distance, Height, Angle, Midpoint, currentVector, nextVector);
     }
 
     private void resizeArray(float[] oldVertList) {
@@ -208,12 +230,25 @@ public class MapEditorController {
                 System.out.println("File Name: " + fileName);
                 PolyMap map = new PolyMap(fileName);
                 map.setPolygonMesh(polygonMesh);
+                map.setWalls(wallInfo);
                 map.export();
             }
         };
         files.setDirectory(Gdx.files.local("maps/"));
         files.show(stage);
     }
+
+    public void setWallInfo(float Length, float Height, float Angle, Vector3 Position, Vector3 Start, Vector3 End){
+        WallInfo wI = new WallInfo();
+        wI.length = Length;
+        wI.height = Height;
+        wI.rotAngle = Angle;
+        wI.position = Position;
+        wI.start = Start;
+        wI.end = End;
+        wallInfo.add(wI);
+    }
+
 
 
     public void dispose() {
