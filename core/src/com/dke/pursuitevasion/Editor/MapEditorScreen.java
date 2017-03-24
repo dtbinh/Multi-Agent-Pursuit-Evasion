@@ -151,8 +151,14 @@ public class MapEditorScreen implements Screen, InputProcessor {
         trackingCameraController.update(delta);
         modelBatch.begin(camera);
         modelBatch.render(controller.getPolygonModel(), environ);
-        for (ModelInstance instance : controller.getInstances()) {
-            modelBatch.render(instance, environ);
+        if(controller.getMode() == Mode.POINT_EDITOR){
+            for (ModelInstance instance : controller.getInstancesSpheres()) {
+                modelBatch.render(instance, environ);
+            }
+        }else{
+            for (ModelInstance instance : controller.getInstances()) {
+                modelBatch.render(instance, environ);
+            }
         }
         if(controller.mWall!=null){
             modelBatch.render(controller.mWall);

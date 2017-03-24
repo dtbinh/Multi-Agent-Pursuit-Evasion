@@ -26,6 +26,7 @@ public class MapEditorController {
 
     private Mode mode = Mode.DO_NOTHING;
 
+    private ArrayList<ModelInstance> instancesSpheres;
     private ArrayList<ModelInstance> instances;
     private ArrayList<Vector3> instanceVectors;
     private ArrayList<WallInfo> wallInfo;
@@ -50,6 +51,7 @@ public class MapEditorController {
 
     public MapEditorController() {
         instances= new ArrayList<ModelInstance>();
+        instancesSpheres= new ArrayList<ModelInstance>();
         instanceVectors = new ArrayList<Vector3>();
         wallInfo = new ArrayList<WallInfo>();
         modelBuilder = new ModelBuilder();
@@ -157,7 +159,7 @@ public class MapEditorController {
 
         if(!nearNeighbor(intersection)) {
             ModelInstance vPosInst = new ModelInstance(vertexPos, intersection);
-            instances.add(vPosInst);
+            instancesSpheres.add(vPosInst);
             instanceVectors.add(intersection);
         }
     }
@@ -249,7 +251,9 @@ public class MapEditorController {
         wallInfo.add(wI);
     }
 
-
+    public ArrayList<ModelInstance> getInstancesSpheres(){
+        return instancesSpheres;
+    }
 
     public void dispose() {
         polygonMesh.dispose();
