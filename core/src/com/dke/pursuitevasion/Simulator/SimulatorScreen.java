@@ -39,8 +39,8 @@ public class SimulatorScreen implements Screen {
         map = gson.fromJson(mapFile.readString(), PolyMap.class);
 
         /* Set up the camera */
-        cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        cam.position.set(-10f, 10, 10f);
+        cam = new PerspectiveCamera(60f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        cam.position.set(0f,90f,0f);
         cam.lookAt(0,0,0);
         cam.near = 0.1f;
         cam.far = 300f;
@@ -79,7 +79,6 @@ public class SimulatorScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         trackingCameraController.update(delta);
-
         engine.update(delta);
     }
 
