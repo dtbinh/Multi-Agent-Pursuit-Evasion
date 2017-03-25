@@ -26,7 +26,8 @@ public class PolyMap {
     public void setPolygonMesh(Mesh mesh) {
         polyIndexArray = new short[mesh.getNumIndices()];
         mesh.getIndices(polyIndexArray);
-        polyVertexArray = new float[mesh.getNumVertices() * 3];
+        System.out.println(mesh.getNumVertices()+" num verts");
+        polyVertexArray = new float[mesh.getNumVertices() * 5];
 
         System.out.printf("Vertex num %s vertex size %s float size %s", mesh.getNumVertices(), mesh.getVertexSize(), 4);
 
@@ -34,7 +35,7 @@ public class PolyMap {
     }
 
     public Mesh getPolygonMesh() {
-        VertexAttributes attributes = new VertexAttributes(VertexAttribute.Position());
+        VertexAttributes attributes = new VertexAttributes(VertexAttribute.Position(), VertexAttribute.TexCoords(0));
         Mesh mesh = new Mesh(true,polyVertexArray.length, polyIndexArray.length, attributes);
         mesh.setVertices(polyVertexArray);
         mesh.setIndices(polyIndexArray);

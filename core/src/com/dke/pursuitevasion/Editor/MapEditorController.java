@@ -1,16 +1,14 @@
 package com.dke.pursuitevasion.Editor;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
-import com.badlogic.gdx.math.EarClippingTriangulator;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Plane;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -34,6 +32,7 @@ public class MapEditorController {
     private float[] vertList = new float[0];
     private short[] mIndices;
     private int vertListSize;
+    public Texture texture;
 
     //for wall info
     private float Distance;
@@ -47,6 +46,7 @@ public class MapEditorController {
     private ModelBuilder modelBuilder;
     private Mesh polygonMesh;
     private ModelInstance polygonModel;
+    public boolean meshRenderable, meshRendered;
     ModelInstance mWall, mWallPerm;
 
     public MapEditorController() {
@@ -57,11 +57,44 @@ public class MapEditorController {
         modelBuilder = new ModelBuilder();
 
         initMesh();
+        initTexture();
+
+    }
+
+    private void initTexture(){
+        FileHandle img = Gdx.files.internal("wood.jpg");
+        texture = new Texture(img, Pixmap.Format.RGB565, false);
+        texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+        texture.setFilter(Texture.TextureFilter.Linear,
+                Texture.TextureFilter.Linear);
+
+    }
+
+    private void setTextureCoords(){
+        float[] textureVertList = new float[vertListSize/3*2+vertListSize];
+        //copy elements from old vertlist to new vertlist skipping texture positions
+        for(int i=0; i<vertList.length/3;i++){
+            textureVertList[i*5] = vertList[i*3];
+            textureVertList[i*5+1] = vertList[i*3+1];
+            textureVertList[i*5+2] = vertList[i*3+2];
+        }
+        vertList = textureVertList;
+        setUV(vertList);
+        meshRendered = true;
+    }
+
+    //set coordinates for the texture
+    private void setUV(float[] vertArray){
+        float u = ((float) Gdx.graphics.getWidth()) / texture.getWidth()/3;
+        float v = ((float) Gdx.graphics.getHeight()) / texture.getHeight()/3;
+        for(int i=0;i<vertList.length/5;i++){
+            vertArray[i*5+3] = u*vertArray[i*5];
+            vertArray[i*5+4] = -v*vertArray[i*5+2];
+        }
     }
 
     private void initMesh() {
         polygonMesh = new Mesh(true, 4, 6, new VertexAttribute(VertexAttributes.Usage.Position, 3, "a_position"));
-        //mesh.setVertices(new float[]{-1f, -1f, 0f,0f, -1f, 0f,0f, 0f, 0f,-1f, 0f, 0f,});
         polygonMesh.setVertices(new float[]{1f, 1f, 0f, 1f, -1f, 0f, -1f, -1f, 0f, -1f, 1f, 0f,});
         polygonMesh.setIndices(new short[] {0, 1, 2, 2, 3, 0,});
         Material material = new Material(ColorAttribute.createDiffuse(Color.RED));
@@ -72,6 +105,7 @@ public class MapEditorController {
     }
 
     public void remakePolygonMesh() {
+        meshRenderable = false;
         //Remove y float from vertList
         int newLength = (2*vertList.length)/3;
         int forLoopNum = (vertList.length/3);
@@ -86,8 +120,11 @@ public class MapEditorController {
             newVertList[i] = temp.get(i);
         }
 
-        EarClippingTriangulator triangulator = new EarClippingTriangulator();
-        ShortArray meshIndices = triangulator.computeTriangles(newVertList);
+        //EarClippingTriangulator triangulator = new EarClippingTriangulator();
+        //ShortArray meshIndices = triangulator.computeTriangles(newVertList);
+
+        DelaunayTriangulator triangulator = new DelaunayTriangulator();
+        ShortArray meshIndices = triangulator.computeTriangles(newVertList, false);
 
         short[] indices = new short[meshIndices.size];
         for (int i=0; i<meshIndices.size;i++)
@@ -95,8 +132,10 @@ public class MapEditorController {
             indices[i] = meshIndices.get(i);
         }
         mIndices = indices;
+        setTextureCoords();
         polygonMesh = new Mesh(true, vertList.length, meshIndices.size,
-                new VertexAttribute(VertexAttributes.Usage.Position, 3, "a_position"));
+                new VertexAttribute(VertexAttributes.Usage.Position, 3, "a_position"),
+                new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, "a_texCoord0"));
         polygonMesh.setVertices(vertList);
         polygonMesh.setIndices(indices);
         Material material = new Material(ColorAttribute.createDiffuse(Color.GOLD));
@@ -104,7 +143,7 @@ public class MapEditorController {
         modelBuilder.part("Map", polygonMesh, GL20.GL_TRIANGLES, material);
         Model tmp_model = modelBuilder.end();
         polygonModel = new ModelInstance(tmp_model, 0,0,0);
-
+        meshRenderable = true;
     }
 
     public Mode getMode() {
@@ -117,6 +156,10 @@ public class MapEditorController {
 
     public ModelInstance getPolygonModel() {
         return polygonModel;
+    }
+
+    public Mesh getPolygonMesh(){
+        return polygonMesh;
     }
 
     public ArrayList<ModelInstance> getInstances() {
@@ -177,7 +220,7 @@ public class MapEditorController {
             depth = 0.1f;
         float height = 0.06f;
         Vector3 midPoint = ((click.sub(clickDrag)).scl(0.5f)).add(clickDrag);
-        midPoint.y +=height/2;
+        midPoint.y +=height/2+0.01f;
 
         Model wall = modelBuilder.createBox(distance, height, 0.08f,new Material(ColorAttribute.createDiffuse(Color.SCARLET)),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
@@ -185,7 +228,6 @@ public class MapEditorController {
         Model wallPerm = modelBuilder.createBox(distance, height, 0.08f,new Material(ColorAttribute.createDiffuse(Color.DARK_GRAY)),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
         mWallPerm = new ModelInstance(wallPerm, midPoint);
-
 
         Vector3 difference = (cClick.sub(cClickDrag));
         Vector3 xAxis = new Vector3(1, 0, 0);
@@ -199,7 +241,6 @@ public class MapEditorController {
             floatAngle *= -1;
         mWall.transform.rotateRad(new Vector3(0, 1, 0), floatAngle);
         mWallPerm.transform.rotateRad(new Vector3(0, 1, 0), floatAngle);
-
 
         Distance = distance;
         Height = height;

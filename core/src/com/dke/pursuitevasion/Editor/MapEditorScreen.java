@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
@@ -34,6 +35,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
     private Skin skin;
     private Environment environ;
     private ModelBatch modelBatch;
+    private ShaderProgram shader;
 
     /* Controller & Others */
     private MapEditorController controller;
@@ -43,10 +45,35 @@ public class MapEditorScreen implements Screen, InputProcessor {
     private TrackingCameraController trackingCameraController;
     private Vector3 wallVec;
 
+    String vertexShader = "attribute vec4 a_position;    \n" +
+            "attribute vec4 a_color;\n" +
+            "attribute vec2 a_texCoord0;\n" +
+            "uniform mat4 u_worldView;\n" +
+            "varying vec4 v_color;" +
+            "varying vec2 v_texCoords;" +
+            "void main()                  \n" +
+            "{                            \n" +
+            "   v_color = vec4(1, 1, 1, 1); \n" +
+            "   v_texCoords = a_texCoord0; \n" +
+            "   gl_Position =  u_worldView * a_position;  \n"      +
+            "}                            \n" ;
+    String fragmentShader = "#ifdef GL_ES\n" +
+            "precision mediump float;\n" +
+            "#endif\n" +
+            "varying vec4 v_color;\n" +
+            "varying vec2 v_texCoords;\n" +
+            "uniform sampler2D u_texture;\n" +
+            "void main()                                  \n" +
+            "{                                            \n" +
+            "  gl_FragColor = v_color * texture2D(u_texture, v_texCoords);\n" +
+            "}";
+
     public MapEditorScreen(PursuitEvasion pursuitEvasion) {
         this.pursuitEvasion = pursuitEvasion;
         stage = new Stage();
         controller = new MapEditorController();
+        shader = new ShaderProgram(vertexShader, fragmentShader);
+
         createUI();
 
         // Setting default camera position
@@ -100,7 +127,8 @@ public class MapEditorScreen implements Screen, InputProcessor {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 controller.setMode(Mode.DO_NOTHING);
-                controller.remakePolygonMesh();
+                if(!controller.meshRendered)
+                    controller.remakePolygonMesh();
             }
         });
 
@@ -149,8 +177,20 @@ public class MapEditorScreen implements Screen, InputProcessor {
         Gdx.gl20.glEnable(GL20.GL_DEPTH_TEST);
         camera.update();
         trackingCameraController.update(delta);
+
+        //rendering mesh
+        controller.texture.bind();
+        shader.begin();
+        shader.setUniformMatrix("u_worldView", camera.combined);
+        shader.setUniformi("u_texture", 0);
+        if(controller.meshRenderable) {
+            controller.getPolygonMesh().render(shader, GL20.GL_TRIANGLES);
+        }
+        shader.end();
+
+
         modelBatch.begin(camera);
-        modelBatch.render(controller.getPolygonModel(), environ);
+        //modelBatch.render(controller.getPolygonModel(), environ);
         if(controller.getMode() == Mode.POINT_EDITOR){
             for (ModelInstance instance : controller.getInstancesSpheres()) {
                 modelBatch.render(instance, environ);
@@ -161,6 +201,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
             }
         }
         if(controller.mWall!=null){
+            //lets the user see the wall he is drawing
             modelBatch.render(controller.mWall);
         }
         modelBatch.end();
@@ -223,7 +264,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
             if(controller.getMode() == Mode.WALL_EDITOR) {
                 if (wallVec == null) {
                     wallVec = new Vector3();
-                    Intersector.intersectRayTriangles(pickRay,controller.getVertList(), controller.getmIndices(), 3, wallVec);
+                    Intersector.intersectRayTriangles(pickRay,controller.getVertList(), controller.getmIndices(), 5, wallVec);
                 }
             }
         }
@@ -255,7 +296,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
                 case WALL_EDITOR:
                     Ray pickRay = camera.getPickRay(screenX, screenY);
                     Vector3 intersection = new Vector3();
-                    Intersector.intersectRayTriangles(pickRay,controller.getVertList(), controller.getmIndices(), 3, intersection);
+                    Intersector.intersectRayTriangles(pickRay,controller.getVertList(), controller.getmIndices(), 5, intersection);
                     if(wallVec.x !=0 && wallVec.z!=0 && intersection.x!=0 && intersection.z!=0) {
                         controller.addWall(wallVec.cpy(), intersection.cpy());
                     }
