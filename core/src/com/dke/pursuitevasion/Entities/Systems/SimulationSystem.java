@@ -14,7 +14,6 @@ public class SimulationSystem extends EntitySystem {
 
     private float timeAccumulator = 0f;
 
-
     private ComponentMapper<StateComponent> sm = ComponentMapper.getFor(StateComponent.class);
 
     public void addedToEngine(Engine engine) {
@@ -30,6 +29,6 @@ public class SimulationSystem extends EntitySystem {
     }
 
     private void stepUpdate() {
-        System.out.println("Step update");
+
     }
 }
