@@ -48,6 +48,7 @@ public class SimulatorScreen implements Screen {
         cam.update();
 
         trackingCameraController = new TrackingCameraController(cam);
+        trackingCameraController.setCameraDistance(5f);
 
         /* Set up the environment */
         Environment env = new Environment();

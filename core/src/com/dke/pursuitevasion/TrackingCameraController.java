@@ -129,4 +129,8 @@ public class TrackingCameraController implements InputProcessor {
     public void setTrackedVector(Vector3 trackedPosition) {
         this.trackedPosition = trackedPosition;
     }
+
+    public void setCameraDistance(float f){
+        cameraDistance = f;
+    }
 }
