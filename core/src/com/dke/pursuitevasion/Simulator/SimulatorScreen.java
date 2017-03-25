@@ -59,11 +59,12 @@ public class SimulatorScreen implements Screen {
 
         engine = new Engine();
         engine.addSystem(new GraphicsSystem(cam, env));
-        //engine.addSystem(new SimulationSystem());
+        engine.addSystem(new SimulationSystem());
 
         entityFactory = new EntityFactory();
 
         engine.addEntity(entityFactory.createTerrain(map.getPolygonMesh()));
+        engine.addEntity(entityFactory.testAgent());
 
         for (int i=0; i<map.getwI().length; i++) {
             engine.addEntity(entityFactory.createWall(map.getwI()[i]));

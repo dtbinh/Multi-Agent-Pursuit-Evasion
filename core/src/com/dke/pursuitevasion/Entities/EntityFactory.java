@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.dke.pursuitevasion.Entities.Components.GraphicsComponent;
+import com.dke.pursuitevasion.Entities.Components.MovableComponent;
 import com.dke.pursuitevasion.Entities.Components.StateComponent;
 import com.dke.pursuitevasion.Entities.Components.VisibleComponent;
 import com.dke.pursuitevasion.WallInfo;
@@ -28,6 +29,33 @@ public class EntityFactory {
         return instance = new EntityFactory();
     }
 
+    public Entity testAgent() {
+        Entity entity = new Entity();
+
+        StateComponent transformComponent = new StateComponent();
+        transformComponent.position = new Vector3();
+        transformComponent.orientation = new Quaternion(new Vector3(0,0,0),0);
+        entity.add(transformComponent);
+
+        ModelBuilder modelBuilder = new ModelBuilder();
+        Model model = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.LIGHT_GRAY)),
+                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+
+        ModelInstance agentModel = new ModelInstance(model);
+
+        GraphicsComponent graphicsComponent = new GraphicsComponent();
+        graphicsComponent.modelInstance = agentModel;
+        entity.add(graphicsComponent);
+
+        VisibleComponent visibleComponent = new VisibleComponent();
+        entity.add(visibleComponent);
+
+        MovableComponent movableComponent = new MovableComponent();
+        entity.add(movableComponent);
+
+        return entity;
+    }
+
     public Entity createTerrain(Mesh mesh) {
         Entity entity = new Entity();
 
@@ -42,7 +70,7 @@ public class EntityFactory {
         modelBuilder.part("1", mesh, GL_TRIANGLES, new Material(ColorAttribute.createDiffuse(Color.GOLD)));
         Model model = modelBuilder.end();
 
-        ModelInstance polygonModel = new ModelInstance(model, 0,0,0);
+        ModelInstance polygonModel = new ModelInstance(model);
 
         //Add model to the entity
         GraphicsComponent graphicsComponent = new GraphicsComponent();
@@ -52,6 +80,7 @@ public class EntityFactory {
         //Make it visible
         VisibleComponent visibleComponent = new VisibleComponent();
         entity.add(visibleComponent);
+
         return entity;
     }
 

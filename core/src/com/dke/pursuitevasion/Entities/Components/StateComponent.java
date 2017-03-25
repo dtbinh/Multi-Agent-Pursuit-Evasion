@@ -70,12 +70,8 @@ public class StateComponent implements Component {
 
     public void update() {
         if (autoTransformUpdate) {
-            //rotate seems to freeze?
-            //transform.idt().rotate(orientation).scale(scale.x, scale.y, scale.z).translate(position);
             transform.idt().translate(position);
         }
-        //orientation.normalize(); TODO: Fix
-        //spin = 0.5 * nQuaternion(0, angularVelocity.x, angularVelocity.y, angularVelocity.z) * orientation;
-        //Transform matrix pls
+
     }
 }
