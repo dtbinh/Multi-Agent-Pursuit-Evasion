@@ -25,7 +25,7 @@ public class NewSimulationWindow extends Window {
         this.game = game;
         this.setModal(true);
         this.skin = skin;
-        this.setSize(900, 400);
+        this.setSize(400, 400);
         this.menuScreen = screen;
 
         initGUI();

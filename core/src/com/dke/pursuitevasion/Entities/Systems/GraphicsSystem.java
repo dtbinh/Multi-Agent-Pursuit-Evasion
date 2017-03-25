@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.dke.pursuitevasion.Entities.Components.GraphicsComponent;
+import com.dke.pursuitevasion.Entities.Components.StateComponent;
 import com.dke.pursuitevasion.Entities.Components.VisibleComponent;
 
 /**
@@ -14,7 +15,7 @@ import com.dke.pursuitevasion.Entities.Components.VisibleComponent;
 public class GraphicsSystem extends EntitySystem {
     private ImmutableArray<Entity> entities;
 
-    /*private ComponentMapper<StateComponent> stateMap = ComponentMapper.getFor(StateComponent.class);*/
+    private ComponentMapper<StateComponent> stateMap = ComponentMapper.getFor(StateComponent.class);
     private ComponentMapper<GraphicsComponent> graphicsMap = ComponentMapper.getFor(GraphicsComponent.class);
     private ModelBatch modelBatch = new ModelBatch();
 
@@ -60,7 +61,7 @@ public class GraphicsSystem extends EntitySystem {
     }
 
     public void addedToEngine(Engine engine) {
-        entities = engine.getEntitiesFor(Family.all(GraphicsComponent.class, VisibleComponent.class).get());
+        entities = engine.getEntitiesFor(Family.all(StateComponent.class, GraphicsComponent.class, VisibleComponent.class).get());
     }
 
     /**
@@ -71,13 +72,13 @@ public class GraphicsSystem extends EntitySystem {
         modelBatch.begin(cam);
         for (int i = 0; i < entities.size(); ++i) {
             Entity entity = entities.get(i);
-            /* StateComponent state = stateMap.get(entity); */
+            StateComponent state = stateMap.get(entity);
             GraphicsComponent graphics = graphicsMap.get(entity);
-            /*
+
             if (state.autoTransformUpdate) {
                 graphics.modelInstance.transform = state.transform;
             }
-            */
+
             modelBatch.render(graphics.modelInstance, env);
         }
         modelBatch.end();
