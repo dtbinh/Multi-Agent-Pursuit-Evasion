@@ -1,14 +1,19 @@
 package com.dke.pursuitevasion.Entities;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.dke.pursuitevasion.Entities.Components.GraphicsComponent;
+import com.dke.pursuitevasion.Entities.Components.MovableComponent;
 import com.dke.pursuitevasion.Entities.Components.StateComponent;
 import com.dke.pursuitevasion.Entities.Components.VisibleComponent;
 import com.dke.pursuitevasion.WallInfo;
@@ -27,16 +32,54 @@ public class EntityFactory {
         return instance = new EntityFactory();
     }
 
+    public Entity testAgent() {
+        Entity entity = new Entity();
+
+        StateComponent transformComponent = new StateComponent();
+        transformComponent.position = new Vector3();
+        transformComponent.orientation = new Quaternion(new Vector3(0,0,0),0);
+        entity.add(transformComponent);
+
+        ModelBuilder modelBuilder = new ModelBuilder();
+        Model model = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.LIGHT_GRAY)),
+                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+
+        ModelInstance agentModel = new ModelInstance(model);
+
+        GraphicsComponent graphicsComponent = new GraphicsComponent();
+        graphicsComponent.modelInstance = agentModel;
+        entity.add(graphicsComponent);
+
+        VisibleComponent visibleComponent = new VisibleComponent();
+        entity.add(visibleComponent);
+
+        MovableComponent movableComponent = new MovableComponent();
+        entity.add(movableComponent);
+
+        return entity;
+    }
+
     public Entity createTerrain(Mesh mesh) {
         Entity entity = new Entity();
+
+        FileHandle img = Gdx.files.internal("wood.jpg");
+        Texture texture = new Texture(img, Pixmap.Format.RGB565, false);
+        texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+        texture.setFilter(Texture.TextureFilter.Linear,
+                Texture.TextureFilter.Linear);
+
+        StateComponent transformComponent = new StateComponent();
+        transformComponent.position = new Vector3();
+        transformComponent.orientation = new Quaternion(new Vector3(0, 0, 0), 0);
+        entity.add(transformComponent);
 
         //Creating a model builder every time is inefficient, but so is talking about this. (JUST WERKS)
         ModelBuilder modelBuilder = new ModelBuilder();
         modelBuilder.begin();
-        modelBuilder.part("1", mesh, GL_TRIANGLES, new Material(ColorAttribute.createDiffuse(Color.GOLD)));
+        modelBuilder.part("1", mesh, GL_TRIANGLES, new Material(new TextureAttribute(TextureAttribute.Diffuse, texture)));
         Model model = modelBuilder.end();
 
-        ModelInstance polygonModel = new ModelInstance(model, 0,0,0);
+        ModelInstance polygonModel = new ModelInstance(model);
 
         //Add model to the entity
         GraphicsComponent graphicsComponent = new GraphicsComponent();
@@ -46,6 +89,7 @@ public class EntityFactory {
         //Make it visible
         VisibleComponent visibleComponent = new VisibleComponent();
         entity.add(visibleComponent);
+
         return entity;
     }
 
