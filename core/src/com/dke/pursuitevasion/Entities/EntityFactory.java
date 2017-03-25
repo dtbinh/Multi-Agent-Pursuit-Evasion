@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.dke.pursuitevasion.Entities.Components.GraphicsComponent;
 import com.dke.pursuitevasion.Entities.Components.StateComponent;
@@ -29,6 +30,11 @@ public class EntityFactory {
 
     public Entity createTerrain(Mesh mesh) {
         Entity entity = new Entity();
+
+        StateComponent transformComponent = new StateComponent();
+        transformComponent.position = new Vector3();
+        transformComponent.orientation = new Quaternion(new Vector3(0, 0, 0), 0);
+        entity.add(transformComponent);
 
         //Creating a model builder every time is inefficient, but so is talking about this. (JUST WERKS)
         ModelBuilder modelBuilder = new ModelBuilder();

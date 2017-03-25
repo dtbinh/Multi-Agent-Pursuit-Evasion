@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.dke.pursuitevasion.Entities.EntityFactory;
 import com.dke.pursuitevasion.Entities.Systems.GraphicsSystem;
+import com.dke.pursuitevasion.Entities.Systems.SimulationSystem;
 import com.dke.pursuitevasion.PolyMap;
 import com.dke.pursuitevasion.PursuitEvasion;
 import com.dke.pursuitevasion.TrackingCameraController;
@@ -42,7 +43,7 @@ public class SimulatorScreen implements Screen {
         cam = new PerspectiveCamera(60f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         cam.position.set(0f,90f,0f);
         cam.lookAt(0,0,0);
-        cam.near = 0.1f;
+        cam.near = 1f;
         cam.far = 300f;
         cam.update();
 
@@ -58,6 +59,7 @@ public class SimulatorScreen implements Screen {
 
         engine = new Engine();
         engine.addSystem(new GraphicsSystem(cam, env));
+        //engine.addSystem(new SimulationSystem());
 
         entityFactory = new EntityFactory();
 
