@@ -13,11 +13,11 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ShortArray;
-import com.dke.pursuitevasion.PolyMap;
+import com.dke.pursuitevasion.*;
 import com.dke.pursuitevasion.UI.FileSaver;
-import com.dke.pursuitevasion.WallInfo;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 
 public class MapEditorController {
@@ -126,6 +126,13 @@ public class MapEditorController {
         DelaunayTriangulator triangulator = new DelaunayTriangulator();
         ShortArray meshIndices = triangulator.computeTriangles(newVertList, false);
 
+        int intArray[] = new int[meshIndices.size];
+        for(int i = 0; i < meshIndices.size; i++)
+        {
+            intArray[i] = (int)meshIndices.get(i);
+        }
+        ArrayList<EdgeVectors> edges = Edges.computeEdges(intArray, vertList);
+
         short[] indices = new short[meshIndices.size];
         for (int i=0; i<meshIndices.size;i++)
         {
@@ -204,6 +211,7 @@ public class MapEditorController {
             ModelInstance vPosInst = new ModelInstance(vertexPos, intersection);
             instancesSpheres.add(vPosInst);
             instanceVectors.add(intersection);
+            System.out.println(intersection);
         }
     }
 
