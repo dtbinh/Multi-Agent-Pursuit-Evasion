@@ -71,13 +71,6 @@ public class EntityFactory {
         transformComponent.orientation = new Quaternion(new Vector3(0, 0, 0), 0);
         entity.add(transformComponent);
 
-        System.out.println("EdgeVectors: " + edgeVectors.length);
-
-        for (int i=0; i<edgeVectors.length; i++) {
-            createBoundary(edgeVectors[i]);
-        }
-
-        //Creating a model builder every time is inefficient, but so is talking about this. (JUST WERKS)
         ModelBuilder modelBuilder = new ModelBuilder();
         modelBuilder.begin();
         modelBuilder.part("1", mesh, GL_TRIANGLES, new Material(new TextureAttribute(TextureAttribute.Diffuse, texture)));
@@ -100,6 +93,7 @@ public class EntityFactory {
     public Entity createBoundary(EdgeVectors eV) {
         Entity entity = new Entity();
         WallComponent wallComponent = new WallComponent();
+        System.out.println(eV);
         wallComponent.eV = eV;
 
         entity.add(wallComponent);

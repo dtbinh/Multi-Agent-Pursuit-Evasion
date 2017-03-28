@@ -17,6 +17,7 @@ import java.util.Random;
 public class SimulationSystem extends EntitySystem {
     private final float STEP_SIZE = 1f/60f;
     private ImmutableArray<Entity> entities;
+    private ImmutableArray<Entity> bounds;
 
     private float timeAccumulator = 0f;
 
@@ -25,7 +26,8 @@ public class SimulationSystem extends EntitySystem {
     private ComponentMapper<WallComponent> wm = ComponentMapper.getFor(WallComponent.class);
 
     public void addedToEngine(Engine engine) {
-        entities = engine.getEntitiesFor(Family.all(StateComponent.class, VisibleComponent.class).all(WallComponent.class).get());
+        entities = engine.getEntitiesFor(Family.all(StateComponent.class, VisibleComponent.class).get());
+        bounds = engine.getEntitiesFor(Family.all(WallComponent.class).get());
     }
 
     public void update(float delta) {
@@ -53,11 +55,10 @@ public class SimulationSystem extends EntitySystem {
 
     private boolean checkForCollisions(Vector3 position) {
         Intersector intersector = new Intersector();
-        for (int i=0; i<entities.size(); i++) {
-            if (!wm.has(entities.get(i)))
-                continue;
-            float distance = intersector.distanceLinePoint(wm.get(entities.get(i)).eV.Vector1.x,wm.get(entities.get(i)).eV.Vector1.y,wm.get(entities.get(i)).eV.Vector2.x,wm.get(entities.get(i)).eV.Vector2.y,position.x, position.y);
-            System.out.println(distance);
+        for (int i=0; i<bounds.size(); i++) {
+            float distance = intersector.distanceLinePoint(wm.get(bounds.get(i)).eV.Vector1.x,wm.get(bounds.get(i)).eV.Vector1.z,wm.get(bounds.get(i)).eV.Vector2.x,wm.get(bounds.get(i)).eV.Vector2.z,position.x, position.z);
+            if (distance < 1)
+                System.out.println(distance);
         }
         return true;
     }
