@@ -56,6 +56,7 @@ public class MapEditorController {
         instanceVectors = new ArrayList<Vector3>();
         wallInfo = new ArrayList<WallInfo>();
         modelBuilder = new ModelBuilder();
+        edges = new ArrayList<EdgeVectors>();
 
         initMesh();
         initTexture();
@@ -283,9 +284,7 @@ public class MapEditorController {
                 PolyMap map = new PolyMap(fileName);
                 map.setPolygonMesh(polygonMesh);
                 map.setWalls(wallInfo);
-                if(edges!=null) {
-                    map.setEdgeVectors(edges);
-                }
+                map.setEdgeVectors(edges);
                 map.export();
             }
         };
