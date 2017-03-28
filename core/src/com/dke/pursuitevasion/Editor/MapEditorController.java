@@ -28,6 +28,7 @@ public class MapEditorController {
     private ArrayList<ModelInstance> instances;
     private ArrayList<Vector3> instanceVectors;
     private ArrayList<WallInfo> wallInfo;
+    public ArrayList<EdgeVectors> edges;
 
     private float[] vertList = new float[0];
     private short[] mIndices;
@@ -131,7 +132,7 @@ public class MapEditorController {
         {
             intArray[i] = (int)meshIndices.get(i);
         }
-        ArrayList<EdgeVectors> edges = Edges.computeEdges(intArray, vertList);
+        edges = Edges.computeEdges(intArray, vertList);
 
         short[] indices = new short[meshIndices.size];
         for (int i=0; i<meshIndices.size;i++)
@@ -282,6 +283,9 @@ public class MapEditorController {
                 PolyMap map = new PolyMap(fileName);
                 map.setPolygonMesh(polygonMesh);
                 map.setWalls(wallInfo);
+                if(edges!=null) {
+                    map.setEdgeVectors(edges);
+                }
                 map.export();
             }
         };

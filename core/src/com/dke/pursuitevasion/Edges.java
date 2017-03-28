@@ -36,7 +36,10 @@ public class Edges
             int index2 = border.get(i).index1;
             Vector3 vertex1 = new Vector3(vertList[index*3], 0, vertList[index*3+2]);
             Vector3 vertex2 = new Vector3(vertList[index2*3], 0, vertList[index2*3+2]);
-            EdgeVectors edgeVector = new EdgeVectors(vertex1, vertex2);
+            EdgeVectors edgeVector = new EdgeVectors();
+            edgeVector.Vector1 = vertex1;
+            edgeVector.Vector2 = vertex2;
+
             vectorEdges.add(edgeVector);
         }
 

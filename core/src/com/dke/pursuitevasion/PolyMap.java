@@ -18,6 +18,7 @@ public class PolyMap {
     private float[] polyVertexArray;
     private short[] polyIndexArray;
     private WallInfo[] wI;
+    private EdgeVectors[] eV;
 
     public PolyMap(String name) {
         this.name = name;
@@ -54,8 +55,16 @@ public class PolyMap {
         wI = wallInfo.toArray(new WallInfo[wallInfo.size()]);
     }
 
+    public void setEdgeVectors(ArrayList<EdgeVectors> edgeVectorsInfo){
+        eV = edgeVectorsInfo.toArray(new EdgeVectors[edgeVectorsInfo.size()]);
+    }
+
     public WallInfo[] getwI() {
         return wI;
+    }
+
+    public EdgeVectors[] geteV(){
+        return eV;
     }
 
 }
