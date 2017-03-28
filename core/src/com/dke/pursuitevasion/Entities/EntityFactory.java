@@ -12,10 +12,8 @@ import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
-import com.dke.pursuitevasion.Entities.Components.GraphicsComponent;
-import com.dke.pursuitevasion.Entities.Components.MovableComponent;
-import com.dke.pursuitevasion.Entities.Components.StateComponent;
-import com.dke.pursuitevasion.Entities.Components.VisibleComponent;
+import com.dke.pursuitevasion.EdgeVectors;
+import com.dke.pursuitevasion.Entities.Components.*;
 import com.dke.pursuitevasion.WallInfo;
 
 import static com.badlogic.gdx.graphics.GL20.GL_TRIANGLES;
@@ -59,7 +57,7 @@ public class EntityFactory {
         return entity;
     }
 
-    public Entity createTerrain(Mesh mesh) {
+    public Entity createTerrain(Mesh mesh, EdgeVectors[] edgeVectors) {
         Entity entity = new Entity();
 
         FileHandle img = Gdx.files.internal("wood.jpg");
@@ -72,6 +70,12 @@ public class EntityFactory {
         transformComponent.position = new Vector3();
         transformComponent.orientation = new Quaternion(new Vector3(0, 0, 0), 0);
         entity.add(transformComponent);
+
+        System.out.println("EdgeVectors: " + edgeVectors.length);
+
+        for (int i=0; i<edgeVectors.length; i++) {
+            createBoundary(edgeVectors[i]);
+        }
 
         //Creating a model builder every time is inefficient, but so is talking about this. (JUST WERKS)
         ModelBuilder modelBuilder = new ModelBuilder();
@@ -93,9 +97,18 @@ public class EntityFactory {
         return entity;
     }
 
-    public Entity createWall(WallInfo wallInfo) {
+    public Entity createBoundary(EdgeVectors eV) {
         Entity entity = new Entity();
+        WallComponent wallComponent = new WallComponent();
+        wallComponent.eV = eV;
 
+        entity.add(wallComponent);
+        return entity;
+    }
+
+    public Entity createWall(WallInfo wallInfo) {
+
+        Entity entity = new Entity();
         StateComponent transformComponent = new StateComponent();
         transformComponent.transform.setToTranslation(wallInfo.position);
         transformComponent.transform.rotateRad(new Vector3(0, 1, 0), wallInfo.rotAngle);
@@ -106,6 +119,10 @@ public class EntityFactory {
         Model wall = modelBuilder.createBox(wallInfo.length,wallInfo.height,0.08f,new Material(ColorAttribute.createDiffuse(Color.LIGHT_GRAY)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
         ModelInstance wallInstance = new ModelInstance(wall);
         wallInstance.transform = transformComponent.transform;
+
+        WallComponent wallComponent = new WallComponent();
+        wallComponent.eV = new EdgeVectors(wallInfo.start, wallInfo.end);
+        entity.add(wallComponent);
 
         GraphicsComponent graphicsComponent = new GraphicsComponent();
         graphicsComponent.modelInstance = wallInstance;

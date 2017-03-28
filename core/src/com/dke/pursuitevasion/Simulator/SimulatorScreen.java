@@ -64,7 +64,7 @@ public class SimulatorScreen implements Screen {
 
         entityFactory = new EntityFactory();
 
-        engine.addEntity(entityFactory.createTerrain(map.getPolygonMesh()));
+        engine.addEntity(entityFactory.createTerrain(map.getPolygonMesh(), map.geteV()));
         engine.addEntity(entityFactory.testAgent());
 
         for (int i=0; i<map.getwI().length; i++) {
@@ -89,7 +89,10 @@ public class SimulatorScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        Gdx.gl.glViewport(0, 0, width, height);
+        cam.viewportHeight = height;
+        cam.viewportWidth = width;
+        cam.update();
     }
 
     @Override

@@ -2,10 +2,12 @@ package com.dke.pursuitevasion.Entities.Systems;
 
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
 import com.dke.pursuitevasion.Entities.Components.MovableComponent;
 import com.dke.pursuitevasion.Entities.Components.StateComponent;
 import com.dke.pursuitevasion.Entities.Components.VisibleComponent;
+import com.dke.pursuitevasion.Entities.Components.WallComponent;
 
 import java.util.Random;
 
@@ -20,9 +22,10 @@ public class SimulationSystem extends EntitySystem {
 
     private ComponentMapper<StateComponent> sm = ComponentMapper.getFor(StateComponent.class);
     private ComponentMapper<MovableComponent> mm = ComponentMapper.getFor(MovableComponent.class);
+    private ComponentMapper<WallComponent> wm = ComponentMapper.getFor(WallComponent.class);
 
     public void addedToEngine(Engine engine) {
-        entities = engine.getEntitiesFor(Family.all(StateComponent.class, VisibleComponent.class).get());
+        entities = engine.getEntitiesFor(Family.all(StateComponent.class, VisibleComponent.class).all(WallComponent.class).get());
     }
 
     public void update(float delta) {
@@ -37,11 +40,25 @@ public class SimulationSystem extends EntitySystem {
         for (int i=0; i<entities.size(); i++) {
             if (!mm.has(entities.get(i)))
                 continue;
+            // Entity is movable
             Random r = new Random();
             float x = sm.get(entities.get(i)).position.x;
             x -= STEP_SIZE;
+            Vector3 position = new Vector3(x, 0, 0);
+            checkForCollisions(position);
             sm.get(entities.get(i)).position.set(new Vector3(x,0,0));
             sm.get(entities.get(i)).update();
         }
+    }
+
+    private boolean checkForCollisions(Vector3 position) {
+        Intersector intersector = new Intersector();
+        for (int i=0; i<entities.size(); i++) {
+            if (!wm.has(entities.get(i)))
+                continue;
+            float distance = intersector.distanceLinePoint(wm.get(entities.get(i)).eV.Vector1.x,wm.get(entities.get(i)).eV.Vector1.y,wm.get(entities.get(i)).eV.Vector2.x,wm.get(entities.get(i)).eV.Vector2.y,position.x, position.y);
+            System.out.println(distance);
+        }
+        return true;
     }
 }
