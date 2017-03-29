@@ -36,7 +36,13 @@ public class EntityFactory {
         StateComponent transformComponent = new StateComponent();
         transformComponent.position = new Vector3();
         transformComponent.orientation = new Quaternion(position,0);
+        transformComponent.update();
         entity.add(transformComponent);
+
+        //Create a sphere collider component
+        SphereColliderComponent sphereColliderComponent = new SphereColliderComponent();
+        sphereColliderComponent.radius = 0.15f;
+        entity.add(sphereColliderComponent);
 
         ModelBuilder modelBuilder = new ModelBuilder();
         Model model = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.LIGHT_GRAY)),

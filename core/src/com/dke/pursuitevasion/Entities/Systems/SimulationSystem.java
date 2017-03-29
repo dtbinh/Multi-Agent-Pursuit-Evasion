@@ -4,10 +4,7 @@ import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
-import com.dke.pursuitevasion.Entities.Components.MovableComponent;
-import com.dke.pursuitevasion.Entities.Components.StateComponent;
-import com.dke.pursuitevasion.Entities.Components.VisibleComponent;
-import com.dke.pursuitevasion.Entities.Components.WallComponent;
+import com.dke.pursuitevasion.Entities.Components.*;
 
 import java.util.Random;
 
@@ -23,6 +20,7 @@ public class SimulationSystem extends EntitySystem {
 
     private ComponentMapper<StateComponent> sm = ComponentMapper.getFor(StateComponent.class);
     private ComponentMapper<MovableComponent> mm = ComponentMapper.getFor(MovableComponent.class);
+    private ComponentMapper<SphereColliderComponent> scm = ComponentMapper.getFor(SphereColliderComponent.class);
     private ComponentMapper<WallComponent> wm = ComponentMapper.getFor(WallComponent.class);
 
     public void addedToEngine(Engine engine) {
@@ -48,19 +46,18 @@ public class SimulationSystem extends EntitySystem {
             x -= STEP_SIZE;
             Vector3 nextPos = sm.get(entities.get(i)).position.cpy();
             nextPos.mulAdd(sm.get(entities.get(i)).velocity, delta);
-            if (!checkForCollisions(nextPos)) {
+            if (!checkForCollisions(nextPos, scm.get(entities.get(i)).radius)) {
                 sm.get(entities.get(i)).position.mulAdd(sm.get(entities.get(i)).velocity, delta);
-                //sm.get(entities.get(i)).position.set(new Vector3(x, 0, 0));
                 sm.get(entities.get(i)).update();
             }
         }
     }
 
-    private boolean checkForCollisions(Vector3 position) {
+    private boolean checkForCollisions(Vector3 position, float radius) {
         Intersector intersector = new Intersector();
         for (int i=0; i<bounds.size(); i++) {
             float distance = intersector.distanceLinePoint(wm.get(bounds.get(i)).eV.Vector1.x,wm.get(bounds.get(i)).eV.Vector1.z,wm.get(bounds.get(i)).eV.Vector2.x,wm.get(bounds.get(i)).eV.Vector2.z,position.x, position.z);
-            if (distance < 0.007) {
+            if (distance - (radius/2) < 0.005) {
                 System.out.println(distance);
                 return true;
             }
