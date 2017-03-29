@@ -15,7 +15,7 @@ import java.util.Random;
  * Created by Nicola Gheza on 25/03/2017.
  */
 public class SimulationSystem extends EntitySystem {
-    private final float STEP_SIZE = 1f/60f;
+    private final float STEP_SIZE = 1f/200f;
     private ImmutableArray<Entity> entities;
     private ImmutableArray<Entity> bounds;
 
@@ -48,18 +48,35 @@ public class SimulationSystem extends EntitySystem {
             x -= STEP_SIZE;
             Vector3 position = new Vector3(x, 0, 0);
             checkForCollisions(position);
-            sm.get(entities.get(i)).position.set(new Vector3(x,0,0));
-            sm.get(entities.get(i)).update();
+            /*
+            System.out.println("All bounds in map");
+            for(int j=0;j<bounds.size();j++){
+                System.out.println(wm.get(bounds.get(j)).eV.Vector1.x+"   "+wm.get(bounds.get(j)).eV.Vector1.z);
+                System.out.println(wm.get(bounds.get(j)).eV.Vector2.x+"   "+wm.get(bounds.get(j)).eV.Vector2.z);
+            }*/
+            if(!checkForCollisions(position)) {
+                sm.get(entities.get(i)).position.set(new Vector3(x, 0, 0));
+                sm.get(entities.get(i)).update();
+            }
         }
     }
 
     private boolean checkForCollisions(Vector3 position) {
         Intersector intersector = new Intersector();
         for (int i=0; i<bounds.size(); i++) {
-            float distance = intersector.distanceLinePoint(wm.get(bounds.get(i)).eV.Vector1.x,wm.get(bounds.get(i)).eV.Vector1.z,wm.get(bounds.get(i)).eV.Vector2.x,wm.get(bounds.get(i)).eV.Vector2.z,position.x, position.z);
-            if (distance < 1)
-                System.out.println(distance);
+            Vector3 v1 = wm.get(bounds.get(i)).eV.Vector1;
+            Vector3 v2 = wm.get(bounds.get(i)).eV.Vector2;
+            float startX = v1.x;
+            float startY = v1.z;
+            float endX = v2.x;
+            float endY = v2.z;
+            //float distance = intersector.distanceLinePoint(wm.get(bounds.get(i)).eV.Vector1.x,wm.get(bounds.get(i)).eV.Vector1.z,wm.get(bounds.get(i)).eV.Vector2.x,wm.get(bounds.get(i)).eV.Vector2.z,position.x, position.z);
+            float distance = intersector.distanceLinePoint(startX, startY, endX, endY,position.x, position.z);
+            if (distance < 0.003) {
+                //System.out.println(distance);
+                return true;
+            }
         }
-        return true;
+        return false;
     }
 }

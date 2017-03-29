@@ -116,6 +116,7 @@ public class EntityFactory {
 
         WallComponent wallComponent = new WallComponent();
         wallComponent.eV = new EdgeVectors(wallInfo.start, wallInfo.end);
+        System.out.println("start "+ wallInfo.start+"  End "+ wallInfo.end);
         entity.add(wallComponent);
 
         GraphicsComponent graphicsComponent = new GraphicsComponent();
