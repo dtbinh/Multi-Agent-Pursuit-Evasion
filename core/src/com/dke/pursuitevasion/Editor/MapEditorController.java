@@ -182,7 +182,8 @@ public class MapEditorController {
     private boolean nearNeighbor(Vector3 vec) {
         for (int i=0; i<instanceVectors.size(); i++) {
             Vector3 v = instanceVectors.get(i);
-            if (vec.x<v.x+0.5 && vec.x>v.x-0.5 && vec.z<v.z+0.5 && vec.z>v.z-0.5)
+            float tolerance = 0.1f;
+            if (vec.x<v.x+tolerance && vec.x>v.x-tolerance && vec.z<v.z+tolerance && vec.z>v.z-tolerance)
                 return true;
         }
         return false;
@@ -213,13 +214,16 @@ public class MapEditorController {
             ModelInstance vPosInst = new ModelInstance(vertexPos, intersection);
             instancesSpheres.add(vPosInst);
             instanceVectors.add(intersection);
-            System.out.println(intersection);
+            //System.out.println(intersection);
         }
     }
 
     public void addWall(Vector3 click, Vector3 clickDrag){
+        currentVector = click.cpy();
+        nextVector = clickDrag.cpy();
         Vector3 cClick = click.cpy();
         Vector3 cClickDrag = clickDrag.cpy();
+
         float width = Math.abs(click.x - clickDrag.x);
         float depth = Math.abs(click.z - clickDrag.z);
         float distance = click.dst(clickDrag);
@@ -256,8 +260,6 @@ public class MapEditorController {
         Height = height;
         Angle = floatAngle;
         Midpoint = midPoint;
-        currentVector = cClick;
-        nextVector = cClickDrag;
     }
 
     public void addWallToArray(){

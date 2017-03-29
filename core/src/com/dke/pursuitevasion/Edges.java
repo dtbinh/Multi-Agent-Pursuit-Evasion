@@ -43,7 +43,7 @@ public class Edges
             vectorEdges.add(edgeVector);
         }
 
-        System.out.println(edges.toString());
+        //System.out.println(edges.toString());
 
         /*for(int i=0;i<vectorEdges.size();i++) {
             System.out.println(vectorEdges.get(i).Vector1+"   "+vectorEdges.get(i).Vector2);
