@@ -15,7 +15,7 @@ import java.util.Random;
  * Created by Nicola Gheza on 25/03/2017.
  */
 public class SimulationSystem extends EntitySystem {
-    private final float STEP_SIZE = 1f/60f;
+    private final float STEP_SIZE = 1f/200f;
     private ImmutableArray<Entity> entities;
     private ImmutableArray<Entity> bounds;
 
@@ -33,12 +33,12 @@ public class SimulationSystem extends EntitySystem {
     public void update(float delta) {
         timeAccumulator += delta;
         for (int i=0; i<(int)(timeAccumulator/STEP_SIZE); i++) {
-            stepUpdate();
+            stepUpdate(delta);
             timeAccumulator -= STEP_SIZE;
         }
     }
 
-    private void stepUpdate() {
+    private void stepUpdate(float delta) {
         for (int i=0; i<entities.size(); i++) {
             if (!mm.has(entities.get(i)))
                 continue;
@@ -46,10 +46,13 @@ public class SimulationSystem extends EntitySystem {
             Random r = new Random();
             float x = sm.get(entities.get(i)).position.x;
             x -= STEP_SIZE;
-            Vector3 position = new Vector3(x, 0, 0);
-            checkForCollisions(position);
-            sm.get(entities.get(i)).position.set(new Vector3(x,0,0));
-            sm.get(entities.get(i)).update();
+            Vector3 nextPos = sm.get(entities.get(i)).position.cpy();
+            nextPos.mulAdd(sm.get(entities.get(i)).velocity, delta);
+            if (!checkForCollisions(nextPos)) {
+                sm.get(entities.get(i)).position.mulAdd(sm.get(entities.get(i)).velocity, delta);
+                //sm.get(entities.get(i)).position.set(new Vector3(x, 0, 0));
+                sm.get(entities.get(i)).update();
+            }
         }
     }
 
@@ -57,9 +60,11 @@ public class SimulationSystem extends EntitySystem {
         Intersector intersector = new Intersector();
         for (int i=0; i<bounds.size(); i++) {
             float distance = intersector.distanceLinePoint(wm.get(bounds.get(i)).eV.Vector1.x,wm.get(bounds.get(i)).eV.Vector1.z,wm.get(bounds.get(i)).eV.Vector2.x,wm.get(bounds.get(i)).eV.Vector2.z,position.x, position.z);
-            if (distance < 1)
+            if (distance < 0.007) {
                 System.out.println(distance);
+                return true;
+            }
         }
-        return true;
+        return false;
     }
 }

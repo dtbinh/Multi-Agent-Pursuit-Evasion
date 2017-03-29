@@ -30,12 +30,12 @@ public class EntityFactory {
         return instance = new EntityFactory();
     }
 
-    public Entity testAgent() {
+    public Entity createAgent(Vector3 position) {
         Entity entity = new Entity();
 
         StateComponent transformComponent = new StateComponent();
         transformComponent.position = new Vector3();
-        transformComponent.orientation = new Quaternion(new Vector3(0,0,0),0);
+        transformComponent.orientation = new Quaternion(position,0);
         entity.add(transformComponent);
 
         ModelBuilder modelBuilder = new ModelBuilder();

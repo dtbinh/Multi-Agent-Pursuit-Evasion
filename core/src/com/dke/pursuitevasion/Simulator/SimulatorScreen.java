@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.math.Vector3;
 import com.dke.pursuitevasion.Entities.EntityFactory;
 import com.dke.pursuitevasion.Entities.Systems.GraphicsSystem;
 import com.dke.pursuitevasion.Entities.Systems.SimulationSystem;
@@ -70,7 +71,7 @@ public class SimulatorScreen implements Screen {
         for (int i=0; i<map.geteV().length; i++) {
             engine.addEntity(entityFactory.createBoundary(map.geteV()[i]));
         }
-        engine.addEntity(entityFactory.testAgent());
+        engine.addEntity(entityFactory.createAgent(new Vector3(0,0,0)));
 
         for (int i=0; i<map.getwI().length; i++) {
             engine.addEntity(entityFactory.createWall(map.getwI()[i]));

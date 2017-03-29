@@ -16,8 +16,7 @@ public class StateComponent implements Component {
     public Vector3 position = new Vector3();                ///< the position of the cube center of mass in world coordinates (meters).
     public Quaternion orientation = new Quaternion();         ///< the orientation of the cube represented by a unit quaternion.
     //Secondary state
-    public Vector3 velocity = new Vector3();                ///< velocity in meters per second (calculated from momentum).
-
+    public Vector3 velocity = new Vector3(0.1f,0,0);
     //Constant state
     public Vector3 scale = new Vector3(1, 1, 1);
 
