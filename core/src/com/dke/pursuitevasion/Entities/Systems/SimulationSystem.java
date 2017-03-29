@@ -57,7 +57,7 @@ public class SimulationSystem extends EntitySystem {
         Intersector intersector = new Intersector();
         for (int i=0; i<bounds.size(); i++) {
             float distance = intersector.distanceLinePoint(wm.get(bounds.get(i)).eV.Vector1.x,wm.get(bounds.get(i)).eV.Vector1.z,wm.get(bounds.get(i)).eV.Vector2.x,wm.get(bounds.get(i)).eV.Vector2.z,position.x, position.z);
-            if (distance - (radius/2) < 0.005) {
+            if (distance - (radius/2) < 0.00005) {
                 System.out.println(distance);
                 return true;
             }

@@ -68,14 +68,18 @@ public class SimulatorScreen implements Screen {
         engine.addEntity(entityFactory.createTerrain(map.getPolygonMesh(), map.geteV()));
         System.out.println("EdgeVectors: " + map.geteV().length);
 
+        // Creating terrain bounds
         for (int i=0; i<map.geteV().length; i++) {
             engine.addEntity(entityFactory.createBoundary(map.geteV()[i]));
         }
-       // engine.addEntity(entityFactory.createAgent(new Vector3(0,0,0)));
-        engine.addEntity(entityFactory.createAgent(new Vector3(1,0,0)));
+        // Creating walls
         for (int i=0; i<map.getwI().length; i++) {
             engine.addEntity(entityFactory.createWall(map.getwI()[i]));
         }
+
+        // Creating agent
+        engine.addEntity(entityFactory.createAgent(new Vector3(1,0,0)));
+        engine.addEntity(entityFactory.createAgent(new Vector3(-1,0,1)));
 
     }
 
