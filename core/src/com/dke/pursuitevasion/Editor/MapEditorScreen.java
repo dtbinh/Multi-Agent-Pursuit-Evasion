@@ -105,7 +105,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
     /**
      * create GUI windows
      */
-    private void createUI() {
+    /*private void createUI() {
         skin = new Skin(Gdx.files.internal("uiskin.json"));
         Window windowDesign = new Window("Design", skin);
 
@@ -160,6 +160,69 @@ public class MapEditorScreen implements Screen, InputProcessor {
 
         // Dimensions
         windowDesign.setSize(650, windowHeight);
+        windowDesign.setPosition(offset, screenHeight - windowHeight - offset);
+
+        // Add windows
+        stage.addActor(windowDesign);
+    } */
+    private void createUI() {
+        skin = new Skin(Gdx.files.internal("uiskin.json"));
+        Window windowDesign = new Window("Design", skin);
+
+        TextButton addOuterVertexButton = new TextButton("Add Outer Vertex", skin);
+        TextButton makePolygonButton = new TextButton("Apply Triangulation", skin);
+        TextButton exportMapButton = new TextButton("Export Map", skin);
+        TextButton wallEditorButton = new TextButton("Add Walls", skin);
+
+
+        addOuterVertexButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (controller.getMode() == Mode.DO_NOTHING)
+                    controller.setMode(Mode.POINT_EDITOR);
+            }
+        });
+
+        makePolygonButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                controller.setMode(Mode.DO_NOTHING);
+                if(!controller.meshRendered)
+                    controller.remakePolygonMesh();
+            }
+        });
+
+        exportMapButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                controller.saveFile(stage, skin);
+            }
+        });
+        wallEditorButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if(controller.getMode() == Mode.DO_NOTHING)
+                    controller.setMode(Mode.WALL_EDITOR);
+            }
+        });
+
+        // Add buttons
+        windowDesign.add(addOuterVertexButton);
+        windowDesign.add(makePolygonButton);
+        windowDesign.add(wallEditorButton);
+        windowDesign.add(exportMapButton);
+
+        // Screen and window variables
+        int windowHeight = (int) addOuterVertexButton.getHeight();
+        int screenWidth = Gdx.graphics.getWidth();
+        int screenHeight = Gdx.graphics.getHeight();
+        int gutter = 20;
+        int offset = 0;
+
+        windowDesign.setMovable(false);
+
+        // Dimensions
+        windowDesign.setSize(screenWidth, windowHeight + 20);
         windowDesign.setPosition(offset, screenHeight - windowHeight - offset);
 
         // Add windows

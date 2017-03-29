@@ -34,7 +34,7 @@ public class EntityFactory {
         Entity entity = new Entity();
 
         StateComponent transformComponent = new StateComponent();
-        transformComponent.position = new Vector3();
+        transformComponent.position = position;
         transformComponent.orientation = new Quaternion(position,0);
         transformComponent.update();
         entity.add(transformComponent);
