@@ -13,7 +13,7 @@ import java.util.Random;
  * Created by Nicola Gheza on 25/03/2017.
  */
 public class SimulationSystem extends EntitySystem {
-    private final float STEP_SIZE = 1f/120f;
+    private final float STEP_SIZE = 1f/200f;
     private ImmutableArray<Entity> entities;
     private ImmutableArray<Entity> bounds;
     Vector3 bounce;
@@ -38,14 +38,39 @@ public class SimulationSystem extends EntitySystem {
         }
     }
 
+
+    private float directionChangeFrequency = 2f;
+    private float minDirectionChangeAmount = 0.1f;
+    private float maxDirectionChangeAmount = 0.9f;
+
+    private Random randomNumberGen = new Random();
+
+    float directionChangetimer = 0;
+
     private void stepUpdate(float delta) {
         for (int i=0; i<entities.size(); i++) {
             if (!mm.has(entities.get(i)))
                 continue;
+
+            directionChangetimer += delta;
+
             // Entity is movable
             Vector3 nextPos = sm.get(entities.get(i)).position.cpy();
             nextPos.mulAdd(sm.get(entities.get(i)).velocity, delta);
+            if (directionChangetimer >= directionChangeFrequency) {
+                directionChangetimer -= directionChangeFrequency;
+                float directionChangeRange = maxDirectionChangeAmount - minDirectionChangeAmount;
+                // calculate a random change amount between the minimum and max
+                float directionChangeAmount = randomNumberGen.nextFloat() * directionChangeRange + minDirectionChangeAmount;
+                // flip the sign half the time so that the velocity increases and decreases
+                Random random = new Random();
+                if(random.nextBoolean()){
+                    directionChangeAmount  = -directionChangeAmount;
+                }
+                sm.get(entities.get(i)).velocity.z += directionChangeAmount; // apply the change amount to the velocity
+            }
             if (!checkForCollisions(nextPos, scm.get(entities.get(i)).radius, sm.get(entities.get(i)).velocity)) {
+
                 sm.get(entities.get(i)).position.mulAdd(sm.get(entities.get(i)).velocity, delta);
                 sm.get(entities.get(i)).update();
                 //System.out.println("if");
@@ -53,7 +78,7 @@ public class SimulationSystem extends EntitySystem {
             }else{
                 //System.out.println("else");
                 sm.get(entities.get(i)).velocity = bounce;
-                System.out.println(sm.get(entities.get(i)).velocity+"  velo");
+                //System.out.println(sm.get(entities.get(i)).velocity+"  velo");
                 //System.out.println(sm.get(entities.get(i)).velocity);
             }
         }
@@ -62,7 +87,11 @@ public class SimulationSystem extends EntitySystem {
     private boolean checkForCollisions(Vector3 position, float radius, Vector3 velo) {
         Intersector intersector = new Intersector();
         for (int i=0; i<bounds.size(); i++) {
-            float distance = intersector.distanceLinePoint(wm.get(bounds.get(i)).eV.Vector1.x,wm.get(bounds.get(i)).eV.Vector1.z,wm.get(bounds.get(i)).eV.Vector2.x,wm.get(bounds.get(i)).eV.Vector2.z,position.x, position.z);
+            //float distance = intersector.distanceLinePoint(wm.get(bounds.get(i)).eV.Vector1.x,wm.get(bounds.get(i)).eV.Vector1.z,wm.get(bounds.get(i)).eV.Vector2.x,wm.get(bounds.get(i)).eV.Vector2.z,position.x, position.z);
+            Vector2 v1 = new Vector2(wm.get(bounds.get(i)).eV.Vector1.x,wm.get(bounds.get(i)).eV.Vector1.z);
+            Vector2 v2 = new Vector2(wm.get(bounds.get(i)).eV.Vector2.x,wm.get(bounds.get(i)).eV.Vector2.z);
+            Vector2 point = new Vector2(position.x, position.z);
+            float distance = intersector.distanceSegmentPoint(v1,v2, point);
             if (distance - (radius/2) < 0.00005) {
                 if(velo!=null) {
                     Vector3 one = wm.get(bounds.get(i)).eV.Vector1;
@@ -75,7 +104,7 @@ public class SimulationSystem extends EntitySystem {
 
                 }
 
-                System.out.println("trig");
+                //System.out.println("trig");
                 return true;
             }
         }

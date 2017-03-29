@@ -72,6 +72,8 @@ public class SimulatorScreen implements Screen {
             engine.addEntity(entityFactory.createBoundary(map.geteV()[i]));
         }
         engine.addEntity(entityFactory.createAgent(new Vector3(0,0,0)));
+        engine.addEntity(entityFactory.createAgent(new Vector3(0,0,0)));
+        engine.addEntity(entityFactory.createAgent(new Vector3(0,0,0)));
 
         for (int i=0; i<map.getwI().length; i++) {
             engine.addEntity(entityFactory.createWall(map.getwI()[i]));
