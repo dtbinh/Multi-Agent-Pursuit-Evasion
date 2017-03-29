@@ -99,7 +99,6 @@ public class EntityFactory {
     public Entity createBoundary(EdgeVectors eV) {
         Entity entity = new Entity();
         WallComponent wallComponent = new WallComponent();
-        System.out.println(eV);
         wallComponent.eV = eV;
 
         entity.add(wallComponent);
@@ -122,7 +121,6 @@ public class EntityFactory {
 
         WallComponent wallComponent = new WallComponent();
         wallComponent.eV = new EdgeVectors(wallInfo.start, wallInfo.end);
-        System.out.println("start "+ wallInfo.start+"  End "+ wallInfo.end);
         entity.add(wallComponent);
 
         GraphicsComponent graphicsComponent = new GraphicsComponent();

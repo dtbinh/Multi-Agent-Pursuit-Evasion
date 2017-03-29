@@ -6,6 +6,8 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 
+import java.util.Random;
+
 /**
  * StateComponent
  * <p>
@@ -16,7 +18,7 @@ public class StateComponent implements Component {
     public Vector3 position = new Vector3();                ///< the position of the cube center of mass in world coordinates (meters).
     public Quaternion orientation = new Quaternion();         ///< the orientation of the cube represented by a unit quaternion.
     //Secondary state
-    public Vector3 velocity = new Vector3(0.1f,0,0);
+    public Vector3 velocity = new Vector3(0.22f,0,0.2f);
     //Constant state
     public Vector3 scale = new Vector3(1, 1, 1);
 
@@ -72,5 +74,23 @@ public class StateComponent implements Component {
             transform.idt().translate(position);
         }
 
+    }
+
+    public void randomizeVelo(){
+        double x = (Math.random() * (50 - 10)) + 10;
+        float xVelo = (float) x/100;
+        double z = (Math.random() * (50 - 10)) + 10;
+        float zVelo = (float) z/100*-1;
+
+        if(velocity.z<0)
+            zVelo*=-1;
+
+        Random ran = new Random();
+        int n = ran.nextInt(2);
+        if(n>1){
+            xVelo*=-1;
+        }
+
+        velocity = new Vector3(xVelo, 0, zVelo);
     }
 }
