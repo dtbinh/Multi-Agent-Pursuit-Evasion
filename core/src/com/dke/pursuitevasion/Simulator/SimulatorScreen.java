@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
@@ -71,9 +72,11 @@ public class SimulatorScreen implements Screen {
         for (int i=0; i<map.geteV().length; i++) {
             engine.addEntity(entityFactory.createBoundary(map.geteV()[i]));
         }
-        engine.addEntity(entityFactory.createAgent(new Vector3(0,0,0)));
-        engine.addEntity(entityFactory.createAgent(new Vector3(0,0,0)));
-        engine.addEntity(entityFactory.createAgent(new Vector3(0,0,0)));
+        engine.addEntity(entityFactory.createAgent(new Vector3(0,0.15f/2,0), Color.PURPLE));
+        engine.addEntity(entityFactory.createAgent(new Vector3(0,0.15f/2,0), Color.BLUE));
+        engine.addEntity(entityFactory.createAgent(new Vector3(0,0.15f/2,0), Color.RED));
+        engine.addEntity(entityFactory.createAgent(new Vector3(0,0.15f/2,0), Color.GREEN));
+        engine.addEntity(entityFactory.createAgent(new Vector3(0,0.15f/2,0), Color.BROWN));
 
         for (int i=0; i<map.getwI().length; i++) {
             engine.addEntity(entityFactory.createWall(map.getwI()[i]));

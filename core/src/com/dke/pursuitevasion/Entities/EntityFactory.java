@@ -30,7 +30,7 @@ public class EntityFactory {
         return instance = new EntityFactory();
     }
 
-    public Entity createAgent(Vector3 position) {
+    public Entity createAgent(Vector3 position, Color color) {
         Entity entity = new Entity();
 
         StateComponent transformComponent = new StateComponent();
@@ -45,7 +45,7 @@ public class EntityFactory {
         entity.add(sphereColliderComponent);
 
         ModelBuilder modelBuilder = new ModelBuilder();
-        Model model = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.LIGHT_GRAY)),
+        Model model = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(color)),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
 
         ModelInstance agentModel = new ModelInstance(model);
@@ -82,11 +82,12 @@ public class EntityFactory {
         modelBuilder.part("1", mesh, GL_TRIANGLES, new Material(new TextureAttribute(TextureAttribute.Diffuse, texture)));
         Model model = modelBuilder.end();
 
-        ModelInstance polygonModel = new ModelInstance(model);
+
+        //ModelInstance polygonModel = new ModelInstance(model);
 
         //Add model to the entity
         GraphicsComponent graphicsComponent = new GraphicsComponent();
-        graphicsComponent.modelInstance = polygonModel;
+        graphicsComponent.mesh = mesh;
         entity.add(graphicsComponent);
 
         //Make it visible
@@ -109,13 +110,14 @@ public class EntityFactory {
 
         Entity entity = new Entity();
         StateComponent transformComponent = new StateComponent();
+        wallInfo.position.y+=wallInfo.height/2;
         transformComponent.transform.setToTranslation(wallInfo.position);
         transformComponent.transform.rotateRad(new Vector3(0, 1, 0), wallInfo.rotAngle);
         transformComponent.autoTransformUpdate = false;
         entity.add(transformComponent);
 
         ModelBuilder modelBuilder = new ModelBuilder();
-        Model wall = modelBuilder.createBox(wallInfo.length,wallInfo.height,0.08f,new Material(ColorAttribute.createDiffuse(Color.LIGHT_GRAY)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+        Model wall = modelBuilder.createBox(wallInfo.length-0.05f,wallInfo.height,0.08f,new Material(ColorAttribute.createDiffuse(Color.LIGHT_GRAY)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
         ModelInstance wallInstance = new ModelInstance(wall);
         wallInstance.transform = transformComponent.transform;
 

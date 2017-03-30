@@ -13,7 +13,7 @@ import java.util.Random;
  * Created by Nicola Gheza on 25/03/2017.
  */
 public class SimulationSystem extends EntitySystem {
-    private final float STEP_SIZE = 1f/200f;
+    private final float STEP_SIZE = 1f/60f;
     private ImmutableArray<Entity> entities;
     private ImmutableArray<Entity> bounds;
     Vector3 bounce;
@@ -73,13 +73,9 @@ public class SimulationSystem extends EntitySystem {
 
                 sm.get(entities.get(i)).position.mulAdd(sm.get(entities.get(i)).velocity, delta);
                 sm.get(entities.get(i)).update();
-                //System.out.println("if");
 
             }else{
-                //System.out.println("else");
                 sm.get(entities.get(i)).velocity = bounce;
-                //System.out.println(sm.get(entities.get(i)).velocity+"  velo");
-                //System.out.println(sm.get(entities.get(i)).velocity);
             }
         }
     }
@@ -92,12 +88,19 @@ public class SimulationSystem extends EntitySystem {
             Vector2 v2 = new Vector2(wm.get(bounds.get(i)).eV.Vector2.x,wm.get(bounds.get(i)).eV.Vector2.z);
             Vector2 point = new Vector2(position.x, position.z);
             float distance = intersector.distanceSegmentPoint(v1,v2, point);
-            if (distance - (radius/2) < 0.00005) {
+            if (distance - (radius/2) < 0.005) {
                 if(velo!=null) {
                     Vector3 one = wm.get(bounds.get(i)).eV.Vector1;
                     Vector3 two = wm.get(bounds.get(i)).eV.Vector2;
                     Vector3 three = (two.cpy().sub(one.cpy()).nor());
-                    bounce = three.cpy().sub(velo.cpy()).nor();
+
+                    Random r = new Random();
+                    float chance = r.nextFloat();
+                    if (chance <= 0.10f){
+                        bounce = velo.scl(-1f);
+                    }else{
+                        bounce = three.cpy().sub(velo.cpy()).nor();
+                    }
 
                     /*Vector3 three = (one.cpy().sub(two)).nor();
                     bounce = velo.cpy().sub(three).nor();*/

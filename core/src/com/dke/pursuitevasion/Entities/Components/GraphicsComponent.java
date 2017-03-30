@@ -1,6 +1,7 @@
 package com.dke.pursuitevasion.Entities.Components;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 
 /**
@@ -8,4 +9,5 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
  */
 public class GraphicsComponent implements Component {
     public ModelInstance modelInstance;
+    public Mesh mesh;
 }
