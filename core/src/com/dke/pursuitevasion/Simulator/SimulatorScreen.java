@@ -15,6 +15,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.dke.pursuitevasion.Entities.EntityFactory;
 import com.dke.pursuitevasion.Entities.Systems.GraphicsSystem;
 import com.dke.pursuitevasion.Entities.Systems.SimulationSystem;
+import com.dke.pursuitevasion.Entities.Systems.VisionSystem;
 import com.dke.pursuitevasion.PolyMap;
 import com.dke.pursuitevasion.PursuitEvasion;
 import com.dke.pursuitevasion.TrackingCameraController;
@@ -61,8 +62,7 @@ public class SimulatorScreen implements Screen {
         inputMultiplexer.addProcessor(trackingCameraController);
 
         engine = new Engine();
-        engine.addSystem(new GraphicsSystem(cam, env));
-        engine.addSystem(new SimulationSystem());
+
 
         entityFactory = new EntityFactory();
 
@@ -72,16 +72,18 @@ public class SimulatorScreen implements Screen {
         for (int i=0; i<map.geteV().length; i++) {
             engine.addEntity(entityFactory.createBoundary(map.geteV()[i]));
         }
-        engine.addEntity(entityFactory.createAgent(new Vector3(0,0.15f/2,0), Color.PURPLE));
-        engine.addEntity(entityFactory.createAgent(new Vector3(0,0.15f/2,0), Color.BLUE));
-        engine.addEntity(entityFactory.createAgent(new Vector3(0,0.15f/2,0), Color.RED));
-        engine.addEntity(entityFactory.createAgent(new Vector3(0,0.15f/2,0), Color.GREEN));
-        engine.addEntity(entityFactory.createAgent(new Vector3(0,0.15f/2,0), Color.BROWN));
 
         for (int i=0; i<map.getwI().length; i++) {
             engine.addEntity(entityFactory.createWall(map.getwI()[i]));
         }
 
+        engine.addSystem(new GraphicsSystem(cam, env));
+        engine.addSystem(new SimulationSystem());
+        engine.addSystem(new VisionSystem());
+
+        engine.addEntity(entityFactory.createAgent(new Vector3(-2,0.15f/2,0), Color.BLUE));
+        engine.addEntity(entityFactory.createAgent(new Vector3(0.5f,0.15f/2,0), Color.BLUE));
+        engine.addEntity(entityFactory.createEvasor(new Vector3(2,0.15f/2, 0), Color.RED));
     }
 
     @Override

@@ -9,4 +9,5 @@ import com.dke.pursuitevasion.EdgeVectors;
  */
 public class WallComponent implements Component {
     public EdgeVectors eV;
+    public boolean innerWall = false;
 }
