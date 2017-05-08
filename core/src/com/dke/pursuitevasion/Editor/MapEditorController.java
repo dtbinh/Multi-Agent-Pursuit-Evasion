@@ -35,6 +35,7 @@ public class MapEditorController {
     private int vertListSize;
     public Texture texture;
 
+
     //for wall info
     private float Distance;
     private float Height;
@@ -216,6 +217,14 @@ public class MapEditorController {
             instanceVectors.add(intersection);
             //System.out.println(intersection);
         }
+    }
+
+    public void addPursuer(int screenX,int screenY, PerspectiveCamera camera) {
+
+    }
+
+    public void addEvader(int screenX,int screenY,PerspectiveCamera camera){
+
     }
 
     public void addWall(Vector3 click, Vector3 clickDrag){
