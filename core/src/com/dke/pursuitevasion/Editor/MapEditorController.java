@@ -15,9 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ShortArray;
 import com.dke.pursuitevasion.*;
 import com.dke.pursuitevasion.UI.FileSaver;
+import sun.management.Agent;
 
-import java.util.ArrayList;
-import java.util.Set;
+import java.util.*;
 
 
 public class MapEditorController {
@@ -28,6 +28,8 @@ public class MapEditorController {
     private ArrayList<ModelInstance> instances;
     private ArrayList<Vector3> instanceVectors;
     private ArrayList<WallInfo> wallInfo;
+    private ArrayList<AgentInfo> agentsInfo;
+    private ArrayList<EvaderInfo> evaderInfo;
     public ArrayList<EdgeVectors> edges;
 
     private float[] vertList = new float[0];
@@ -56,6 +58,8 @@ public class MapEditorController {
         instancesSpheres= new ArrayList<ModelInstance>();
         instanceVectors = new ArrayList<Vector3>();
         wallInfo = new ArrayList<WallInfo>();
+        agentsInfo = new ArrayList<AgentInfo>();
+        evaderInfo = new ArrayList<EvaderInfo>();
         modelBuilder = new ModelBuilder();
         edges = new ArrayList<EdgeVectors>();
 
@@ -211,20 +215,44 @@ public class MapEditorController {
         Model vertexPos = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.LIGHT_GRAY)),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
 
+
+        ModelInstance vPosInst = new ModelInstance(vertexPos, intersection);
+        instancesSpheres.add(vPosInst);
+        instanceVectors.add(intersection);
+    }
+
+    public void addAgent(int screenX, int screenY, PerspectiveCamera camera) {
+        Ray pickRay = camera.getPickRay(screenX, screenY);
+        Vector3 intersection = new Vector3();
+        Intersector.intersectRayPlane(pickRay, new Plane(new Vector3(0f, 1f, 0f), 0f), intersection);
+
+
+        setAgentInfo(intersection);
+
+        Model agentModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.BLUE)),
+            VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+
         if(!nearNeighbor(intersection)) {
-            ModelInstance vPosInst = new ModelInstance(vertexPos, intersection);
-            instancesSpheres.add(vPosInst);
-            instanceVectors.add(intersection);
-            //System.out.println(intersection);
+            ModelInstance agentInstance = new ModelInstance(agentModel, intersection);
+            instances.add(agentInstance);
         }
     }
 
-    public void addPursuer(int screenX,int screenY, PerspectiveCamera camera) {
-
-    }
-
     public void addEvader(int screenX,int screenY,PerspectiveCamera camera){
+        Ray pickRay = camera.getPickRay(screenX, screenY);
+        Vector3 intersection = new Vector3();
+        Intersector.intersectRayPlane(pickRay, new Plane(new Vector3(0f, 1f, 0f), 0f), intersection);
 
+
+        setEvaderInfo(intersection);
+
+        Model evaderModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.RED)),
+                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+
+        if(!nearNeighbor(intersection)) {
+            ModelInstance evaderInstance = new ModelInstance(evaderModel, intersection);
+            instances.add(evaderInstance);
+        }
     }
 
     public void addWall(Vector3 click, Vector3 clickDrag){
@@ -260,6 +288,7 @@ public class MapEditorController {
         double dotResult = (double) dotProd;
         double angle = Math.acos(dotResult);
         float floatAngle = (float) angle;
+
         if (difference.z > 0)
             floatAngle *= -1;
         mWall.transform.rotateRad(new Vector3(0, 1, 0), floatAngle);
@@ -296,6 +325,8 @@ public class MapEditorController {
                 map.setPolygonMesh(polygonMesh);
                 map.setWalls(wallInfo);
                 map.setEdgeVectors(edges);
+                map.setAgentsInfo(agentsInfo);
+                map.setEvaderInfo(evaderInfo);
                 map.export();
             }
         };
@@ -328,6 +359,18 @@ public class MapEditorController {
 
     public float[] getVertList(){
         return vertList;
+    }
+
+    public void setAgentInfo(Vector3 position) {
+        AgentInfo aI = new AgentInfo();
+        aI.position = position;
+        agentsInfo.add(aI);
+    }
+
+    public void setEvaderInfo(Vector3 position) {
+        EvaderInfo eI = new EvaderInfo();
+        eI.position = position;
+        evaderInfo.add(eI);
     }
 }
 

@@ -17,7 +17,10 @@ public class PolyMap {
 
     private float[] polyVertexArray;
     private short[] polyIndexArray;
+    private int persuer = 1;
     private WallInfo[] wI;
+    private AgentInfo[] aI;
+    private EvaderInfo[] eI;
     private EdgeVectors[] eV;
 
     public PolyMap(String name) {
@@ -33,6 +36,10 @@ public class PolyMap {
         System.out.printf("Vertex num %s vertex size %s float size %s", mesh.getNumVertices(), mesh.getVertexSize(), 4);
 
         mesh.getVertices(polyVertexArray);
+    }
+
+    public int getPersuer() {
+        return persuer;
     }
 
     public Mesh getPolygonMesh() {
@@ -65,6 +72,16 @@ public class PolyMap {
 
     public EdgeVectors[] geteV(){
         return eV;
+    }
+
+    public AgentInfo[] getaI() { return aI; }
+
+    public void setAgentsInfo(ArrayList<AgentInfo> agentsInfo) {
+        aI = agentsInfo.toArray(new AgentInfo[agentsInfo.size()]);
+    }
+
+    public void setEvaderInfo(ArrayList<EvaderInfo> evaderInfo){
+        eI = evaderInfo.toArray(new EvaderInfo[evaderInfo.size()]);
     }
 
 }

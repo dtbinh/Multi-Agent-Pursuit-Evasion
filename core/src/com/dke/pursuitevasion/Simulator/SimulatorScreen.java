@@ -83,7 +83,7 @@ public class SimulatorScreen implements Screen {
 
         engine.addEntity(entityFactory.createAgent(new Vector3(-2,0.15f/2,0), Color.BLUE));
         engine.addEntity(entityFactory.createAgent(new Vector3(0.5f,0.15f/2,0), Color.BLUE));
-        engine.addEntity(entityFactory.createEvasor(new Vector3(2,0.15f/2, 0), Color.RED));
+        engine.addEntity(entityFactory.createEvader(new Vector3(2,0.15f/2, 0), Color.RED));
     }
 
     @Override

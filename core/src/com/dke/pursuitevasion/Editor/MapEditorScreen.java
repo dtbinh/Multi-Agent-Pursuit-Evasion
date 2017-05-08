@@ -10,19 +10,14 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.dke.pursuitevasion.Menu.*;
-import com.dke.pursuitevasion.Menu.NewSimulationWindow;
 import com.dke.pursuitevasion.PursuitEvasion;
 import com.dke.pursuitevasion.TrackingCameraController;
-import com.dke.pursuitevasion.Simulator.*;
-
 
 
 /**
@@ -211,10 +206,11 @@ public class MapEditorScreen implements Screen, InputProcessor {
                 controller.saveFile(stage, skin);
             }
         });
+
         wallEditorButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if(controller.getMode() == Mode.DO_NOTHING)
+                if(controller.getMode() == Mode.DO_NOTHING || controller.getMode() == Mode.EVADER_EDITOR || controller.getMode() == Mode.PURSUER_EDITOR )
                     controller.setMode(Mode.WALL_EDITOR);
             }
         });
@@ -222,7 +218,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
        addPursuerButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (controller.getMode() == Mode.DO_NOTHING)
+                if (controller.getMode() == Mode.DO_NOTHING || controller.getMode() == Mode.WALL_EDITOR || controller.getMode()==Mode.EVADER_EDITOR)
                     controller.setMode(Mode.PURSUER_EDITOR);
             }
         });
@@ -230,7 +226,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
         addEvaderButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (controller.getMode() == Mode.DO_NOTHING)
+                if (controller.getMode() == Mode.DO_NOTHING || controller.getMode() == Mode.WALL_EDITOR || controller.getMode()==Mode.PURSUER_EDITOR)
                    controller.setMode(Mode.EVADER_EDITOR);
             }
         });
@@ -406,7 +402,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
                     wallVec = null;
                     break;
                 case PURSUER_EDITOR:
-                    controller.addPursuer(screenX,screenY,camera);
+                    controller.addAgent(screenX,screenY,camera);
                     leftPressed = false;
                     break;
                 case EVADER_EDITOR:

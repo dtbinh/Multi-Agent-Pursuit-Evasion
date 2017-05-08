@@ -66,7 +66,7 @@ public class EntityFactory {
         return entity;
     }
 
-    public Entity createEvasor(Vector3 position, Color color) {
+    public Entity createEvader(Vector3 position, Color color) {
         Entity entity = new Entity();
 
         StateComponent transformComponent = new StateComponent();
