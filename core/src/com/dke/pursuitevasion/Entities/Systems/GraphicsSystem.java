@@ -7,7 +7,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.Shader;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.dke.pursuitevasion.Entities.Components.GraphicsComponent;
 import com.dke.pursuitevasion.Entities.Components.StateComponent;
 import com.dke.pursuitevasion.Entities.Components.VisibleComponent;
@@ -21,7 +23,7 @@ public class GraphicsSystem extends EntitySystem {
     private ComponentMapper<StateComponent> stateMap = ComponentMapper.getFor(StateComponent.class);
     private ComponentMapper<GraphicsComponent> graphicsMap = ComponentMapper.getFor(GraphicsComponent.class);
     private ModelBatch modelBatch = new ModelBatch();
-
+    //private ShapeRenderer shapeRenderer = new ShapeRenderer();
     private Camera cam;
     private Environment env;
     private ShaderProgram shader;
@@ -91,6 +93,17 @@ public class GraphicsSystem extends EntitySystem {
         entities = engine.getEntitiesFor(Family.all(StateComponent.class, GraphicsComponent.class, VisibleComponent.class).get());
     }
 
+
+    private void renderSystems() {
+        for (EntitySystem system : getEngine().getSystems()) {
+            if (system instanceof DebugRenderer) {
+                DebugRenderer renderer = (DebugRenderer) system;
+                renderer.render(modelBatch);
+            }
+        }
+    }
+
+
     /**
      * Draw all components with GraphicsComponent
      * @param deltaTime
@@ -116,7 +129,7 @@ public class GraphicsSystem extends EntitySystem {
             }
             shader.end();
         }
-
+        renderSystems();
         modelBatch.end();
     }
 }

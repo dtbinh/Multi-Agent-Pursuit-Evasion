@@ -13,16 +13,16 @@ import java.util.Random;
  * Created by Nicola Gheza on 25/03/2017.
  */
 public class SimulationSystem extends EntitySystem {
-    private final float STEP_SIZE = 1f/60f;
+    private final float STEP_SIZE = 1f/30f;
     private ImmutableArray<Entity> entities;
     private ImmutableArray<Entity> bounds;
     Vector3 bounce;
 
     private float timeAccumulator = 0f;
 
-    private ComponentMapper<StateComponent> sm = ComponentMapper.getFor(StateComponent.class);
-    private ComponentMapper<MovableComponent> mm = ComponentMapper.getFor(MovableComponent.class);
-    private ComponentMapper<SphereColliderComponent> scm = ComponentMapper.getFor(SphereColliderComponent.class);
+    private ComponentMapper<StateComponent> stateMapper = ComponentMapper.getFor(StateComponent.class);
+    private ComponentMapper<AgentComponent> agentMapper = ComponentMapper.getFor(AgentComponent.class);
+    private ComponentMapper<ObserverComponent> observerMapper = ComponentMapper.getFor(ObserverComponent.class);
     private ComponentMapper<WallComponent> wm = ComponentMapper.getFor(WallComponent.class);
 
     public void addedToEngine(Engine engine) {
@@ -41,7 +41,7 @@ public class SimulationSystem extends EntitySystem {
 
     private float directionChangeFrequency = 2f;
     private float minDirectionChangeAmount = 0.1f;
-    private float maxDirectionChangeAmount = 0.9f;
+    private float maxDirectionChangeAmount = 0.5f;
 
     private Random randomNumberGen = new Random();
 
@@ -49,14 +49,13 @@ public class SimulationSystem extends EntitySystem {
 
     private void stepUpdate(float delta) {
         for (int i=0; i<entities.size(); i++) {
-            if (!mm.has(entities.get(i)))
+            if (!agentMapper.has(entities.get(i)))
                 continue;
 
             directionChangetimer += delta;
 
-            // Entity is movable
-            Vector3 nextPos = sm.get(entities.get(i)).position.cpy();
-            nextPos.mulAdd(sm.get(entities.get(i)).velocity, delta);
+            Vector3 nextPos = stateMapper.get(entities.get(i)).position.cpy();
+            nextPos.mulAdd(stateMapper.get(entities.get(i)).velocity, delta);
             if (directionChangetimer >= directionChangeFrequency) {
                 directionChangetimer -= directionChangeFrequency;
                 float directionChangeRange = maxDirectionChangeAmount - minDirectionChangeAmount;
@@ -67,15 +66,15 @@ public class SimulationSystem extends EntitySystem {
                 if(random.nextBoolean()){
                     directionChangeAmount  = -directionChangeAmount;
                 }
-                sm.get(entities.get(i)).velocity.z += directionChangeAmount; // apply the change amount to the velocity
+                stateMapper.get(entities.get(i)).velocity.z += directionChangeAmount; // apply the change amount to the velocity
             }
-            if (!checkForCollisions(nextPos, scm.get(entities.get(i)).radius, sm.get(entities.get(i)).velocity)) {
+            if (!checkForCollisions(nextPos, agentMapper.get(entities.get(i)).radius, stateMapper.get(entities.get(i)).velocity)) {
 
-                sm.get(entities.get(i)).position.mulAdd(sm.get(entities.get(i)).velocity, delta);
-                sm.get(entities.get(i)).update();
+                stateMapper.get(entities.get(i)).position.mulAdd(stateMapper.get(entities.get(i)).velocity, delta);
+                stateMapper.get(entities.get(i)).update();
 
-            }else{
-                sm.get(entities.get(i)).velocity = bounce;
+            } else {
+                stateMapper.get(entities.get(i)).velocity = bounce;
             }
         }
     }
@@ -113,4 +112,6 @@ public class SimulationSystem extends EntitySystem {
         }
         return false;
     }
+
+
 }

@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Quaternion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.dke.pursuitevasion.EdgeVectors;
 import com.dke.pursuitevasion.Entities.Components.*;
@@ -39,8 +40,13 @@ public class EntityFactory {
         transformComponent.update();
         entity.add(transformComponent);
 
+        // Adding ObserverComponent for VisionSystem
+        ObserverComponent observerComponent = new ObserverComponent();
+        observerComponent.position = new Vector2(transformComponent.position.x, transformComponent.position.y);
+        entity.add(observerComponent);
+
         //Create a sphere collider component
-        SphereColliderComponent sphereColliderComponent = new SphereColliderComponent();
+        AgentComponent sphereColliderComponent = new AgentComponent();
         sphereColliderComponent.radius = 0.15f;
         entity.add(sphereColliderComponent);
 
@@ -57,8 +63,40 @@ public class EntityFactory {
         VisibleComponent visibleComponent = new VisibleComponent();
         entity.add(visibleComponent);
 
-        MovableComponent movableComponent = new MovableComponent();
-        entity.add(movableComponent);
+        return entity;
+    }
+
+    public Entity createEvasor(Vector3 position, Color color) {
+        Entity entity = new Entity();
+
+        StateComponent transformComponent = new StateComponent();
+        transformComponent.position = position;
+        transformComponent.orientation = new Quaternion(position,0);
+        transformComponent.update();
+        entity.add(transformComponent);
+
+        // Adding ObserverComponent for VisionSystem
+        ObservableComponent observableComponent = new ObservableComponent();
+        observableComponent.position = new Vector2(transformComponent.position.x, transformComponent.position.y);
+        entity.add(observableComponent);
+
+        //Create a sphere collider component
+        AgentComponent sphereColliderComponent = new AgentComponent();
+        sphereColliderComponent.radius = 0.15f;
+        entity.add(sphereColliderComponent);
+
+        ModelBuilder modelBuilder = new ModelBuilder();
+        Model model = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(color)),
+                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+
+        ModelInstance agentModel = new ModelInstance(model);
+
+        GraphicsComponent graphicsComponent = new GraphicsComponent();
+        graphicsComponent.modelInstance = agentModel;
+        entity.add(graphicsComponent);
+
+        VisibleComponent visibleComponent = new VisibleComponent();
+        entity.add(visibleComponent);
 
         return entity;
     }
@@ -110,7 +148,7 @@ public class EntityFactory {
 
         Entity entity = new Entity();
         StateComponent transformComponent = new StateComponent();
-        wallInfo.position.y+=wallInfo.height/2;
+
         transformComponent.transform.setToTranslation(wallInfo.position);
         transformComponent.transform.rotateRad(new Vector3(0, 1, 0), wallInfo.rotAngle);
         transformComponent.autoTransformUpdate = false;
@@ -123,6 +161,7 @@ public class EntityFactory {
 
         WallComponent wallComponent = new WallComponent();
         wallComponent.eV = new EdgeVectors(wallInfo.start, wallInfo.end);
+        wallComponent.innerWall = true;
         entity.add(wallComponent);
 
         GraphicsComponent graphicsComponent = new GraphicsComponent();
