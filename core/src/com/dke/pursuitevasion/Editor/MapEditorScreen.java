@@ -170,8 +170,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
         table.setSize(800, 480);
 
         Label mapBuilderText = new Label("---Map builder---", skin);
-        Label wallsText = new Label("---Place walls---", skin);
-        Label addAgentsText = new Label("---Add agents---", skin);
+        Label objectsText = new Label("---Place objects and agents---", skin);
         Label exportText = new Label("---Export for simulation---", skin);
 
         TextButton addOuterVertexButton = new TextButton("Add Outer Vertex", skin);
@@ -249,11 +248,9 @@ public class MapEditorScreen implements Screen, InputProcessor {
         table.row();
         table.add(makePolygonButton).width(150);
         table.row();
-        table.add(wallsText);
+        table.add(objectsText);
         table.row();
         table.add(wallEditorButton).width(150);
-        table.row();
-        table.add(addAgentsText);
         table.row();
         table.add(addPursuerButton).width(150);
         table.row();
