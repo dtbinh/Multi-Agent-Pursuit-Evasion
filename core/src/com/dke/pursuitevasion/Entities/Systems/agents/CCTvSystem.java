@@ -1,0 +1,150 @@
+package com.dke.pursuitevasion.Entities.Systems.agents;
+
+import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.dke.pursuitevasion.Entities.Components.ObservableComponent;
+import com.dke.pursuitevasion.Entities.Components.ObserverComponent;
+import com.dke.pursuitevasion.Entities.Components.StateComponent;
+import com.dke.pursuitevasion.Entities.Components.agents.CCTvComponent;
+import com.dke.pursuitevasion.Entities.Mappers;
+import com.dke.pursuitevasion.Entities.Systems.VisionSystem;
+
+/**
+ * Created by Nicola Gheza on 08/05/2017.
+ */
+public class CCTvSystem extends IteratingSystem {
+    private static final float DETECTION_TIME = 1.0f;
+
+    private ImmutableArray<Entity> evaders;
+    private VisionSystem visionSystem;
+    private Vector2 position = new Vector2();
+
+    public CCTvSystem(VisionSystem visionSystem) {
+        super(Family.all(
+                CCTvComponent.class,
+                StateComponent.class
+        ).get());
+
+        this.visionSystem = visionSystem;
+    }
+
+    @Override
+    public void addedToEngine(Engine engine) {
+        super.addedToEngine(engine);
+        evaders = engine.getEntitiesFor(Family.all(ObservableComponent.class).get());
+    }
+
+    @Override
+    protected void processEntity(Entity entity, float deltaTime) {
+        moveCamera(entity, deltaTime);
+        updateObserver(entity);
+        updateDetection(entity, deltaTime);
+    }
+
+    private void updateDetection(Entity entity, float deltaTime) {
+        CCTvComponent cctv = Mappers.cctvMapper.get(entity);
+
+        boolean wasAlerted = cctv.alerted;
+        cctv.alerted = false;
+
+        for (Entity target : evaders) {
+            updateDetection(entity, target);
+
+            if (cctv.alerted)
+                break;
+        }
+
+        cctv.detectionTime = cctv.alerted ? cctv.detectionTime + deltaTime : 0.0f;
+
+        if (cctv.detectionTime > DETECTION_TIME && !cctv.intruderReported) {
+            cctv.intruderReported = true;
+            System.out.println("Intruder detected");
+        }
+    }
+
+    private void updateDetection(Entity entity, Entity target) {
+        Vector2 targetPos = Mappers.observableMapper.get(target).position;
+        CCTvComponent cctv = Mappers.cctvMapper.get(entity);
+
+        cctv.alerted = false;
+        cctv.targetPosition.set(0.0f, 0.0f);
+
+        if (visionSystem.canSee(entity,target)) {
+            cctv.alerted = true;
+            cctv.targetPosition.set(targetPos);
+        }
+    }
+
+
+    private void updateObserver(Entity entity) {
+        CCTvComponent cctv = Mappers.cctvMapper.get(entity);
+        ObserverComponent observer = Mappers.observerMapper.get(entity);
+        StateComponent state = Mappers.stateMapper.get(entity);
+
+        //position = new Vector2(state.position.x, state.position.y);
+        //observer.position.set(position);
+        observer.angle = cctv.currentAngle;
+    }
+
+    private void moveCamera(Entity entity, float deltaTime) {
+        CCTvComponent cctv = Mappers.cctvMapper.get(entity);
+        StateComponent state = Mappers.stateMapper.get(entity);
+
+        if(cctv.alerted) {
+            trackTarget(cctv, state);
+        }
+        else {
+            movePatrol(cctv, state, deltaTime);
+        }
+
+        limitAngle(cctv);
+    }
+
+    private void trackTarget(CCTvComponent cctv, StateComponent state) {
+        position.set(cctv.targetPosition);
+        Vector2 cameraPosition = new Vector2(state.position.x, state.position.z);
+        position.sub(cameraPosition);
+        position.nor();
+        float angle = position.angle();
+        cctv.currentAngle = angle;
+        cctv.patrolStarted = false;
+        state.angle = angle;
+    }
+
+    private void movePatrol(CCTvComponent cctv, StateComponent state, float deltaTime) {
+        if (!cctv.patrolStarted) {
+            cctv.currentAngle = state.angle;
+            cctv.patrolStarted = true;
+        }
+
+        if (cctv.waitTime == 0) {
+            cctv.currentAngle += cctv.angularVelocity * cctv.direction.value() * deltaTime;
+
+            if (cctv.currentAngle <= cctv.minAngle) {
+                cctv.waitTime = cctv.waitTimeMinAngle;
+                cctv.direction = cctv.direction.invert();
+            }
+            else if (cctv.currentAngle >= cctv.maxAngle) {
+                cctv.waitTime = cctv.waitTimeMaxAngle;
+                cctv.direction = cctv.direction.invert();
+            }
+        }
+        else {
+            cctv.waitTime = Math.max(cctv.waitTime - deltaTime, 0.0f);
+        }
+        state.angle = cctv.currentAngle;
+    }
+
+    private void limitAngle(CCTvComponent cctv) {
+        cctv.currentAngle = MathUtils.clamp(
+                cctv.currentAngle,
+                cctv.minAngle,
+                cctv.maxAngle
+        );
+    }
+}

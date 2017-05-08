@@ -22,6 +22,9 @@ public class StateComponent implements Component {
     //Constant state
     public Vector3 scale = new Vector3(1, 1, 1);
 
+
+    public float angle = 0.0f;
+
     //Model transformation
     public Matrix4 transform = new Matrix4();
     public boolean autoTransformUpdate = true;

@@ -114,8 +114,8 @@ public class VisionSystem extends IteratingSystem implements EntityListener, Deb
         ObserverComponent observer = observerMapper.get(entity);
         ObservableComponent observable = observableMapper.get(target);
 
-        System.out.println("Observer position: " + observer.position );
-        System.out.println("Observable position: " + observable.position);
+        //System.out.println("Observer position: " + observer.position );
+        //System.out.println("Observable position: " + observable.position);
 
         for (Entity wallEntity : walls) {
             if (wallMapper.get(wallEntity).innerWall) {
@@ -127,7 +127,6 @@ public class VisionSystem extends IteratingSystem implements EntityListener, Deb
                 Vector2 p4 = new Vector2(eV.Vector2.x, eV.Vector2.z);
 
                 Vector2 intersection = new Vector2();
-                System.out.println("Intersect segments: " + Intersector.intersectSegments(p1, p2, p3, p4,intersection) + " at " + intersection);
 
                 if (!Intersector.intersectSegments(p1, p2, p3, p4,intersection)) {
                     addToVision(entity, target);
