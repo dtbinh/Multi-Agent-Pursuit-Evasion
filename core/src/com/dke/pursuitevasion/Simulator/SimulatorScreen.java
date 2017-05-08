@@ -16,6 +16,7 @@ import com.dke.pursuitevasion.Entities.EntityFactory;
 import com.dke.pursuitevasion.Entities.Systems.GraphicsSystem;
 import com.dke.pursuitevasion.Entities.Systems.SimulationSystem;
 import com.dke.pursuitevasion.Entities.Systems.VisionSystem;
+import com.dke.pursuitevasion.Entities.Systems.agents.CCTvSystem;
 import com.dke.pursuitevasion.PolyMap;
 import com.dke.pursuitevasion.PursuitEvasion;
 import com.dke.pursuitevasion.TrackingCameraController;
@@ -79,11 +80,12 @@ public class SimulatorScreen implements Screen {
 
         engine.addSystem(new GraphicsSystem(cam, env));
         engine.addSystem(new SimulationSystem());
-        engine.addSystem(new VisionSystem());
+        VisionSystem visionSystem = new VisionSystem();
+        engine.addSystem(visionSystem);
+        engine.addSystem(new CCTvSystem(visionSystem));
 
-        engine.addEntity(entityFactory.createAgent(new Vector3(-2,0.15f/2,0), Color.BLUE));
-        engine.addEntity(entityFactory.createAgent(new Vector3(0.5f,0.15f/2,0), Color.BLUE));
-        engine.addEntity(entityFactory.createEvasor(new Vector3(2,0.15f/2, 0), Color.RED));
+        engine.addEntity(entityFactory.createCCTv(new Vector3(3,0.15f/2, 0.5f)));
+        engine.addEntity(entityFactory.createEvader(new Vector3(3,0.15f/2, 0.5f), Color.RED));
     }
 
     @Override
