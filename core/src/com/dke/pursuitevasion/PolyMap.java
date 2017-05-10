@@ -38,10 +38,6 @@ public class PolyMap {
         mesh.getVertices(polyVertexArray);
     }
 
-    public int getPersuer() {
-        return persuer;
-    }
-
     public Mesh getPolygonMesh() {
         VertexAttributes attributes = new VertexAttributes(VertexAttribute.Position(), VertexAttribute.TexCoords(0));
         Mesh mesh = new Mesh(true,polyVertexArray.length, polyIndexArray.length, attributes);
@@ -75,6 +71,8 @@ public class PolyMap {
     }
 
     public AgentInfo[] getaI() { return aI; }
+
+    public EvaderInfo[] geteI() { return eI; }
 
     public void setAgentsInfo(ArrayList<AgentInfo> agentsInfo) {
         aI = agentsInfo.toArray(new AgentInfo[agentsInfo.size()]);

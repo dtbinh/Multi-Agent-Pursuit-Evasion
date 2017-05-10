@@ -86,10 +86,14 @@ public class SimulatorScreen implements Screen {
 
         engine.addEntity(entityFactory.createCCTv(new Vector3(3,0.15f/2, 0.5f)));
         engine.addEntity(entityFactory.createCCTv(new Vector3(1,0.15f/2, 0.0f)));
-        engine.addEntity(entityFactory.createEvader(new Vector3(3,0.15f/2, 0.5f), Color.RED));
-        engine.addEntity(entityFactory.createEvader(new Vector3(-1,0.15f/2, 0.5f), Color.RED));
-        engine.addEntity(entityFactory.createAgent(new Vector3(-1,0.15f/2, 0.5f), Color.BLUE));
 
+        for (int i=0; i<map.getaI().length; i++) {
+            engine.addEntity(entityFactory.createAgent(map.getaI()[i].position, Color.BLUE));
+        }
+
+        for (int i=0; i<map.geteI().length; i++) {
+            engine.addEntity(entityFactory.createEvader(map.geteI()[i].position, Color.RED));
+        }
 
     }
 
