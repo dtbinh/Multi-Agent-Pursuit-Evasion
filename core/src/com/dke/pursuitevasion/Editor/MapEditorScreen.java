@@ -10,18 +10,15 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.dke.pursuitevasion.Menu.MenuScreen;
 import com.dke.pursuitevasion.PursuitEvasion;
 import com.dke.pursuitevasion.TrackingCameraController;
+
 
 /**
  * Created by jeeza on 23-2-17.
@@ -169,10 +166,20 @@ public class MapEditorScreen implements Screen, InputProcessor {
         skin = new Skin(Gdx.files.internal("uiskin.json"));
         Window windowDesign = new Window("Design", skin);
 
+        Table table=new Table();
+        table.setSize(800, 480);
+
+        Label mapBuilderText = new Label("---Map builder---", skin);
+        Label objectsText = new Label("---Place objects and agents---", skin);
+        Label exportText = new Label("---Export for simulation---", skin);
+
         TextButton addOuterVertexButton = new TextButton("Add Outer Vertex", skin);
         TextButton makePolygonButton = new TextButton("Apply Triangulation", skin);
         TextButton exportMapButton = new TextButton("Export Map", skin);
         TextButton wallEditorButton = new TextButton("Add Walls", skin);
+        TextButton addPursuerButton = new TextButton("Add Pursuer", skin);
+        TextButton addEvaderButton = new TextButton("Add Evader", skin);
+        TextButton simulatorButton = new TextButton("Simulator", skin);
 
 
         addOuterVertexButton.addListener(new ChangeListener() {
@@ -198,22 +205,66 @@ public class MapEditorScreen implements Screen, InputProcessor {
                 controller.saveFile(stage, skin);
             }
         });
+
         wallEditorButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if(controller.getMode() == Mode.DO_NOTHING)
+                if(controller.getMode() == Mode.DO_NOTHING || controller.getMode() == Mode.EVADER_EDITOR || controller.getMode() == Mode.PURSUER_EDITOR )
                     controller.setMode(Mode.WALL_EDITOR);
             }
         });
 
-        // Add buttons
-        windowDesign.add(addOuterVertexButton);
-        windowDesign.add(makePolygonButton);
-        windowDesign.add(wallEditorButton);
-        windowDesign.add(exportMapButton);
+       addPursuerButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (controller.getMode() == Mode.DO_NOTHING || controller.getMode() == Mode.WALL_EDITOR || controller.getMode()==Mode.EVADER_EDITOR)
+                    controller.setMode(Mode.PURSUER_EDITOR);
+            }
+        });
+
+        addEvaderButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (controller.getMode() == Mode.DO_NOTHING || controller.getMode() == Mode.WALL_EDITOR || controller.getMode()==Mode.PURSUER_EDITOR)
+                   controller.setMode(Mode.EVADER_EDITOR);
+            }
+        });
+
+  /*      simulatorButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game = pursuitEvasion.ge
+                newSimulationWindow = new NewSimulationWindow(skin, game, this);
+                stage.addActor(newSimulationWindow);
+                newSimulationWindow.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 1);
+            }
+        });
+    */
+
+        // Add buttonse
+        table.add(mapBuilderText);
+        table.row();
+        table.add(addOuterVertexButton).width(150);
+        table.row();
+        table.add(makePolygonButton).width(150);
+        table.row();
+        table.add(objectsText);
+        table.row();
+        table.add(wallEditorButton).width(150);
+        table.row();
+        table.add(addPursuerButton).width(150);
+        table.row();
+        table.add(addEvaderButton).width(150);
+        table.row();
+        table.add(exportText);
+        table.row();
+        table.add(exportMapButton).width(150);
+        table.row();
+        windowDesign.add(table);
+
 
         // Screen and window variables
-        int windowHeight = (int) addOuterVertexButton.getHeight();
+        int windowHeight = (int) stage.getHeight();
         int screenWidth = Gdx.graphics.getWidth();
         int screenHeight = Gdx.graphics.getHeight();
         int gutter = 20;
@@ -222,7 +273,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
         windowDesign.setMovable(false);
 
         // Dimensions
-        windowDesign.setSize(screenWidth, windowHeight + 20);
+        windowDesign.setSize(screenWidth/4, windowHeight);
         windowDesign.setPosition(offset, screenHeight - windowHeight - offset);
 
         // Add windows
@@ -347,6 +398,14 @@ public class MapEditorScreen implements Screen, InputProcessor {
                     leftPressed = false;
                     wallVec = null;
                     break;
+                case PURSUER_EDITOR:
+                    controller.addAgent(screenX,screenY,camera);
+                    leftPressed = false;
+                    break;
+                case EVADER_EDITOR:
+                    controller.addEvader(screenX,screenY,camera);
+                    leftPressed = false;
+                    break;
             }
         }
         return false;
@@ -378,4 +437,5 @@ public class MapEditorScreen implements Screen, InputProcessor {
     public boolean scrolled(int amount) {
         return false;
     }
+
 }

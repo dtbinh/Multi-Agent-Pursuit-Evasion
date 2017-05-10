@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.dke.pursuitevasion.PursuitEvasion;
 import com.dke.pursuitevasion.Simulator.SimulatorScreen;
@@ -23,37 +24,59 @@ public class NewSimulationWindow extends Window {
     public NewSimulationWindow(Skin skin, PursuitEvasion game, MenuScreen screen) {
         super("New Simulation", skin);
         this.game = game;
-        this.setModal(true);
+        this.setModal(false);
         this.skin = skin;
-        this.setSize(400, 400);
+        this.setSize(250, 400);
         this.menuScreen = screen;
+        this.setMovable(false);
+
 
         initGUI();
-
     }
 
     private void initGUI() {
-        int buttonWidth = 120, buttonHeight = 30;
+        int buttonWidth = 120, buttonHeight = 100;
         int padding = 30;
 
+        Table table=new Table();
+        table.setSize(800, 480);
+
         TextButton selectMapButton = new TextButton("Select map", skin);
+        //selectMapButton.setOrigin(140,50);
         selectMapButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 showFileChooser();
             }
         });
-        add(selectMapButton);
 
         TextButton startButton = new TextButton("Start", skin);
         startButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new SimulatorScreen(game, file));
+                    game.setScreen(new SimulatorScreen(game, file));
+                    remove();
+            }
+        });
+        //selectMapButton.setPosition(140,150);
+
+
+        TextButton backButton = new TextButton("Back", skin);
+        backButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor){
                 remove();
             }
         });
-        add(startButton);
+        //selectMapButton.setPosition(140,250);
+
+        table.add(selectMapButton).width(150);
+        table.row();
+        table.add(startButton).width(150);
+        table.row();
+        table.add(backButton).width(150);
+        table.row();
+        add(table);
     }
 
     private void showFileChooser() {

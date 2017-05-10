@@ -6,5 +6,7 @@ package com.dke.pursuitevasion.Editor;
 public enum Mode {
     DO_NOTHING,
     POINT_EDITOR,
-    WALL_EDITOR
+    WALL_EDITOR,
+    PURSUER_EDITOR,
+    EVADER_EDITOR
 }
