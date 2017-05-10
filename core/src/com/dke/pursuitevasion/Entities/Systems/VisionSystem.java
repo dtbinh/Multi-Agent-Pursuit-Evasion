@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
@@ -177,7 +178,7 @@ public class VisionSystem extends IteratingSystem implements EntityListener, Deb
         ModelBuilder modelBuilder = new ModelBuilder();
         for (Entity entity : getEntities()) {
             modelBuilder.begin();
-            MeshPartBuilder builder = modelBuilder.part("triangle", 1, 3, new Material());
+            MeshPartBuilder builder = modelBuilder.part("triangle", GL20.GL_TRIANGLES, 3, new Material());
             builder.setColor(Color.GREEN);
 
             ObserverComponent observer = observerMapper.get(entity);

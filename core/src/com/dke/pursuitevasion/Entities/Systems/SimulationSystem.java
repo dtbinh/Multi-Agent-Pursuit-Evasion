@@ -77,7 +77,6 @@ public class SimulationSystem extends EntitySystem {
     private boolean checkForCollisions(Vector3 position, float radius, Vector3 velo) {
         Intersector intersector = new Intersector();
         for (int i=0; i<bounds.size(); i++) {
-            //float distance = intersector.distanceLinePoint(Mappers.wallMapper.get(bounds.get(i)).eV.Vector1.x,Mappers.wallMapper.get(bounds.get(i)).eV.Vector1.z,Mappers.wallMapper.get(bounds.get(i)).eV.Vector2.x,Mappers.wallMapper.get(bounds.get(i)).eV.Vector2.z,position.x, position.z);
             Vector2 v1 = new Vector2(Mappers.wallMapper.get(bounds.get(i)).eV.Vector1.x,Mappers.wallMapper.get(bounds.get(i)).eV.Vector1.z);
             Vector2 v2 = new Vector2(Mappers.wallMapper.get(bounds.get(i)).eV.Vector2.x,Mappers.wallMapper.get(bounds.get(i)).eV.Vector2.z);
             Vector2 point = new Vector2(position.x, position.z);

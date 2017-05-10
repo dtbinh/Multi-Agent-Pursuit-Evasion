@@ -49,7 +49,6 @@ public class CCTvSystem extends IteratingSystem {
     private void updateDetection(Entity entity, float deltaTime) {
         CCTvComponent cctv = Mappers.cctvMapper.get(entity);
 
-        boolean wasAlerted = cctv.alerted;
         cctv.alerted = false;
 
         for (Entity target : evaders) {
@@ -63,7 +62,7 @@ public class CCTvSystem extends IteratingSystem {
 
         if (cctv.detectionTime > DETECTION_TIME && !cctv.intruderReported) {
             cctv.intruderReported = true;
-            System.out.println("Intruder detected");
+            System.out.println(cctv + " intruder detected");
         }
     }
 
@@ -84,10 +83,7 @@ public class CCTvSystem extends IteratingSystem {
     private void updateObserver(Entity entity) {
         CCTvComponent cctv = Mappers.cctvMapper.get(entity);
         ObserverComponent observer = Mappers.observerMapper.get(entity);
-        StateComponent state = Mappers.stateMapper.get(entity);
 
-        //position = new Vector2(state.position.x, state.position.y);
-        //observer.position.set(position);
         observer.angle = cctv.currentAngle;
     }
 

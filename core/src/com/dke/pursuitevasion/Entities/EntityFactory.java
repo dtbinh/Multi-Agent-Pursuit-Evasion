@@ -83,7 +83,7 @@ public class EntityFactory {
         entity.add(cctv);
 
         ModelBuilder modelBuilder = new ModelBuilder();
-        Model model = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.GREEN)),
+        Model model = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.BLACK)),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
 
         ModelInstance agentModel = new ModelInstance(model);
