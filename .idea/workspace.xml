@@ -2,24 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="41dcac44-571c-45b2-a08c-b296523670aa" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/AI/AStarPathFinder.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/AI/CustomConnection.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/AI/CustomPoint.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/AI/Node.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/AI/NodeState.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/AI/PathTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Entities/Systems/agents/CCTvSystem.class" afterPath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Entities/Systems/agents/CCTvSystem.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/core/core.iml" afterPath="$PROJECT_DIR$/.idea/modules/core/core.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_badlogicgames_gdx_gdx_ai_1_8_0.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Entities/Systems/agents/CCTvSystem.class" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/core/core_main.iml" afterPath="$PROJECT_DIR$/.idea/modules/core/core_main.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/core/core_test.iml" afterPath="$PROJECT_DIR$/.idea/modules/core/core_test.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/desktop/desktop.iml" afterPath="$PROJECT_DIR$/.idea/modules/desktop/desktop.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/desktop/desktop_main.iml" afterPath="$PROJECT_DIR$/.idea/modules/desktop/desktop_main.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/desktop/desktop_test.iml" afterPath="$PROJECT_DIR$/.idea/modules/desktop/desktop_test.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/html/html.iml" afterPath="$PROJECT_DIR$/.idea/modules/html/html.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/html/html_main.iml" afterPath="$PROJECT_DIR$/.idea/modules/html/html_main.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/html/html_test.iml" afterPath="$PROJECT_DIR$/.idea/modules/html/html_test.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.gradle" afterPath="$PROJECT_DIR$/build.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/CCTvSystem.java" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/CCTvSystem.java" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -90,7 +83,7 @@
       <file leaf-file-name="SimulatorScreen.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Simulator/SimulatorScreen.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="264">
+            <state relative-caret-position="1600">
               <caret line="84" column="55" selection-start-line="84" selection-start-column="55" selection-end-line="84" selection-end-column="55" />
               <folding />
             </state>
@@ -100,18 +93,38 @@
       <file leaf-file-name="CCTvSystem.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/CCTvSystem.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="201">
-              <caret line="64" column="35" selection-start-line="64" selection-start-column="35" selection-end-line="64" selection-end-column="35" />
+            <state relative-caret-position="1300">
+              <caret line="64" column="41" selection-start-line="64" selection-start-column="41" selection-end-line="64" selection-end-column="41" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Node.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/AI/Node.java">
+      <file leaf-file-name="AStarPathFinder.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/AI/AStarPathFinder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
+            <state relative-caret-position="275">
+              <caret line="11" column="19" selection-start-line="11" selection-start-column="19" selection-end-line="11" selection-end-column="19" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/desktop/build.gradle">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-157">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/build.gradle">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="643">
+              <caret line="73" column="0" selection-start-line="73" selection-start-column="0" selection-end-line="73" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -120,7 +133,7 @@
       <file leaf-file-name="CCTvComponent.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Components/agents/CCTvComponent.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="413">
+            <state relative-caret-position="450">
               <caret line="20" column="30" selection-start-line="20" selection-start-column="17" selection-end-line="20" selection-end-column="30" />
               <folding />
             </state>
@@ -130,7 +143,7 @@
       <file leaf-file-name="VisionSystem.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/VisionSystem.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="151">
+            <state relative-caret-position="2200">
               <caret line="115" column="52" selection-start-line="115" selection-start-column="52" selection-end-line="115" selection-end-column="52" />
               <folding />
             </state>
@@ -1075,6 +1088,11 @@
         </entry>
       </map>
     </option>
+    <option name="modificationStamps">
+      <map>
+        <entry key="$PROJECT_DIR$" value="7477316980461" />
+      </map>
+    </option>
     <option name="projectBuildClasspath">
       <map>
         <entry key="$PROJECT_DIR$">
@@ -1269,7 +1287,6 @@
         <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/VisibleComponent.java" />
         <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Components/VisibleComponent.java" />
         <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Components/GraphicsComponent.java" />
-        <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Menu/NewSimulationWindow.java" />
         <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Components/MovableComponent.java" />
         <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/EdgeVectors.java" />
@@ -1296,6 +1313,7 @@
         <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Simulator/SimulatorScreen.java" />
         <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/VisionSystem.java" />
         <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/CCTvSystem.java" />
+        <option value="$PROJECT_DIR$/build.gradle" />
       </list>
     </option>
   </component>
@@ -1304,6 +1322,13 @@
   <component name="JsGulpfileManager">
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="Bundled (Maven 3)" />
+      </MavenGeneralSettings>
+    </option>
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="-11" />
@@ -1337,6 +1362,8 @@
     </navigator>
     <panes>
       <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -1451,8 +1478,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -1475,116 +1500,6 @@
       <recent name="C:\Users\Nicola Gheza\IdeaProjects\Multi-Agent-Pursuit-Evasion\core\assets" />
       <recent name="C:\Users\Nicola Gheza\IdeaProjects\Multi-Agent-Pursuit-Evasion\core\src\com\dke\pursuitevasion" />
     </key>
-  </component>
-  <component name="RestoreUpdateTree" date="Moments ago" ActionInfo="_Update">
-    <UpdatedFiles>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Updated from server" />
-        <option name="myStatusName" value="Changed on server" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="CHANGED_ON_SERVER" />
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Updated" />
-          <option name="myStatusName" value="Changed" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="UPDATED" />
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/CCTvSystem.java</PATH>
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Created" />
-          <option name="myStatusName" value="Created" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="CREATED" />
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Deleted" />
-          <option name="myStatusName" value="Deleted" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="true" />
-          <option name="myId" value="REMOVED_FROM_REPOSITORY" />
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Restored" />
-          <option name="myStatusName" value="Will be restored" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="RESTORED" />
-        </FILE-GROUP>
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Modified" />
-        <option name="myStatusName" value="Modified" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="MODIFIED" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Skipped" />
-        <option name="myStatusName" value="Skipped" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="SKIPPED" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Merged with conflicts" />
-        <option name="myStatusName" value="Will be merged with conflicts" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="MERGED_WITH_CONFLICTS" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Merged with tree conflicts" />
-        <option name="myStatusName" value="Merged with tree conflicts" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="MERGED_WITH_TREE_CONFLICT" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Merged with property conflicts" />
-        <option name="myStatusName" value="Will be merged with property conflicts" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="MERGED_WITH_PROPERTY_CONFLICT" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Merged" />
-        <option name="myStatusName" value="Will be merged" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="MERGED" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Not in repository" />
-        <option name="myStatusName" value="Not in repository" />
-        <option name="mySupportsDeletion" value="true" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="UNKNOWN" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Locally added" />
-        <option name="myStatusName" value="Locally added" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="LOCALLY_ADDED" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Locally removed" />
-        <option name="myStatusName" value="Locally removed" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="LOCALLY_REMOVED" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Switched" />
-        <option name="myStatusName" value="Switched" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="SWITCHED" />
-      </FILE-GROUP>
-    </UpdatedFiles>
   </component>
   <component name="RunManager" selected="Application.DesktopLauncher">
     <configuration default="false" name="DesktopLauncher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -2045,7 +1960,14 @@
       <option name="project" value="LOCAL" />
       <updated>1494417024180</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Added A* pathfinding">
+      <created>1495463672872</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1495463672872</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -2076,8 +1998,8 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20756757" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30378377" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20756757" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Gradle" active="true" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30378377" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25266525" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -2165,7 +2087,8 @@
     <MESSAGE value="Added CCTvSystem &#10;" />
     <MESSAGE value="Added CCTvSystem &#10;with some editing" />
     <MESSAGE value="Added CCTvSystem &#10;with some editing&#10;integrated callum's code" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added CCTvSystem &#10;with some editing&#10;integrated callum's code" />
+    <MESSAGE value="Added A* pathfinding" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added A* pathfinding" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2178,13 +2101,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Menu/MenuScreen.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2508">
-          <caret line="76" column="47" selection-start-line="76" selection-start-column="47" selection-end-line="76" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Simulator/SimulatorController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="165">
@@ -2278,13 +2194,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/desktop/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/VisibleComponent.java" />
     <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Menu/MenuScreen.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -2347,13 +2256,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1304">
-          <caret line="76" column="21" selection-start-line="76" selection-start-column="21" selection-end-line="76" selection-end-column="21" />
         </state>
       </provider>
     </entry>
@@ -2432,7 +2334,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="462">
           <caret line="17" column="5" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2440,11 +2341,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
           <caret line="11" column="29" selection-start-line="11" selection-start-column="29" selection-end-line="11" selection-end-column="29" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#464#465#0" expanded="false" />
-            <element signature="e#531#532#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2452,9 +2348,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="500">
           <caret line="25" column="29" selection-start-line="25" selection-start-column="29" selection-end-line="25" selection-end-column="29" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2469,29 +2362,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4600">
           <caret line="213" column="80" selection-start-line="213" selection-start-column="80" selection-end-line="213" selection-end-column="80" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#6049#6050#0" expanded="false" />
-            <element signature="e#6076#6077#0" expanded="false" />
-            <element signature="e#6114#6115#0" expanded="false" />
-            <element signature="e#6146#6147#0" expanded="false" />
-            <element signature="e#6192#6193#0" expanded="false" />
-            <element signature="e#6227#6228#0" expanded="false" />
-            <element signature="e#6262#6263#0" expanded="false" />
-            <element signature="e#6296#6297#0" expanded="false" />
-            <element signature="e#6350#6351#0" expanded="false" />
-            <element signature="e#6382#6383#0" expanded="false" />
-            <element signature="e#6436#6437#0" expanded="false" />
-            <element signature="e#6474#6475#0" expanded="false" />
-            <element signature="e#12979#12980#0" expanded="false" />
-            <element signature="e#13018#13019#0" expanded="false" />
-            <element signature="e#13047#13048#0" expanded="false" />
-            <element signature="e#13084#13085#0" expanded="false" />
-            <element signature="e#13119#13120#0" expanded="false" />
-            <element signature="e#13150#13151#0" expanded="false" />
-            <element signature="e#13185#13186#0" expanded="false" />
-            <element signature="e#13216#13217#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2499,9 +2369,29 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1675">
           <caret line="85" column="133" selection-start-line="85" selection-start-column="133" selection-end-line="85" selection-end-column="133" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/PolyMap.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="463">
+          <caret line="74" column="21" selection-start-line="74" selection-start-column="21" selection-end-line="74" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Simulator/SimulatorScreen.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1600">
+          <caret line="84" column="55" selection-start-line="84" selection-start-column="55" selection-end-line="84" selection-end-column="55" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/AI/Node.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-225">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2513,50 +2403,50 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/PolyMap.java">
+    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/VisionSystem.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="463">
-          <caret line="74" column="21" selection-start-line="74" selection-start-column="21" selection-end-line="74" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Simulator/SimulatorScreen.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="84" column="55" selection-start-line="84" selection-start-column="55" selection-end-line="84" selection-end-column="55" />
+        <state relative-caret-position="2200">
+          <caret line="115" column="52" selection-start-line="115" selection-start-column="52" selection-end-line="115" selection-end-column="52" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Components/agents/CCTvComponent.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="413">
+        <state relative-caret-position="450">
           <caret line="20" column="30" selection-start-line="20" selection-start-column="17" selection-end-line="20" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/VisionSystem.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="151">
-          <caret line="115" column="52" selection-start-line="115" selection-start-column="52" selection-end-line="115" selection-end-column="52" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/CCTvSystem.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="64" column="35" selection-start-line="64" selection-start-column="35" selection-end-line="64" selection-end-column="35" />
+        <state relative-caret-position="1300">
+          <caret line="64" column="41" selection-start-line="64" selection-start-column="41" selection-end-line="64" selection-end-column="41" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/AI/Node.java">
+    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/AI/AStarPathFinder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
+        <state relative-caret-position="275">
+          <caret line="11" column="19" selection-start-line="11" selection-start-column="19" selection-end-line="11" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/desktop/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-157">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="643">
+          <caret line="73" column="0" selection-start-line="73" selection-start-column="0" selection-end-line="73" selection-end-column="0" />
           <folding />
         </state>
       </provider>
