@@ -62,7 +62,7 @@ public class CCTvSystem extends IteratingSystem {
 
         if (cctv.detectionTime > DETECTION_TIME) {
             cctv.detectionTime = 0.0f;
-            System.out.println(cctv + " intruder detected" + cctv.targetPosition);
+            System.out.println(/*cctv +*/ " intruder detected" + cctv.targetPosition);
         }
     }
 
