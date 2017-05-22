@@ -16,6 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.dke.pursuitevasion.Menu.MenuScreen;
+import com.dke.pursuitevasion.Menu.NewSimulationWindow;
 import com.dke.pursuitevasion.PursuitEvasion;
 import com.dke.pursuitevasion.TrackingCameraController;
 
@@ -41,6 +43,9 @@ public class MapEditorScreen implements Screen, InputProcessor {
     private PerspectiveCamera camera;
     private TrackingCameraController trackingCameraController;
     private Vector3 wallVec;
+
+    private PursuitEvasion game;
+    private NewSimulationWindow newSimulationWindow;
 
     String vertexShader = "attribute vec4 a_position;    \n" +
             "attribute vec4 a_color;\n" +
@@ -70,7 +75,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
         stage = new Stage();
         controller = new MapEditorController();
         shader = new ShaderProgram(vertexShader, fragmentShader);
-
+        this.game = pursuitEvasion;
         createUI();
 
         // Setting default camera position
@@ -180,6 +185,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
         TextButton addPursuerButton = new TextButton("Add Pursuer", skin);
         TextButton addEvaderButton = new TextButton("Add Evader", skin);
         TextButton simulatorButton = new TextButton("Simulator", skin);
+        TextButton backButton = new TextButton("Back", skin);
 
 
         addOuterVertexButton.addListener(new ChangeListener() {
@@ -230,16 +236,21 @@ public class MapEditorScreen implements Screen, InputProcessor {
             }
         });
 
-  /*      simulatorButton.addListener(new ChangeListener() {
+        backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game = pursuitEvasion.ge
-                newSimulationWindow = new NewSimulationWindow(skin, game, this);
+               game.setScreen(new MenuScreen(pursuitEvasion));
+            }
+        });
+
+        simulatorButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                newSimulationWindow = new NewSimulationWindow(skin, game, new MenuScreen(pursuitEvasion));
                 stage.addActor(newSimulationWindow);
                 newSimulationWindow.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 1);
             }
         });
-    */
 
         // Add buttonse
         table.add(mapBuilderText);
@@ -260,6 +271,9 @@ public class MapEditorScreen implements Screen, InputProcessor {
         table.row();
         table.add(exportMapButton).width(150);
         table.row();
+        table.add(simulatorButton).width(150);
+        table.row();
+        table.add(backButton).width(150);
         windowDesign.add(table);
 
 
