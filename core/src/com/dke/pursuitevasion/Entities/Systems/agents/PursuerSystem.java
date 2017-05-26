@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.dke.pursuitevasion.Entities.Components.ObservableComponent;
 import com.dke.pursuitevasion.Entities.Components.ObserverComponent;
 import com.dke.pursuitevasion.Entities.Components.StateComponent;
@@ -17,7 +18,8 @@ import com.dke.pursuitevasion.Entities.Systems.VisionSystem;
  * Created by Nicola Gheza on 23/05/2017.
  */
 public class PursuerSystem extends IteratingSystem {
-
+    private static final float DETECTION_TIME = 1.0f;
+    private Vector2 position = new Vector2();
     private ImmutableArray<Entity> evaders;
     private VisionSystem visionSystem;
 
@@ -46,10 +48,24 @@ public class PursuerSystem extends IteratingSystem {
     private void movePursuer(Entity entity, float deltaTime) {
         PursuerComponent pursuerComponent = Mappers.pursuerMapper.get(entity);
         StateComponent stateComponent = Mappers.stateMapper.get(entity);
-
-        moveVision(pursuerComponent, stateComponent, deltaTime);
-
+        // Movin vision
+        if (pursuerComponent.alerted)
+            trackTarget(pursuerComponent, stateComponent);
+        else
+            moveVision(pursuerComponent, stateComponent, deltaTime);
         limitAngle(pursuerComponent);
+    }
+
+    // Point camera to target and keep tracks of it
+    private void trackTarget(PursuerComponent pursuer, StateComponent state) {
+        position.set(pursuer.targetPosition);
+        Vector2 cameraPosition = new Vector2(state.position.x, state.position.z);
+        position.sub(cameraPosition);
+        position.nor();
+        float angle = position.angle();
+        pursuer.currentAngle = angle;
+        pursuer.patrolStarted = false;
+        state.angle = angle;
     }
 
     private void moveVision(PursuerComponent pursuerComponent, StateComponent stateComponent, float deltaTime) {
@@ -89,6 +105,37 @@ public class PursuerSystem extends IteratingSystem {
     }
 
     private void updateDetection(Entity entity, float deltaTime) {
+        PursuerComponent pursuer = Mappers.pursuerMapper.get(entity);
+
+        pursuer.alerted = false;
+
+        for (Entity target : evaders) {
+            updateDetection(entity, target);
+
+            if (pursuer.alerted)
+                break;
+        }
+
+        pursuer.detectionTime = pursuer.alerted ? pursuer.detectionTime + deltaTime : 0.0f;
+
+        if (pursuer.detectionTime > DETECTION_TIME) {
+            pursuer.detectionTime = 0.0f;
+            System.out.println(" intruder detected" + pursuer.targetPosition);
+        }
+    }
+
+    private void updateDetection(Entity entity, Entity target) {
+        Vector2 targetPos = Mappers.observableMapper.get(target).position;
+        PursuerComponent pursuer = Mappers.pursuerMapper.get(entity);
+
+        pursuer.alerted = false;
+        pursuer.targetPosition.set(0.0f, 0.0f);
+
+        if (visionSystem.canSee(entity,target)) {
+            pursuer.alerted = true;
+            pursuer.targetPosition.set(targetPos);
+        }
+
     }
 
 }
