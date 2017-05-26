@@ -86,9 +86,6 @@ public class SimulatorScreen implements Screen {
         engine.addSystem(new CCTvSystem(visionSystem));
         engine.addSystem(new PursuerSystem(visionSystem));
 
-        engine.addEntity(entityFactory.createCCTv(new Vector3(3,0.15f/2, 0.5f)));
-        engine.addEntity(entityFactory.createCCTv(new Vector3(1,0.15f/2, 0.0f)));
-
         for (int i=0; i<map.getaI().length; i++) {
             if(map.getaI()[i].isCCTV){
                 engine.addEntity(entityFactory.createCCTv(map.getaI()[i].position));
