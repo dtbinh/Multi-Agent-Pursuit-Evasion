@@ -101,6 +101,7 @@ public class CCTvSystem extends IteratingSystem {
         limitAngle(cctv);
     }
 
+    // Point camera to target and keep tracks of it
     private void trackTarget(CCTvComponent cctv, StateComponent state) {
         position.set(cctv.targetPosition);
         Vector2 cameraPosition = new Vector2(state.position.x, state.position.z);
@@ -112,6 +113,7 @@ public class CCTvSystem extends IteratingSystem {
         state.angle = angle;
     }
 
+    // Move camera in patrol
     private void movePatrol(CCTvComponent cctv, StateComponent state, float deltaTime) {
         if (!cctv.patrolStarted) {
             cctv.currentAngle = state.angle;
@@ -120,7 +122,6 @@ public class CCTvSystem extends IteratingSystem {
 
         if (cctv.waitTime == 0) {
             cctv.currentAngle += cctv.angularVelocity * cctv.direction.value() * deltaTime;
-
             if (cctv.currentAngle <= cctv.minAngle) {
                 cctv.waitTime = cctv.waitTimeMinAngle;
                 cctv.direction = cctv.direction.invert();

@@ -222,14 +222,12 @@ public class MapEditorController {
     }
 
     public void addAgent(int screenX, int screenY, PerspectiveCamera camera, boolean isCCTV) {
-        boolean cctv = isCCTV;
-
         Ray pickRay = camera.getPickRay(screenX, screenY);
         Vector3 intersection = new Vector3();
         Intersector.intersectRayPlane(pickRay, new Plane(new Vector3(0f, 1f, 0f), 0f), intersection);
 
 
-        setAgentInfo(intersection, cctv);
+        setAgentInfo(intersection, isCCTV);
 
         if(isCCTV){
             Model cctvModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.BLACK)),
@@ -246,10 +244,6 @@ public class MapEditorController {
                 instances.add(agentInstance);
             }
         }
-
-
-
-
     }
 
     public void addEvader(int screenX,int screenY,PerspectiveCamera camera){

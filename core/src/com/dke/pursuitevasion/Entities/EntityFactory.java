@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.dke.pursuitevasion.EdgeVectors;
 import com.dke.pursuitevasion.Entities.Components.*;
 import com.dke.pursuitevasion.Entities.Components.agents.CCTvComponent;
+import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
 import com.dke.pursuitevasion.WallInfo;
 
 import static com.badlogic.gdx.graphics.GL20.GL_TRIANGLES;
@@ -65,6 +66,42 @@ public class EntityFactory {
         entity.add(visibleComponent);
 
         return entity;
+    }
+
+    public Entity createPursuer(Vector3 position, Color color) {
+        Entity entity = new Entity();
+
+        StateComponent transformComponent = new StateComponent();
+        transformComponent.position = position;
+        transformComponent.orientation = new Quaternion(position,0);
+        transformComponent.update();
+        entity.add(transformComponent);
+
+        // Adding ObserverComponent for VisionSystem
+        ObserverComponent observerComponent = new ObserverComponent();
+        observerComponent.position = new Vector2(transformComponent.position.x, transformComponent.position.y);
+        observerComponent.fovAngle = 90f;
+        observerComponent.distance = 1f;
+        entity.add(observerComponent);
+
+        PursuerComponent pursuerComponent = new PursuerComponent();
+        entity.add(pursuerComponent);
+
+        ModelBuilder modelBuilder = new ModelBuilder();
+        Model model = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(color)),
+                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+
+        ModelInstance agentModel = new ModelInstance(model);
+
+        GraphicsComponent graphicsComponent = new GraphicsComponent();
+        graphicsComponent.modelInstance = agentModel;
+        entity.add(graphicsComponent);
+
+        VisibleComponent visibleComponent = new VisibleComponent();
+        entity.add(visibleComponent);
+
+        return entity;
+
     }
 
     public Entity createCCTv(Vector3 position) {
