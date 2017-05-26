@@ -1,23 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="41dcac44-571c-45b2-a08c-b296523670aa" name="Default" comment="Added A* pathfinding">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Components/agents/PursuerComponent.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/PursuerSystem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Entities/EntityFactory.class" afterPath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Entities/EntityFactory.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Entities/Mappers.class" afterPath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Entities/Mappers.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Entities/Systems/agents/CCTvSystem.class" afterPath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Entities/Systems/agents/CCTvSystem.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Simulator/SimulatorScreen.class" afterPath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Simulator/SimulatorScreen.class" />
+    <list default="true" id="41dcac44-571c-45b2-a08c-b296523670aa" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/AgentInfo.java" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/AgentInfo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Editor/MapEditorController.java" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Editor/MapEditorController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Editor/MapEditorScreen.java" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Editor/MapEditorScreen.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Editor/Mode.java" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Editor/Mode.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Components/agents/CCTvComponent.java" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Components/agents/CCTvComponent.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/EntityFactory.java" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/EntityFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Mappers.java" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Mappers.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/CCTvSystem.java" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/CCTvSystem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Simulator/SimulatorScreen.java" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Simulator/SimulatorScreen.java" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -90,9 +75,18 @@
           <file leaf-file-name="SimulatorScreen.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Simulator/SimulatorScreen.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="391">
+                <state relative-caret-position="544">
                   <caret line="96" column="0" lean-forward="false" selection-start-line="96" selection-start-column="0" selection-end-line="96" selection-end-column="0" />
-                  <folding />
+                  <folding>
+                    <element signature="e#4103#4104#0" expanded="false" />
+                    <marker date="1495808313197" expanded="false" signature="4041:4052" ph=" { " />
+                    <marker date="1495808313197" expanded="true" signature="4156:4366" ph="{...}" />
+                    <marker date="1495808313197" expanded="true" signature="4428:4577" ph="{...}" />
+                    <marker date="1495808313197" expanded="true" signature="4617:4625" ph="{...}" />
+                    <marker date="1495808313197" expanded="true" signature="4666:4674" ph="{...}" />
+                    <marker date="1495808313197" expanded="true" signature="4713:4721" ph="{...}" />
+                    <marker date="1495808313197" expanded="true" signature="4763:4771" ph="{...}" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -112,7 +106,21 @@
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="309">
                   <caret line="229" column="41" lean-forward="false" selection-start-line="229" selection-start-column="41" selection-end-line="229" selection-end-column="41" />
-                  <folding />
+                  <folding>
+                    <marker date="1495808309197" expanded="true" signature="9322:9981" ph="{...}" />
+                    <marker date="1495808309197" expanded="true" signature="10040:11860" ph="{...}" />
+                    <marker date="1495808309197" expanded="true" signature="11894:12068" ph="{...}" />
+                    <marker date="1495808309197" expanded="true" signature="12120:12364" ph="{...}" />
+                    <marker date="1495808309197" expanded="true" signature="12415:13086" ph="{...}" />
+                    <marker date="1495808309197" expanded="true" signature="12553:12988" ph="{...}" />
+                    <marker date="1495808309197" expanded="true" signature="13202:13438" ph="{...}" />
+                    <marker date="1495808309197" expanded="false" signature="13497:13507" ph=" { " />
+                    <marker date="1495808309197" expanded="false" signature="13564:13575" ph=" { " />
+                    <marker date="1495808309197" expanded="false" signature="13637:13647" ph=" { " />
+                    <marker date="1495808309197" expanded="false" signature="13703:13713" ph=" { " />
+                    <marker date="1495808309197" expanded="true" signature="13800:13935" ph="{...}" />
+                    <marker date="1495808309197" expanded="true" signature="13985:14094" ph="{...}" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -120,12 +128,28 @@
           <file leaf-file-name="MapEditorScreen.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Editor/MapEditorScreen.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="326">
-                  <caret line="279" column="20" lean-forward="false" selection-start-line="279" selection-start-column="20" selection-end-line="279" selection-end-column="20" />
+                <state relative-caret-position="122">
+                  <caret line="286" column="20" lean-forward="false" selection-start-line="286" selection-start-column="20" selection-end-line="286" selection-end-column="20" />
                   <folding>
                     <element signature="imports" expanded="true" />
-                    <element signature="e#9443#9829#0" expanded="true" />
-                    <element signature="e#9828#9829#0" expanded="true" />
+                    <element signature="e#7641#7895#0" expanded="true" />
+                    <element signature="e#7894#7895#0" expanded="true" />
+                    <element signature="e#7937#8221#0" expanded="true" />
+                    <element signature="e#8220#8221#0" expanded="true" />
+                    <element signature="e#8261#8445#0" expanded="true" />
+                    <element signature="e#8444#8445#0" expanded="true" />
+                    <element signature="e#8486#8832#0" expanded="true" />
+                    <element signature="e#8831#8832#0" expanded="true" />
+                    <element signature="e#8872#9216#0" expanded="true" />
+                    <element signature="e#9215#9216#0" expanded="true" />
+                    <element signature="e#9256#9599#0" expanded="true" />
+                    <element signature="e#9598#9599#0" expanded="true" />
+                    <element signature="e#9637#10023#0" expanded="true" />
+                    <element signature="e#10022#10023#0" expanded="true" />
+                    <element signature="e#10058#10255#0" expanded="true" />
+                    <element signature="e#10254#10255#0" expanded="true" />
+                    <element signature="e#10295#10623#0" expanded="true" />
+                    <element signature="e#10622#10623#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -210,7 +234,7 @@
           <file leaf-file-name="PursuerSystem.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/PursuerSystem.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="342">
+                <state relative-caret-position="477">
                   <caret line="69" column="13" lean-forward="false" selection-start-line="69" selection-start-column="13" selection-end-line="69" selection-end-column="13" />
                   <folding>
                     <element signature="imports" expanded="true" />
@@ -2120,7 +2144,7 @@
       <workItem from="1495479108588" duration="5100000" />
       <workItem from="1495618716918" duration="4941000" />
       <workItem from="1495802539848" duration="158000" />
-      <workItem from="1495806244986" duration="1958000" />
+      <workItem from="1495806244986" duration="2217000" />
     </task>
     <task id="LOCAL-00001" summary="Starting to build simulation part.">
       <created>1489706067873</created>
@@ -2269,11 +2293,18 @@
       <option name="project" value="LOCAL" />
       <updated>1495463672872</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Pursuer Vision working properly&#10;CCTV button now works as it should (ie. the cctv actually works!!!)&#10;">
+      <created>1495808283393</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1495808283393</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="163094000" />
+    <option name="totallyTimeSpent" value="163353000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -2390,7 +2421,8 @@
     <MESSAGE value="Added CCTvSystem &#10;with some editing" />
     <MESSAGE value="Added CCTvSystem &#10;with some editing&#10;integrated callum's code" />
     <MESSAGE value="Added A* pathfinding" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added A* pathfinding" />
+    <MESSAGE value="Pursuer Vision working properly&#10;CCTV button now works as it should (ie. the cctv actually works!!!)&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Pursuer Vision working properly&#10;CCTV button now works as it should (ie. the cctv actually works!!!)&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2421,7 +2453,16 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1122">
           <caret line="47" column="0" lean-forward="false" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#4103#4104#0" expanded="false" />
+            <marker date="1495808313197" expanded="false" signature="4041:4052" ph=" { " />
+            <marker date="1495808313197" expanded="true" signature="4156:4366" ph="{...}" />
+            <marker date="1495808313197" expanded="true" signature="4428:4577" ph="{...}" />
+            <marker date="1495808313197" expanded="true" signature="4617:4625" ph="{...}" />
+            <marker date="1495808313197" expanded="true" signature="4666:4674" ph="{...}" />
+            <marker date="1495808313197" expanded="true" signature="4713:4721" ph="{...}" />
+            <marker date="1495808313197" expanded="true" signature="4763:4771" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2671,26 +2712,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Components/agents/PursuerComponent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" column="30" lean-forward="false" selection-start-line="10" selection-start-column="30" selection-end-line="10" selection-end-column="30" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/PursuerSystem.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="69" column="13" lean-forward="false" selection-start-line="69" selection-start-column="13" selection-end-line="69" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/VisionSystem.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="511">
@@ -2725,9 +2746,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Simulator/SimulatorScreen.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
+        <state relative-caret-position="544">
           <caret line="96" column="0" lean-forward="false" selection-start-line="96" selection-start-column="0" selection-end-line="96" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#4103#4104#0" expanded="false" />
+            <marker date="1495808313197" expanded="false" signature="4041:4052" ph=" { " />
+            <marker date="1495808313197" expanded="true" signature="4156:4366" ph="{...}" />
+            <marker date="1495808313197" expanded="true" signature="4428:4577" ph="{...}" />
+            <marker date="1495808313197" expanded="true" signature="4617:4625" ph="{...}" />
+            <marker date="1495808313197" expanded="true" signature="4666:4674" ph="{...}" />
+            <marker date="1495808313197" expanded="true" signature="4713:4721" ph="{...}" />
+            <marker date="1495808313197" expanded="true" signature="4763:4771" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2751,18 +2781,68 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="309">
           <caret line="229" column="41" lean-forward="false" selection-start-line="229" selection-start-column="41" selection-end-line="229" selection-end-column="41" />
-          <folding />
+          <folding>
+            <marker date="1495808309197" expanded="true" signature="9322:9981" ph="{...}" />
+            <marker date="1495808309197" expanded="true" signature="10040:11860" ph="{...}" />
+            <marker date="1495808309197" expanded="true" signature="11894:12068" ph="{...}" />
+            <marker date="1495808309197" expanded="true" signature="12120:12364" ph="{...}" />
+            <marker date="1495808309197" expanded="true" signature="12415:13086" ph="{...}" />
+            <marker date="1495808309197" expanded="true" signature="12553:12988" ph="{...}" />
+            <marker date="1495808309197" expanded="true" signature="13202:13438" ph="{...}" />
+            <marker date="1495808309197" expanded="false" signature="13497:13507" ph=" { " />
+            <marker date="1495808309197" expanded="false" signature="13564:13575" ph=" { " />
+            <marker date="1495808309197" expanded="false" signature="13637:13647" ph=" { " />
+            <marker date="1495808309197" expanded="false" signature="13703:13713" ph=" { " />
+            <marker date="1495808309197" expanded="true" signature="13800:13935" ph="{...}" />
+            <marker date="1495808309197" expanded="true" signature="13985:14094" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Editor/MapEditorScreen.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="326">
-          <caret line="279" column="20" lean-forward="false" selection-start-line="279" selection-start-column="20" selection-end-line="279" selection-end-column="20" />
+        <state relative-caret-position="122">
+          <caret line="286" column="20" lean-forward="false" selection-start-line="286" selection-start-column="20" selection-end-line="286" selection-end-column="20" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#9443#9829#0" expanded="true" />
-            <element signature="e#9828#9829#0" expanded="true" />
+            <element signature="e#7641#7895#0" expanded="true" />
+            <element signature="e#7894#7895#0" expanded="true" />
+            <element signature="e#7937#8221#0" expanded="true" />
+            <element signature="e#8220#8221#0" expanded="true" />
+            <element signature="e#8261#8445#0" expanded="true" />
+            <element signature="e#8444#8445#0" expanded="true" />
+            <element signature="e#8486#8832#0" expanded="true" />
+            <element signature="e#8831#8832#0" expanded="true" />
+            <element signature="e#8872#9216#0" expanded="true" />
+            <element signature="e#9215#9216#0" expanded="true" />
+            <element signature="e#9256#9599#0" expanded="true" />
+            <element signature="e#9598#9599#0" expanded="true" />
+            <element signature="e#9637#10023#0" expanded="true" />
+            <element signature="e#10022#10023#0" expanded="true" />
+            <element signature="e#10058#10255#0" expanded="true" />
+            <element signature="e#10254#10255#0" expanded="true" />
+            <element signature="e#10295#10623#0" expanded="true" />
+            <element signature="e#10622#10623#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Components/agents/PursuerComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" column="30" lean-forward="false" selection-start-line="10" selection-start-column="30" selection-end-line="10" selection-end-column="30" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/PursuerSystem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="477">
+          <caret line="69" column="13" lean-forward="false" selection-start-line="69" selection-start-column="13" selection-end-line="69" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
