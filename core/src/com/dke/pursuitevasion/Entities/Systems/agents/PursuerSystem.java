@@ -23,7 +23,6 @@ public class PursuerSystem extends IteratingSystem {
     private ImmutableArray<Entity> evaders;
     private VisionSystem visionSystem;
 
-
     public PursuerSystem(VisionSystem visionSystem) {
         super(Family.all(
                 PursuerComponent.class
@@ -73,7 +72,6 @@ public class PursuerSystem extends IteratingSystem {
             pursuerComponent.currentAngle = stateComponent.angle;
             pursuerComponent.patrolStarted = true;
         }
-
         if (pursuerComponent.waitTime == 0) {
             pursuerComponent.currentAngle += pursuerComponent.angularVelocity * pursuerComponent.direction.value() * deltaTime;
             if (pursuerComponent.currentAngle <= pursuerComponent.minAngle) {

@@ -8,8 +8,8 @@ import com.dke.pursuitevasion.Entities.Direction;
  * Created by Nicola Gheza on 23/05/2017.
  */
 public class PursuerComponent implements Component {
-    public float angularVelocity = 40.0f;
-    public float maxAngle = 90.0f;
+    public float angularVelocity = 80.0f;
+    public float maxAngle = 45.0f;
     public float minAngle = 0.0f;
     public float currentAngle = 0.0f;
     public float waitTimeMaxAngle = 0.5f;
