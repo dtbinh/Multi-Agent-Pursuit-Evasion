@@ -3,11 +3,14 @@ package com.dke.pursuitevasion.Menu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.dke.pursuitevasion.Editor.MapEditorScreen;
@@ -33,10 +36,15 @@ public class MenuScreen implements Screen {
     }
 
     private void initGUI() {
+        Table table = new Table();
+        table.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        Label project = new Label("Multi-Agent Pursuit Evasion", skin);
+        project.setFontScale(2);
+
         TextButton buttonMapBuilder = new TextButton("Map Editor", skin);
-        buttonMapBuilder.setPosition(550, 350);
-        buttonMapBuilder.setSize(200, 50);
-        stage.addActor(buttonMapBuilder);
+        //buttonMapBuilder.setPosition(550, 350);
+        //buttonMapBuilder.setSize(200, 50);
         buttonMapBuilder.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -44,16 +52,25 @@ public class MenuScreen implements Screen {
             }
         });
 
-        TextButton buttonStartSim = new TextButton("Start Simulation", skin);
-        buttonStartSim.setPosition(550, 450);
-        buttonStartSim.setSize(200, 50);
-        stage.addActor(buttonStartSim);
+        TextButton buttonStartSim = new TextButton("Simulator", skin);
+        //buttonStartSim.setPosition(550, 450);
+        //buttonStartSim.setSize(200, 50);
         buttonStartSim.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 newSimWindow();
             }
         });
+
+        table.add(project);
+        table.row();
+        table.add(buttonMapBuilder).size(200,50);
+        table.row();
+        table.add(buttonStartSim).size(200,50);
+
+        //table.setOrigin(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/6);
+
+        stage.addActor(table);
     }
 
     private void newMapBuilder() {

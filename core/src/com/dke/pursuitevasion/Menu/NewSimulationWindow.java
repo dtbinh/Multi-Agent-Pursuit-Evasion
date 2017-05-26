@@ -1,5 +1,6 @@
 package com.dke.pursuitevasion.Menu;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -26,7 +27,7 @@ public class NewSimulationWindow extends Window {
         this.game = game;
         this.setModal(false);
         this.skin = skin;
-        this.setSize(250, 400);
+        this.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         this.menuScreen = screen;
         this.setMovable(false);
         initGUI();

@@ -139,7 +139,7 @@ public class SimulatorScreen implements Screen {
         controllerUI.setSize(screenWidth/4, Gdx.graphics.getHeight());
         controllerUI.setPosition(offset, screenHeight - Gdx.graphics.getHeight() - offset);
 
-        //stage.addActor(controllerUI);
+        stage.addActor(controllerUI);
 
 
     }

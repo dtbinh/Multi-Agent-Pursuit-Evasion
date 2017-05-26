@@ -259,10 +259,8 @@ public class MapEditorScreen implements Screen, InputProcessor {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
 
-                newSimulationWindow = new NewSimulationWindow(skin, game, simMenu);
-                stage.addActor(newSimulationWindow);
-                newSimulationWindow.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 1);
-
+                NewSimulationWindow sim = new NewSimulationWindow(skin, game, simMenu);
+                stage.addActor(sim);
 
                 //game.setScreen(new SimulatorScreen(game, save);
 
