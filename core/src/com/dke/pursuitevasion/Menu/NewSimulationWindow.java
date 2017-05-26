@@ -29,8 +29,6 @@ public class NewSimulationWindow extends Window {
         this.setSize(250, 400);
         this.menuScreen = screen;
         this.setMovable(false);
-
-
         initGUI();
     }
 
@@ -51,6 +49,7 @@ public class NewSimulationWindow extends Window {
         });
 
         TextButton startButton = new TextButton("Start", skin);
+
         startButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

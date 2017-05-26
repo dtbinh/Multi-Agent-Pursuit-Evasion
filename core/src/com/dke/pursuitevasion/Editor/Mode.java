@@ -8,5 +8,6 @@ public enum Mode {
     POINT_EDITOR,
     WALL_EDITOR,
     PURSUER_EDITOR,
-    EVADER_EDITOR
+    EVADER_EDITOR,
+    CCTV_EDITOR
 }

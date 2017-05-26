@@ -7,4 +7,5 @@ import com.badlogic.gdx.math.Vector3;
  */
 public class AgentInfo {
     public Vector3 position;
+    public boolean isCCTV;
 }

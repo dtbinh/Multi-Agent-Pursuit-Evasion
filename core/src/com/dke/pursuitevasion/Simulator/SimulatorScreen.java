@@ -12,11 +12,17 @@ import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.dke.pursuitevasion.Entities.EntityFactory;
 import com.dke.pursuitevasion.Entities.Systems.GraphicsSystem;
 import com.dke.pursuitevasion.Entities.Systems.SimulationSystem;
 import com.dke.pursuitevasion.Entities.Systems.VisionSystem;
 import com.dke.pursuitevasion.Entities.Systems.agents.CCTvSystem;
+import com.dke.pursuitevasion.Menu.MenuScreen;
 import com.dke.pursuitevasion.PolyMap;
 import com.dke.pursuitevasion.PursuitEvasion;
 import com.dke.pursuitevasion.TrackingCameraController;
@@ -32,6 +38,8 @@ public class SimulatorScreen implements Screen {
     private PerspectiveCamera cam;
     private TrackingCameraController trackingCameraController;
     private InputMultiplexer inputMultiplexer;
+    private Skin skin;
+    private Stage stage;
 
     private Engine engine; // move to controller
     private EntityFactory entityFactory; // move to controller
@@ -42,6 +50,8 @@ public class SimulatorScreen implements Screen {
         this.game = game;
         Gson gson = new Gson();
         map = gson.fromJson(mapFile.readString(), PolyMap.class);
+
+        createUI();
 
         /* Set up the camera */
         cam = new PerspectiveCamera(60f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -84,16 +94,53 @@ public class SimulatorScreen implements Screen {
         engine.addSystem(visionSystem);
         engine.addSystem(new CCTvSystem(visionSystem));
 
-        engine.addEntity(entityFactory.createCCTv(new Vector3(3,0.15f/2, 0.5f)));
-        engine.addEntity(entityFactory.createCCTv(new Vector3(1,0.15f/2, 0.0f)));
+        //engine.addEntity(entityFactory.createCCTv(new Vector3(3,0.15f/2, 0.5f)));
+        //engine.addEntity(entityFactory.createCCTv(new Vector3(1,0.15f/2, 0.0f)));
 
         for (int i=0; i<map.getaI().length; i++) {
-            engine.addEntity(entityFactory.createAgent(map.getaI()[i].position, Color.BLUE));
+            if(map.getaI()[i].isCCTV){
+                engine.addEntity(entityFactory.createCCTv(map.getaI()[i].position));
+            }else{
+                engine.addEntity(entityFactory.createAgent(map.getaI()[i].position, Color.BLUE));
+            }
+
         }
 
         for (int i=0; i<map.geteI().length; i++) {
             engine.addEntity(entityFactory.createEvader(map.geteI()[i].position, Color.RED));
         }
+
+    }
+
+    private void createUI(){
+        skin = new Skin(Gdx.files.internal("uiskin.json"));
+        Window controllerUI = new Window("Controller", skin);
+        Table table= new Table();
+
+        TextButton rewind = new TextButton("<<", skin);
+        TextButton pause = new TextButton("||", skin);
+        TextButton forward = new TextButton(">>", skin);
+
+        table.add(rewind);
+        table.add(pause);
+        table.add(forward);
+        controllerUI.add(table);
+
+        // Screen and window variables
+       // float windowHeight = stage.getHeight();
+        int screenWidth = Gdx.graphics.getWidth();
+        int screenHeight = Gdx.graphics.getHeight();
+        int gutter = 20;
+        int offset = 0;
+
+        controllerUI.setMovable(false);
+
+        // Dimensions
+        controllerUI.setSize(screenWidth/4, Gdx.graphics.getHeight());
+        controllerUI.setPosition(offset, screenHeight - Gdx.graphics.getHeight() - offset);
+
+        //stage.addActor(controllerUI);
+
 
     }
 

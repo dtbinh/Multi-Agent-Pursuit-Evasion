@@ -221,21 +221,35 @@ public class MapEditorController {
         instanceVectors.add(intersection);
     }
 
-    public void addAgent(int screenX, int screenY, PerspectiveCamera camera) {
+    public void addAgent(int screenX, int screenY, PerspectiveCamera camera, boolean isCCTV) {
+        boolean cctv = isCCTV;
+
         Ray pickRay = camera.getPickRay(screenX, screenY);
         Vector3 intersection = new Vector3();
         Intersector.intersectRayPlane(pickRay, new Plane(new Vector3(0f, 1f, 0f), 0f), intersection);
 
 
-        setAgentInfo(intersection);
+        setAgentInfo(intersection, cctv);
 
-        Model agentModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.BLUE)),
-            VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
-
-        if(!nearNeighbor(intersection)) {
-            ModelInstance agentInstance = new ModelInstance(agentModel, intersection);
-            instances.add(agentInstance);
+        if(isCCTV){
+            Model cctvModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.BLACK)),
+                    VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+            if(!nearNeighbor(intersection)) {
+                ModelInstance cctvInstance = new ModelInstance(cctvModel, intersection);
+                instances.add(cctvInstance);
+            }
+        }else{
+            Model agentModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.BLUE)),
+                    VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+            if(!nearNeighbor(intersection)) {
+                ModelInstance agentInstance = new ModelInstance(agentModel, intersection);
+                instances.add(agentInstance);
+            }
         }
+
+
+
+
     }
 
     public void addEvader(int screenX,int screenY,PerspectiveCamera camera){
@@ -361,9 +375,10 @@ public class MapEditorController {
         return vertList;
     }
 
-    public void setAgentInfo(Vector3 position) {
+    public void setAgentInfo(Vector3 position, boolean isCCTV) {
         AgentInfo aI = new AgentInfo();
         aI.position = position;
+        aI.isCCTV = isCCTV;
         agentsInfo.add(aI);
     }
 

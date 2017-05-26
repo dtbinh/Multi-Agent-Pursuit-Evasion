@@ -1,6 +1,7 @@
 package com.dke.pursuitevasion.Editor;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.dke.pursuitevasion.Menu.MenuScreen;
 import com.dke.pursuitevasion.Menu.NewSimulationWindow;
 import com.dke.pursuitevasion.PursuitEvasion;
+import com.dke.pursuitevasion.Simulator.SimulatorScreen;
 import com.dke.pursuitevasion.TrackingCameraController;
 
 
@@ -46,6 +48,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
 
     private PursuitEvasion game;
     private NewSimulationWindow newSimulationWindow;
+    private FileHandle file;
 
     String vertexShader = "attribute vec4 a_position;    \n" +
             "attribute vec4 a_color;\n" +
@@ -170,7 +173,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
     private void createUI() {
         skin = new Skin(Gdx.files.internal("uiskin.json"));
         Window windowDesign = new Window("Design", skin);
-
+        final MenuScreen simMenu = new MenuScreen(pursuitEvasion);
         Table table=new Table();
         table.setSize(800, 480);
 
@@ -184,6 +187,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
         TextButton wallEditorButton = new TextButton("Add Walls", skin);
         TextButton addPursuerButton = new TextButton("Add Pursuer", skin);
         TextButton addEvaderButton = new TextButton("Add Evader", skin);
+        TextButton addCCTVButton = new TextButton("Add CCTV", skin);
         TextButton simulatorButton = new TextButton("Simulator", skin);
         TextButton backButton = new TextButton("Back", skin);
 
@@ -236,6 +240,14 @@ public class MapEditorScreen implements Screen, InputProcessor {
             }
         });
 
+        addCCTVButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (controller.getMode() == Mode.DO_NOTHING || controller.getMode() == Mode.WALL_EDITOR || controller.getMode()==Mode.PURSUER_EDITOR || controller.getMode()==Mode.EVADER_EDITOR)
+                    controller.setMode(Mode.CCTV_EDITOR);
+            }
+        });
+
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -246,13 +258,19 @@ public class MapEditorScreen implements Screen, InputProcessor {
         simulatorButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                newSimulationWindow = new NewSimulationWindow(skin, game, new MenuScreen(pursuitEvasion));
+
+                newSimulationWindow = new NewSimulationWindow(skin, game, simMenu);
                 stage.addActor(newSimulationWindow);
                 newSimulationWindow.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 1);
+
+
+                //game.setScreen(new SimulatorScreen(game, save);
+
             }
         });
 
-        // Add buttonse
+
+        // Add buttons
         table.add(mapBuilderText);
         table.row();
         table.add(addOuterVertexButton).width(150);
@@ -266,6 +284,8 @@ public class MapEditorScreen implements Screen, InputProcessor {
         table.add(addPursuerButton).width(150);
         table.row();
         table.add(addEvaderButton).width(150);
+        table.row();
+        table.add(addCCTVButton).width(150);
         table.row();
         table.add(exportText);
         table.row();
@@ -413,7 +433,11 @@ public class MapEditorScreen implements Screen, InputProcessor {
                     wallVec = null;
                     break;
                 case PURSUER_EDITOR:
-                    controller.addAgent(screenX,screenY,camera);
+                    controller.addAgent(screenX,screenY,camera,false);
+                    leftPressed = false;
+                    break;
+                case CCTV_EDITOR:
+                    controller.addAgent(screenX,screenY,camera,true);
                     leftPressed = false;
                     break;
                 case EVADER_EDITOR:
