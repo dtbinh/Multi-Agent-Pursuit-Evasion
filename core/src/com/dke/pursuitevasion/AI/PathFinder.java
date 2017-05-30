@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Created by Envy on 4/20/2017.
  */
-public class PathTest implements Screen {
+public class PathFinder implements Screen {
     Camera cam;
     TrackingCameraController trackingCameraController;
     InputMultiplexer inputMux;
@@ -78,7 +78,7 @@ public class PathTest implements Screen {
         }
     }
 
-    public PathTest(PolyMap Map){
+    public PathFinder(PolyMap Map){
         map = Map;
         mesh = map.getPolygonMesh();
         indices = new short[mesh.getMaxIndices()];

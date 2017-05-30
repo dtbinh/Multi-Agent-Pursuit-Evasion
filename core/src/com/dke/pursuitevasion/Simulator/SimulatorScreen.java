@@ -83,7 +83,7 @@ public class SimulatorScreen implements Screen {
         engine.addSystem(new SimulationSystem());
         VisionSystem visionSystem = new VisionSystem();
         engine.addSystem(visionSystem);
-        engine.addSystem(new CCTvSystem(visionSystem));
+        engine.addSystem(new CCTvSystem(visionSystem, map));
         engine.addSystem(new PursuerSystem(visionSystem, map));
 
         for (int i=0; i<map.getaI().length; i++) {

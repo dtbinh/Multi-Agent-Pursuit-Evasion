@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.dke.pursuitevasion.AI.Node;
-import com.dke.pursuitevasion.AI.PathTest;
+import com.dke.pursuitevasion.AI.PathFinder;
 import com.dke.pursuitevasion.Entities.Components.ObservableComponent;
 import com.dke.pursuitevasion.Entities.Components.ObserverComponent;
 import com.dke.pursuitevasion.Entities.Components.StateComponent;
@@ -32,15 +32,14 @@ public class PursuerSystem extends IteratingSystem {
     private VisionSystem visionSystem;
     private Vector2 position = new Vector2();
 
-    private PathTest pathFinder;
+    private PathFinder pathFinder;
     List<Node> p;
-    ArrayList<Vector3> pursuerPath = new ArrayList<Vector3>();
 
     public PursuerSystem(VisionSystem visionSystem, PolyMap map) {
         super(Family.all(PursuerComponent.class).get());
 
         this.visionSystem = visionSystem;
-        pathFinder = new PathTest(map);
+        pathFinder = new PathFinder(map);
     }
 
     @Override
@@ -72,8 +71,8 @@ public class PursuerSystem extends IteratingSystem {
 
     }
     private void followPath(PursuerComponent pC, StateComponent sC){
-        if(pursuerPath!=null && pursuerPath.size()>0){
-            Vector3 pos = pursuerPath.remove(0);
+        if(pC.pursuerPath!=null && pC.pursuerPath.size()>0){
+            Vector3 pos = pC.pursuerPath.remove(0);
             pC.position = pos;
             sC.position = pos;
             sC.update();
@@ -148,13 +147,13 @@ public class PursuerSystem extends IteratingSystem {
                 p.get(0).worldZ = pursuer.position.z;
             }
 
-            addAdditionalSteps(p, start);
+            addAdditionalSteps(pursuer, p, start);
             pursuer.detectionTime = 0.0f;
         }
     }
 
-    public void addAdditionalSteps(List<Node> p, Vector3 Start){
-        pursuerPath = new ArrayList<Vector3>();
+    public void addAdditionalSteps(PursuerComponent pC, List<Node> p, Vector3 Start){
+        pC.pursuerPath = new ArrayList<Vector3>();
         float stepSize = 15;
         if(p.size()>1) {
             for (int i = 0; i < p.size() - 1; i++) {
@@ -180,7 +179,7 @@ public class PursuerSystem extends IteratingSystem {
                         System.out.println(scale+"  "+adjX+"   "+adjZ);
                     }
                     Vector3 position = new Vector3(start.x+bDX, 0, start.z+bDZ);
-                    pursuerPath.add(position);
+                    pC.pursuerPath.add(position);
                 }
             }
         }

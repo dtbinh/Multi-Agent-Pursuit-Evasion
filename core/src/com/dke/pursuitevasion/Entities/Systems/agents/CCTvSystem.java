@@ -7,12 +7,19 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.dke.pursuitevasion.AI.Node;
+import com.dke.pursuitevasion.AI.PathFinder;
 import com.dke.pursuitevasion.Entities.Components.ObservableComponent;
 import com.dke.pursuitevasion.Entities.Components.ObserverComponent;
 import com.dke.pursuitevasion.Entities.Components.StateComponent;
 import com.dke.pursuitevasion.Entities.Components.agents.CCTvComponent;
+import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
 import com.dke.pursuitevasion.Entities.Mappers;
 import com.dke.pursuitevasion.Entities.Systems.VisionSystem;
+import com.dke.pursuitevasion.PolyMap;
+
+import java.util.List;
 
 /**
  * Created by Nicola Gheza on 08/05/2017.
@@ -21,22 +28,28 @@ public class CCTvSystem extends IteratingSystem {
     private static final float DETECTION_TIME = 1.0f;
 
     private ImmutableArray<Entity> evaders;
+    private ImmutableArray<Entity> pursuers;
+
     private VisionSystem visionSystem;
     private Vector2 position = new Vector2();
 
-    public CCTvSystem(VisionSystem visionSystem) {
+    private PathFinder pathFinder;
+
+    public CCTvSystem(VisionSystem visionSystem, PolyMap map) {
         super(Family.all(
                 CCTvComponent.class,
                 StateComponent.class
         ).get());
 
         this.visionSystem = visionSystem;
+        this.pathFinder = new PathFinder(map);
     }
 
     @Override
     public void addedToEngine(Engine engine) {
         super.addedToEngine(engine);
         evaders = engine.getEntitiesFor(Family.all(ObservableComponent.class).get());
+        pursuers = engine.getEntitiesFor(Family.all(PursuerComponent.class).get());
     }
 
     @Override
@@ -63,6 +76,21 @@ public class CCTvSystem extends IteratingSystem {
         if (cctv.detectionTime > DETECTION_TIME) {
             cctv.detectionTime = 0.0f;
             System.out.println(/*cctv +*/ " intruder detected" + cctv.targetPosition);
+            updatePursuerPath(cctv.targetPosition);
+        }
+    }
+
+    private void updatePursuerPath(Vector2 targetPosition) {
+        for (Entity e : pursuers) {
+            PursuerComponent pC = Mappers.pursuerMapper.get(e);
+            Vector3 start = new Vector3(pC.position.x, 0, pC.position.z);
+            Vector3 end = new Vector3(targetPosition.x, 0, targetPosition.y);
+            List<Node> path = pathFinder.findPath(start, end);
+            if (path!=null && path.size()>0) {
+                path.get(0).worldX = pC.position.x;
+                path.get(0).worldZ = pC.position.z;
+            }
+            pC.alerted=true;
         }
     }
 
