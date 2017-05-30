@@ -186,8 +186,7 @@ public class PursuerSystem extends IteratingSystem {
                 CXPoint newUpdateLocation = CXPoint.converToGraphCoordiantion(updateLocation);
                 System.out.println("Moving destination x = "+ newDestination.x + " y = "+newDestination.y + " ; UpdateLocation is x = "+ newUpdateLocation.x + " y = " + newUpdateLocation.y);
 
-                pursuerC.position = new Vector3((float)updateLocation.x,stateC.position.y,(float)updateLocation.y);
-
+                stateC.position = stateC.position.set((float)updateLocation.x,stateC.position.y,(float)updateLocation.y);
                 if (updateLocation == destination){
                     // Check the angle is correct
                     if (task.movingTask.radius != -1.0 && stateC.angle != task.movingTask.radius){
@@ -244,6 +243,7 @@ public class PursuerSystem extends IteratingSystem {
                 break;
             }
         }
+        stateC.update();
 
     }
 
