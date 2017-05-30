@@ -12,15 +12,17 @@ import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.math.Vector3;
+import com.dke.pursuitevasion.*;
+import com.dke.pursuitevasion.CellDecompose.Graph.CXGraph;
+import com.dke.pursuitevasion.CellDecompose.Graph.CXGraphNode;
+import com.dke.pursuitevasion.CellDecompose.Graph.CXPoint;
+import com.dke.pursuitevasion.CellDecompose.Graph.CellDecompositionAlgorithm;
 import com.dke.pursuitevasion.Entities.EntityFactory;
 import com.dke.pursuitevasion.Entities.Systems.GraphicsSystem;
 import com.dke.pursuitevasion.Entities.Systems.SimulationSystem;
 import com.dke.pursuitevasion.Entities.Systems.VisionSystem;
 import com.dke.pursuitevasion.Entities.Systems.agents.CCTvSystem;
 import com.dke.pursuitevasion.Entities.Systems.agents.PursuerSystem;
-import com.dke.pursuitevasion.PolyMap;
-import com.dke.pursuitevasion.PursuitEvasion;
-import com.dke.pursuitevasion.TrackingCameraController;
 import com.google.gson.Gson;
 
 /**
@@ -63,8 +65,48 @@ public class SimulatorScreen implements Screen {
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(trackingCameraController);
 
-        engine = new Engine();
+        // Convert map into graph
+        CXGraph polygon = new CXGraph();
+        EdgeVectors[] edge = map.geteV();
+        WallInfo[] wI = map.getwI();
+        for (int i = 0 ; i < edge.length; i++){
+            // 1.1 Transfer the location ( x = x + 5 , y = (y) * (-1) + 5)
+            EdgeVectors vectors = edge[i];
+            double x1 = vectors.Vector1.x + 5;
+            double y1 = vectors.Vector1.z * (-1) + 5;
+            double x2 = vectors.Vector2.x + 5;
+            double y2 = vectors.Vector2.z * (-1) + 5;
+            // 1.2 add Node
+            CXGraphNode node1 = new CXGraphNode(new CXPoint(x1,y1));
+            CXGraphNode node2 = new CXGraphNode(new CXPoint(x2,y2));
+            node1 = polygon.add_vertex(node1);
+            node2 = polygon.add_vertex(node2);
+            polygon.add_edge(node1,node2,1);
+        }
 
+        // 2. Obstacles --> wallInfo
+        CXGraph obstacle = new CXGraph();
+        // 2.1   add the obstacle nodes
+        for (int i = 0; i < wI.length ; i++) {
+            WallInfo info = wI[i];
+            double x1 = info.start.x + 5;
+
+            double y1 = info.start.z * (-1) + 5;
+            double x2 = info.end.x + 5;
+            double y2 = info.end.z * (-1) + 5;
+            CXGraphNode node1 = new CXGraphNode(new CXPoint(x1,y1));
+            CXGraphNode node2 = new CXGraphNode(new CXPoint(x2,y2));
+            node1 = obstacle.add_vertex(node1);
+            node2 = obstacle.add_vertex(node2);
+            obstacle.add_vertex(node1);
+            obstacle.add_vertex(node2);
+            obstacle.add_edge(node1,node2,1);
+        }
+
+        CellDecompositionAlgorithm cellDecomposeAlgorithm = new CellDecompositionAlgorithm(polygon,obstacle);
+        CXGraph graph =  cellDecomposeAlgorithm.decomposeGraph();
+
+        engine = new Engine();
 
         entityFactory = new EntityFactory();
 
@@ -84,7 +126,7 @@ public class SimulatorScreen implements Screen {
         VisionSystem visionSystem = new VisionSystem();
         engine.addSystem(visionSystem);
         engine.addSystem(new CCTvSystem(visionSystem, map));
-        engine.addSystem(new PursuerSystem(visionSystem, map));
+        engine.addSystem(new PursuerSystem(visionSystem, graph,map));
 
         for (int i=0; i<map.getaI().length; i++) {
             if(map.getaI()[i].isCCTV){

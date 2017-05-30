@@ -87,7 +87,7 @@ public class CCTvSystem extends IteratingSystem {
     private void clearPursuerVision() {
         for (Entity e : pursuers) {
             PursuerComponent pC = Mappers.pursuerMapper.get(e);
-            pC.cctvAlerted = false;
+          //  pC.cctvAlerted = false;
         }
     }
 

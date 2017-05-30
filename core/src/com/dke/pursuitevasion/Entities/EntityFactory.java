@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.dke.pursuitevasion.CXSearchingAlgorithm.CXAgentState;
 import com.dke.pursuitevasion.EdgeVectors;
 import com.dke.pursuitevasion.Entities.Components.*;
 import com.dke.pursuitevasion.Entities.Components.agents.CCTvComponent;
@@ -25,6 +26,9 @@ import static com.badlogic.gdx.graphics.GL20.GL_TRIANGLES;
  * Created by Nicola Gheza on 20/03/2017.
  */
 public class EntityFactory {
+
+    static int pursuerCounter = 0;
+
     static EntityFactory instance;
 
     static EntityFactory getInstance() {
@@ -86,6 +90,8 @@ public class EntityFactory {
 
         PursuerComponent pursuerComponent = new PursuerComponent();
         pursuerComponent.position = position;
+        pursuerComponent.number = pursuerCounter++;
+        pursuerComponent.setState(CXAgentState.Free);
         entity.add(pursuerComponent);
 
         ModelBuilder modelBuilder = new ModelBuilder();
