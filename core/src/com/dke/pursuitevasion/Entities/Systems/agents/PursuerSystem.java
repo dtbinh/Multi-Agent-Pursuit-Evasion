@@ -211,6 +211,7 @@ public class PursuerSystem extends IteratingSystem {
                 float value =  this.agentUtility.getTheNextScanPosition(pursuerC);
                 System.out.println("Current Radius is " + stateC.angle + " TargetRadius is "+ value);
                 stateC.angle = value;
+                pursuerC.currentAngle = value; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
                 CXAgentTask task = (CXAgentTask) pursuerC.taskList.getFirst();
                 if (task.scanTask.scanScope.isEmpty()){
