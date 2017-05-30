@@ -28,12 +28,13 @@ public class PathFinder implements Screen {
     TrackingCameraController trackingCameraController;
     InputMultiplexer inputMux;
     Environment environment;
-    float gapSize;
-    int width, height;
+    static float gapSize;
+    public static int width;
+    static int height;
     PolyMap map;
     List<Node> path;
     Mesh mesh;
-    boolean[][] nodeGrid;
+    static boolean[][] nodeGrid;
     ArrayList<Vector3> walls;
     Vector3 intersection3;
     float[] vertices;
@@ -109,11 +110,14 @@ public class PathFinder implements Screen {
         }
     }
 
-    public List<Node> findPath(Vector3 pursuerPos, Vector3 evaderPos){
+    public List<Node> findPath(Vector3 pursuerPos, Vector3 evaderPos, CustomPoint overrideEnd){
         CP = pF.CC;
         CustomPoint start = getNodeFromWorldCoor(pursuerPos.x, pursuerPos.z);
         CustomPoint end = getNodeFromWorldCoor(evaderPos.x, evaderPos.z);
-        int sIndex = 1;
+        if(overrideEnd!=null){
+            end = overrideEnd;
+        }
+        int sIndex = 1;;
         int eIndex = 1;
 
         try {
@@ -128,10 +132,8 @@ public class PathFinder implements Screen {
                 }
             }
         }catch (Exception e){
-            //System.out.println(start+"         "+sIndex);
-            //System.out.println(end+"         "+eIndex);
         }
-
+        //System.out.println(sIndex+"  "+eIndex);
         path = pF.findPath(sIndex, eIndex);
         return path;
     }
@@ -275,13 +277,13 @@ public class PathFinder implements Screen {
         }
     }
 
-    public float toWorldCoorX(float fX){
+    public static float toWorldCoorX(float fX){
         fX*=gapSize;
         float adjW = (width*gapSize)/2;
         return fX-adjW;
     }
 
-    public float toWorldCoorY(float fY){
+    public static float toWorldCoorY(float fY){
         fY*=gapSize;
         float adjH = (width*gapSize)/2;
         return fY-adjH;
@@ -297,7 +299,7 @@ public class PathFinder implements Screen {
         return data;
     }
 
-    public CustomPoint getNodeFromWorldCoor(float X, float Y){
+    public static CustomPoint getNodeFromWorldCoor(float X, float Y){
         for(int j=0;j<width;j++){
             for(int k=0;k<height;k++){
                 float offset = gapSize/2;
@@ -316,6 +318,10 @@ public class PathFinder implements Screen {
             }
         }
         return null;
+    }
+
+    public boolean[][] getNodeGrid(){
+        return nodeGrid;
     }
 
     @Override

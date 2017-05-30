@@ -29,7 +29,7 @@ public class SimulationSystem extends EntitySystem {
     public void update(float delta) {
         timeAccumulator += delta;
         for (int i=0; i<(int)(timeAccumulator/STEP_SIZE); i++) {
-            stepUpdate(delta);
+            //stepUpdate(delta);
             timeAccumulator -= STEP_SIZE;
         }
     }

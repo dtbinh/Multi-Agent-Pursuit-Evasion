@@ -160,6 +160,7 @@ public class EntityFactory {
         //Create a sphere collider component
         AgentComponent sphereColliderComponent = new AgentComponent();
         sphereColliderComponent.radius = 0.15f;
+        sphereColliderComponent.position = position;
         entity.add(sphereColliderComponent);
 
         ModelBuilder modelBuilder = new ModelBuilder();

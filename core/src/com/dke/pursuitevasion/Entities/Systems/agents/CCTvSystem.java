@@ -96,7 +96,7 @@ public class CCTvSystem extends IteratingSystem {
             PursuerComponent pC = Mappers.pursuerMapper.get(e);
             Vector3 start = new Vector3(pC.position.x, 0, pC.position.z);
             Vector3 end = new Vector3(targetPosition.x, 0, targetPosition.y);
-            List<Node> path = pathFinder.findPath(start, end);
+            List<Node> path = pathFinder.findPath(start, end, null);
             if (path!=null && path.size()>0) {
                 path.get(0).worldX = pC.position.x;
                 path.get(0).worldZ = pC.position.z;

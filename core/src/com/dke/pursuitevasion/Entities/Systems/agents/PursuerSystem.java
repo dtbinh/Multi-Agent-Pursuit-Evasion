@@ -341,7 +341,7 @@ public class PursuerSystem extends IteratingSystem {
             System.out.println("INTRUDER DETECTED");
             Vector3 start = new Vector3(pursuer.position.x, 0, pursuer.position.z);
             Vector3 end = new Vector3(pursuer.targetPosition.x, 0, pursuer.targetPosition.y);
-            p = pathFinder.findPath(start, end);
+            p = pathFinder.findPath(start, end, null);
             //reset start node to current position of pursuer.
             if(p!=null && p.size()<0) {
                 p.get(0).worldX = pursuer.position.x;

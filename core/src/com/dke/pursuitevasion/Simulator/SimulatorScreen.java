@@ -22,6 +22,7 @@ import com.dke.pursuitevasion.Entities.Systems.GraphicsSystem;
 import com.dke.pursuitevasion.Entities.Systems.SimulationSystem;
 import com.dke.pursuitevasion.Entities.Systems.VisionSystem;
 import com.dke.pursuitevasion.Entities.Systems.agents.CCTvSystem;
+import com.dke.pursuitevasion.Entities.Systems.agents.EvaderSystem;
 import com.dke.pursuitevasion.Entities.Systems.agents.PursuerSystem;
 import com.google.gson.Gson;
 
@@ -125,6 +126,7 @@ public class SimulatorScreen implements Screen {
         //engine.addSystem(new SimulationSystem());
         VisionSystem visionSystem = new VisionSystem();
         engine.addSystem(visionSystem);
+        engine.addSystem(new EvaderSystem(map));
         engine.addSystem(new CCTvSystem(visionSystem, map));
         engine.addSystem(new PursuerSystem(visionSystem, graph, map));
 
