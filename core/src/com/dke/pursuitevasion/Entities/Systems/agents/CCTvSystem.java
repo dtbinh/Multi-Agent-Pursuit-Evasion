@@ -25,7 +25,7 @@ import java.util.List;
  * Created by Nicola Gheza on 08/05/2017.
  */
 public class CCTvSystem extends IteratingSystem {
-    private static final float DETECTION_TIME = 1.0f;
+    private static final float DETECTION_TIME = 0.5f;
 
     private ImmutableArray<Entity> evaders;
     private ImmutableArray<Entity> pursuers;
@@ -69,14 +69,25 @@ public class CCTvSystem extends IteratingSystem {
 
             if (cctv.alerted)
                 break;
+            else {
+                clearPursuerVision();
+            }
+
         }
 
         cctv.detectionTime = cctv.alerted ? cctv.detectionTime + deltaTime : 0.0f;
 
         if (cctv.detectionTime > DETECTION_TIME) {
             cctv.detectionTime = 0.0f;
-            System.out.println(/*cctv +*/ " intruder detected" + cctv.targetPosition);
+            //System.out.println(/*cctv +*/ " intruder detected" + cctv.targetPosition);
             updatePursuerPath(cctv.targetPosition);
+        }
+    }
+
+    private void clearPursuerVision() {
+        for (Entity e : pursuers) {
+            PursuerComponent pC = Mappers.pursuerMapper.get(e);
+            pC.cctvAlerted = false;
         }
     }
 
@@ -90,7 +101,9 @@ public class CCTvSystem extends IteratingSystem {
                 path.get(0).worldX = pC.position.x;
                 path.get(0).worldZ = pC.position.z;
             }
-            pC.alerted=true;
+            //pC.cctvAlerted = true;
+            pC.targetPosition = targetPosition.cpy();
+            pC.pursuerPath = PursuerSystem.addAdditionalSteps(pC, path, start);
         }
     }
 

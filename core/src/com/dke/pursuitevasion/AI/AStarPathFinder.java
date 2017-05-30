@@ -58,7 +58,6 @@ public class AStarPathFinder {
     public List<Node> findPath(int indexStart, int indexEnd) {
         startIndex = indexStart;
         endIndex = indexEnd;
-        System.out.println(startIndex+"    "+endIndex);
         return findPath(allNodes.get(CC.get(indexStart)), allNodes.get(CC.get(indexEnd)));
     }
 

@@ -17,6 +17,7 @@ import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
 import com.dke.pursuitevasion.Entities.Mappers;
 import com.dke.pursuitevasion.Entities.Systems.VisionSystem;
 import com.dke.pursuitevasion.PolyMap;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -58,7 +59,6 @@ public class PursuerSystem extends IteratingSystem {
     private void movePursuer(Entity entity, float deltaTime) {
         PursuerComponent pursuerComponent = Mappers.pursuerMapper.get(entity);
         StateComponent stateComponent = Mappers.stateMapper.get(entity);
-
         if(pursuerComponent.alerted) {
             followPath(pursuerComponent, stateComponent);
             trackTarget(pursuerComponent, stateComponent);
@@ -128,7 +128,11 @@ public class PursuerSystem extends IteratingSystem {
 
     private void updateDetection(Entity entity, float deltaTime) {
         PursuerComponent pursuer = Mappers.pursuerMapper.get(entity);
-        pursuer.alerted = false;
+        /*if (pursuer.cctvAlerted)
+            pursuer.alerted = true;
+        else*/
+            pursuer.alerted = false;
+
         for (Entity target : evaders) {
             updateDetection(entity, target);
             if (pursuer.alerted)
@@ -152,7 +156,7 @@ public class PursuerSystem extends IteratingSystem {
         }
     }
 
-    public void addAdditionalSteps(PursuerComponent pC, List<Node> p, Vector3 Start){
+    public static ArrayList<Vector3> addAdditionalSteps(PursuerComponent pC, List<Node> p, Vector3 Start){
         pC.pursuerPath = new ArrayList<Vector3>();
         float stepSize = 15;
         if(p.size()>1) {
@@ -173,16 +177,12 @@ public class PursuerSystem extends IteratingSystem {
                     BigDecimal newZ = sc.multiply(zZ);
                     float bDX = newX.floatValue();
                     float bDZ = newZ.floatValue();
-                    float x = (float) (scale * adjZ);
-                    float z = (float) (scale * adjZ);
-                    if(bDX==0 && bDZ==0) {
-                        System.out.println(scale+"  "+adjX+"   "+adjZ);
-                    }
                     Vector3 position = new Vector3(start.x+bDX, 0, start.z+bDZ);
                     pC.pursuerPath.add(position);
                 }
             }
         }
+        return pC.pursuerPath;
     }
 
     private void updateDetection(Entity entity, Entity target) {

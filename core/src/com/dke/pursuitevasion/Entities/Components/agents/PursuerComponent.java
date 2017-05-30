@@ -21,6 +21,7 @@ public class PursuerComponent implements Component {
     public Direction direction = Direction.COUNTERCLOCKWISE;
     public boolean patrolStarted = false;
     public boolean alerted = false;
+    //public boolean cctvAlerted = false;
     public float detectionTime = 0.0f;
     public Vector2 targetPosition = new Vector2();
     public float moveTime = 0.0f;
