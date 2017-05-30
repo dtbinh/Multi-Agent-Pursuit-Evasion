@@ -3,7 +3,6 @@ package com.dke.pursuitevasion.CXSearchingAlgorithm;
 import com.dke.pursuitevasion.CXSearchingAlgorithm.CXAgentTaskType.*;
 import com.dke.pursuitevasion.CXSearchingAlgorithm.CXMessage.*;
 import com.dke.pursuitevasion.CellDecompose.Graph.*;
-import com.dke.pursuitevasion.Entities.Components.AgentComponent;
 import com.dke.pursuitevasion.Entities.Components.StateComponent;
 import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
 
@@ -121,7 +120,7 @@ public class CXAgentUtility {
                     CXDecomposedGraphNode dNode = (CXDecomposedGraphNode) rightNeighbours.get(0);
                     CXPoint agentLocation = new CXPoint(stateComponent.position.x,stateComponent.position.z);
 
-                    agentLocation = CXPoint.converToGraphCoordiantion(agentLocation);
+                    agentLocation = CXPoint.converToGraphCoordination(agentLocation);
                     CXPoint newPoint = dNode.getTopLeftNode().location;
 
                     // The reason use CXPoint.distance instead of  equal because the number has too much decimal
@@ -197,7 +196,7 @@ public class CXAgentUtility {
         return destination;
     }
 
-    public PursuerComponent checkleftAreaIsBeenSearched(CXGraph decomposedGraph,PursuerComponent pursuerComponent,HashMap searchedArea, StateComponent stateComponent){
+    public PursuerComponent checkLeftAreaIsBeenSearched(CXGraph decomposedGraph, PursuerComponent pursuerComponent, HashMap searchedArea, StateComponent stateComponent){
 
         // Check all left area is been searched or not ? --> Yes, Check the location --> It's in the top-right location? Add Searching task: state = Free;
 

@@ -122,11 +122,11 @@ public class SimulatorScreen implements Screen {
         }
 
         engine.addSystem(new GraphicsSystem(cam, env));
-        engine.addSystem(new SimulationSystem());
+        //engine.addSystem(new SimulationSystem());
         VisionSystem visionSystem = new VisionSystem();
         engine.addSystem(visionSystem);
         engine.addSystem(new CCTvSystem(visionSystem, map));
-        engine.addSystem(new PursuerSystem(visionSystem, graph,map));
+        engine.addSystem(new PursuerSystem(visionSystem, graph, map));
 
         for (int i=0; i<map.getaI().length; i++) {
             if(map.getaI()[i].isCCTV){

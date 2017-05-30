@@ -84,8 +84,8 @@ public class EntityFactory {
         // Adding ObserverComponent for VisionSystem
         ObserverComponent observerComponent = new ObserverComponent();
         observerComponent.position = new Vector2(transformComponent.position.x, transformComponent.position.y);
-        observerComponent.fovAngle = 30f;
-        observerComponent.distance = 0.5f;
+        observerComponent.fovAngle = 45f;
+        observerComponent.distance = 4.5f;
         entity.add(observerComponent);
 
         PursuerComponent pursuerComponent = new PursuerComponent();

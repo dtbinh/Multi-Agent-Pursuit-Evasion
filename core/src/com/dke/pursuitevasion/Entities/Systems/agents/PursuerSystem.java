@@ -23,7 +23,6 @@ import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
 import com.dke.pursuitevasion.Entities.Mappers;
 import com.dke.pursuitevasion.Entities.Systems.VisionSystem;
 import com.dke.pursuitevasion.PolyMap;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ import java.util.List;
  * Created by Nicola Gheza on 23/05/2017.
  */
 public class PursuerSystem extends IteratingSystem {
-    private static final float DETECTION_TIME = 0.5f;
+    private static final float DETECTION_TIME = 0.0f;
 
     private ImmutableArray<Entity> evaders;
     private VisionSystem visionSystem;
@@ -182,8 +181,8 @@ public class PursuerSystem extends IteratingSystem {
                 float velocity = stateC.velocity.x;
                 CXPoint updateLocation = this.agentUtility.getNextMovingPoint(destination,destination,velocity);
 
-                CXPoint newDestination = CXPoint.converToGraphCoordiantion(destination);
-                CXPoint newUpdateLocation = CXPoint.converToGraphCoordiantion(updateLocation);
+                CXPoint newDestination = CXPoint.converToGraphCoordination(destination);
+                CXPoint newUpdateLocation = CXPoint.converToGraphCoordination(updateLocation);
                 System.out.println("Moving destination x = "+ newDestination.x + " y = "+newDestination.y + " ; UpdateLocation is x = "+ newUpdateLocation.x + " y = " + newUpdateLocation.y);
 
                 stateC.position = stateC.position.set((float)updateLocation.x,stateC.position.y,(float)updateLocation.y);
@@ -235,7 +234,7 @@ public class PursuerSystem extends IteratingSystem {
             case WaitSearching:{
                 this.printStateAndLocation("WaitSearching",new CXPoint(stateC.position.x, stateC.position.z));
                 // 1. Check the left area is been searched or not ? --> Yes, Check the location --> It's in the top-right location? Add Searching task: state = Free;
-                pursuerC   = this.agentUtility.checkleftAreaIsBeenSearched(this.graph,pursuerC,this.searchedArea,stateC);
+                pursuerC   = this.agentUtility.checkLeftAreaIsBeenSearched(this.graph,pursuerC,this.searchedArea,stateC);
                 break;
             }
             case FinishGame:{
@@ -248,7 +247,7 @@ public class PursuerSystem extends IteratingSystem {
     }
 
     private void printStateAndLocation(String state,CXPoint location){
-        CXPoint point = CXPoint.converToGraphCoordiantion(location);
+        CXPoint point = CXPoint.converToGraphCoordination(location);
         System.out.println("State: " + state +  ",Current Location " + point.x + " " +point.y);
     }
 
@@ -262,7 +261,7 @@ public class PursuerSystem extends IteratingSystem {
         else {
             moveVision(pursuerComponent, stateComponent, deltaTime);
         }
-
+        moveVision(pursuerComponent, stateComponent, deltaTime);
         limitAngle(pursuerComponent);
 
     }
@@ -338,6 +337,7 @@ public class PursuerSystem extends IteratingSystem {
         pursuer.detectionTime = pursuer.alerted ? pursuer.detectionTime + deltaTime : 0.0f;
 
         if (pursuer.detectionTime > DETECTION_TIME) {
+            System.out.println("INTRUDER DETECTED");
             Vector3 start = new Vector3(pursuer.position.x, 0, pursuer.position.z);
             Vector3 end = new Vector3(pursuer.targetPosition.x, 0, pursuer.targetPosition.y);
             p = pathFinder.findPath(start, end);

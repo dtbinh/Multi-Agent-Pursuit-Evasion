@@ -51,7 +51,7 @@ public class CXPoint implements Serializable {
         return point;
     }
 
-    public static CXPoint converToGraphCoordiantion(CXPoint orignialCoordinatePoint){
+    public static CXPoint converToGraphCoordination(CXPoint orignialCoordinatePoint){
         CXPoint point = new CXPoint();
         point.x  = orignialCoordinatePoint.x + 5;
         point.y = orignialCoordinatePoint.y * (-1) + 5;
