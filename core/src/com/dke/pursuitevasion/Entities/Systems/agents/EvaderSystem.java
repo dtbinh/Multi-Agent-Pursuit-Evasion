@@ -36,7 +36,9 @@ public class EvaderSystem extends IteratingSystem {
             System.out.println(evaderComponent.position+"    ev pos");
             createPath(evaderComponent, evaderComponent.position);
         }
-        moveEvaders(evaderComponent, stateComponent);
+        if (!evaderComponent.captured) {
+            moveEvaders(evaderComponent, stateComponent);
+        }
     }
 
     private void createPath(AgentComponent evader, Vector3 lastPosition){

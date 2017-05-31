@@ -16,6 +16,7 @@ import com.dke.pursuitevasion.CXSearchingAlgorithm.CXAgentTaskType.CXAgentMoving
 import com.dke.pursuitevasion.CXSearchingAlgorithm.CXAgentUtility;
 import com.dke.pursuitevasion.CXSearchingAlgorithm.CXMessage.CXMessage;
 import com.dke.pursuitevasion.CellDecompose.Graph.*;
+import com.dke.pursuitevasion.Entities.Components.AgentComponent;
 import com.dke.pursuitevasion.Entities.Components.ObservableComponent;
 import com.dke.pursuitevasion.Entities.Components.ObserverComponent;
 import com.dke.pursuitevasion.Entities.Components.StateComponent;
@@ -39,7 +40,7 @@ public class PursuerSystem extends IteratingSystem {
     private ImmutableArray<Entity> evaders;
     private VisionSystem visionSystem;
     private Vector2 position = new Vector2();
-
+    private Engine engine;
     private PathFinder pathFinder;
     List<Node> p;
 
@@ -82,6 +83,9 @@ public class PursuerSystem extends IteratingSystem {
     @Override
     public void addedToEngine(Engine engine) {
         super.addedToEngine(engine);
+        if (!runOnce) {
+            this.engine = engine;
+        }
         evaders = engine.getEntitiesFor(Family.all(ObservableComponent.class).get());
     }
 
@@ -105,6 +109,7 @@ public class PursuerSystem extends IteratingSystem {
         CXAgentTask task2 = new CXAgentTask(CXAgentState.Scanning);
         task2.scanTask.scanScope.add((Float)45.0f);
         task2.scanTask.scanScope.add((Float)90.0f);
+        task2.scanTask.scanScope.add((Float)125.f);
 
         pC.taskList.add(task1);
         pC.setState(CXAgentState.Moving);
@@ -393,7 +398,14 @@ public class PursuerSystem extends IteratingSystem {
         if (visionSystem.canSee(entity,target)) {
             pursuer.alerted = true;
             pursuer.targetPosition.set(targetPos);
+            capture(target);
         }
+    }
+
+    private void capture(Entity target) {
+        AgentComponent agentComponent = Mappers.agentMapper.get(target);
+        agentComponent.captured = true;
+        engine.removeEntity(target);
     }
 
 
