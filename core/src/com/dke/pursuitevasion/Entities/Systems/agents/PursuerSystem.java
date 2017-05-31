@@ -16,6 +16,7 @@ import com.dke.pursuitevasion.CXSearchingAlgorithm.CXAgentTaskType.CXAgentMoving
 import com.dke.pursuitevasion.CXSearchingAlgorithm.CXAgentUtility;
 import com.dke.pursuitevasion.CXSearchingAlgorithm.CXMessage.CXMessage;
 import com.dke.pursuitevasion.CellDecompose.Graph.*;
+import com.dke.pursuitevasion.Entities.Components.AgentComponent;
 import com.dke.pursuitevasion.Entities.Components.ObservableComponent;
 import com.dke.pursuitevasion.Entities.Components.ObserverComponent;
 import com.dke.pursuitevasion.Entities.Components.StateComponent;
@@ -23,6 +24,7 @@ import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
 import com.dke.pursuitevasion.Entities.Mappers;
 import com.dke.pursuitevasion.Entities.Systems.VisionSystem;
 import com.dke.pursuitevasion.PolyMap;
+import sun.management.Agent;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -58,6 +60,7 @@ public class PursuerSystem extends IteratingSystem {
     private CXAgentUtility agentUtility = new CXAgentUtility();
 
     private boolean runOnce = false;
+    private Engine engine;
 
     public PursuerSystem(VisionSystem visionSystem, CXGraph graph, PolyMap map) {
         super(Family.all(PursuerComponent.class).get());
@@ -82,6 +85,7 @@ public class PursuerSystem extends IteratingSystem {
     @Override
     public void addedToEngine(Engine engine) {
         super.addedToEngine(engine);
+        if (!runOnce) this.engine = engine;
         evaders = engine.getEntitiesFor(Family.all(ObservableComponent.class).get());
     }
 
@@ -409,6 +413,7 @@ public class PursuerSystem extends IteratingSystem {
     private void updateDetection(Entity entity, Entity target) {
         Vector2 targetPos = Mappers.observableMapper.get(target).position;
         PursuerComponent pursuer = Mappers.pursuerMapper.get(entity);
+        AgentComponent evader = Mappers.agentMapper.get(target);
 
         pursuer.alerted = false;
         pursuer.targetPosition.set(0.0f, 0.0f);
@@ -416,6 +421,9 @@ public class PursuerSystem extends IteratingSystem {
         if (visionSystem.canSee(entity,target)) {
             pursuer.alerted = true;
             pursuer.targetPosition.set(targetPos);
+            evader.captured = true;
+            System.out.println(evader + " is captured.");
+            engine.removeEntity(target);
         }
     }
 
