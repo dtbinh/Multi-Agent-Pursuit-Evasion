@@ -159,7 +159,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
         wallEditorButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if(controller.getMode() == Mode.DO_NOTHING || controller.getMode() == Mode.EVADER_EDITOR || controller.getMode() == Mode.PURSUER_EDITOR || controller.getMode()==Mode.CCTV_EDITOR )
+                if(controller.getMode() == Mode.EVADER_EDITOR || controller.getMode() == Mode.PURSUER_EDITOR || controller.getMode()==Mode.CCTV_EDITOR )
                     controller.setMode(Mode.WALL_EDITOR);
             }
         });
@@ -167,7 +167,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
        addPursuerButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (controller.getMode() == Mode.DO_NOTHING || controller.getMode() == Mode.WALL_EDITOR || controller.getMode()==Mode.EVADER_EDITOR || controller.getMode()==Mode.CCTV_EDITOR)
+                if (controller.getMode() == Mode.WALL_EDITOR || controller.getMode()==Mode.EVADER_EDITOR || controller.getMode()==Mode.CCTV_EDITOR)
                     controller.setMode(Mode.PURSUER_EDITOR);
             }
         });
@@ -175,7 +175,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
         addEvaderButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (controller.getMode() == Mode.DO_NOTHING || controller.getMode() == Mode.WALL_EDITOR || controller.getMode()==Mode.PURSUER_EDITOR || controller.getMode()==Mode.CCTV_EDITOR)
+                if (controller.getMode() == Mode.WALL_EDITOR || controller.getMode()==Mode.PURSUER_EDITOR || controller.getMode()==Mode.CCTV_EDITOR)
                    controller.setMode(Mode.EVADER_EDITOR);
             }
         });
@@ -183,7 +183,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
         addCCTVButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (controller.getMode() == Mode.DO_NOTHING || controller.getMode() == Mode.WALL_EDITOR || controller.getMode()==Mode.PURSUER_EDITOR || controller.getMode()==Mode.EVADER_EDITOR)
+                if (controller.getMode() == Mode.WALL_EDITOR || controller.getMode()==Mode.PURSUER_EDITOR || controller.getMode()==Mode.EVADER_EDITOR)
                     controller.setMode(Mode.CCTV_EDITOR);
             }
         });
