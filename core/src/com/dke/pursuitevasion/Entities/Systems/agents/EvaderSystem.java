@@ -33,14 +33,12 @@ public class EvaderSystem extends IteratingSystem {
         AgentComponent evaderComponent = Mappers.agentMapper.get(entity);
         StateComponent stateComponent = Mappers.stateMapper.get(entity);
         if(evaderComponent.evaderPath==null||evaderComponent.evaderPath.size()==0){
-            System.out.println(evaderComponent.position+"    ev pos");
             createPath(evaderComponent, evaderComponent.position);
         }
         moveEvaders(evaderComponent, stateComponent);
     }
 
     private void createPath(AgentComponent evader, Vector3 lastPosition){
-        System.out.println("damn");
         boolean[][] nodeGrid = pathFinder.getNodeGrid();
         int width = pathFinder.width;
         Random rand = new Random();
@@ -72,24 +70,40 @@ public class EvaderSystem extends IteratingSystem {
     public static ArrayList<Vector3> addAdditionalSteps(AgentComponent eC, List<Node> p){
         eC.evaderPath = new ArrayList<Vector3>();
         p.size();
-        float stepSize = 15;
+        float stepSize = 10;
+        float diagStepSize = (float) Math.floor(1.4*stepSize);
         if(p.size()>1) {
             for (int i = 0; i < p.size() - 1; i++) {
                 Vector3 start = new Vector3(p.get(i).worldX, p.get(i).worldY, p.get(i).worldZ);
                 Vector3 end = new Vector3(p.get(i + 1).worldX, p.get(i + 1).worldY, p.get(i + 1).worldZ);
                 float adjX = end.x - start.x;
                 float adjZ = end.z - start.z;
-                for (float j = 1; j < stepSize; j++) {
-                    double scale = j/stepSize;
-                    BigDecimal sc = BigDecimal.valueOf(scale);
-                    BigDecimal xX = BigDecimal.valueOf(adjX);
-                    BigDecimal zZ = BigDecimal.valueOf(adjZ);
-                    BigDecimal newX = sc.multiply(xX);
-                    BigDecimal newZ = sc.multiply(zZ);
-                    float bDX = newX.floatValue();
-                    float bDZ = newZ.floatValue();
-                    Vector3 position = new Vector3(start.x+bDX, 0, start.z+bDZ);
-                    eC.evaderPath.add(position);
+                if(adjX!=0 && adjZ!=0){
+                    for (float j = 1; j < diagStepSize; j++) {
+                        double scale = j / diagStepSize;
+                        BigDecimal sc = BigDecimal.valueOf(scale);
+                        BigDecimal xX = BigDecimal.valueOf(adjX);
+                        BigDecimal zZ = BigDecimal.valueOf(adjZ);
+                        BigDecimal newX = sc.multiply(xX);
+                        BigDecimal newZ = sc.multiply(zZ);
+                        float bDX = newX.floatValue();
+                        float bDZ = newZ.floatValue();
+                        Vector3 position = new Vector3(start.x + bDX, 0, start.z + bDZ);
+                        eC.evaderPath.add(position);
+                    }
+                }else {
+                    for (float j = 1; j < stepSize; j++) {
+                        double scale = j / stepSize;
+                        BigDecimal sc = BigDecimal.valueOf(scale);
+                        BigDecimal xX = BigDecimal.valueOf(adjX);
+                        BigDecimal zZ = BigDecimal.valueOf(adjZ);
+                        BigDecimal newX = sc.multiply(xX);
+                        BigDecimal newZ = sc.multiply(zZ);
+                        float bDX = newX.floatValue();
+                        float bDZ = newZ.floatValue();
+                        Vector3 position = new Vector3(start.x + bDX, 0, start.z + bDZ);
+                        eC.evaderPath.add(position);
+                    }
                 }
             }
         }

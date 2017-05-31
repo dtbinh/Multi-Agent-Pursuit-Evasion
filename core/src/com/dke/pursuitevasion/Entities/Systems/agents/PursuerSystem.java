@@ -396,5 +396,27 @@ public class PursuerSystem extends IteratingSystem {
         }
     }
 
+    private ArrayList<CXPoint> discretizePath(CXPoint start, CXPoint end){
+        ArrayList<CXPoint> path= new ArrayList<CXPoint>();
+        double distX = end.x-start.x;
+        double distY = end.y-start.y;
+        double distance = Math.sqrt((distX*distX)+(distY*distY));
+
+        double steps = Math.floor(distance/0.2);
+        double stepSize = 15;
+        double scale = 1/(steps*stepSize);
+        for(int i = 1;i < stepSize*steps;i++){
+            BigDecimal sc = BigDecimal.valueOf(scale);
+            BigDecimal xX = BigDecimal.valueOf(distX);
+            BigDecimal zZ = BigDecimal.valueOf(distY);
+            BigDecimal newX = sc.multiply(xX);
+            BigDecimal newZ = sc.multiply(zZ);
+            double adjustX = newX.doubleValue();
+            double adjustY = newZ.doubleValue();
+            CXPoint nextPos = new CXPoint(start.x+adjustX, start.y+adjustY);
+            path.add(nextPos);
+        }
+        return path;
+    }
 
 }
