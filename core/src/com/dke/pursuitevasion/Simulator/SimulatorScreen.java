@@ -1,8 +1,6 @@
 package com.dke.pursuitevasion.Simulator;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -11,7 +9,6 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.math.Vector3;
 import com.dke.pursuitevasion.*;
 import com.dke.pursuitevasion.CellDecompose.Graph.CXGraph;
 import com.dke.pursuitevasion.CellDecompose.Graph.CXGraphNode;
@@ -19,7 +16,6 @@ import com.dke.pursuitevasion.CellDecompose.Graph.CXPoint;
 import com.dke.pursuitevasion.CellDecompose.Graph.CellDecompositionAlgorithm;
 import com.dke.pursuitevasion.Entities.EntityFactory;
 import com.dke.pursuitevasion.Entities.Systems.GraphicsSystem;
-import com.dke.pursuitevasion.Entities.Systems.SimulationSystem;
 import com.dke.pursuitevasion.Entities.Systems.VisionSystem;
 import com.dke.pursuitevasion.Entities.Systems.agents.CCTvSystem;
 import com.dke.pursuitevasion.Entities.Systems.agents.EvaderSystem;
@@ -29,7 +25,7 @@ import com.google.gson.Gson;
 /**
  * Created by Nicola Gheza on 08/03/2017.
  */
-public class SimulatorScreen implements Screen {
+public class SimulatorScreen implements Screen, InputProcessor{
 
     private PursuitEvasion game;
     private PolyMap map;
@@ -69,6 +65,7 @@ public class SimulatorScreen implements Screen {
 
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(trackingCameraController);
+        inputMultiplexer.addProcessor(this);
 
         // Convert map into graph
         CXGraph polygon = new CXGraph();
@@ -188,5 +185,49 @@ public class SimulatorScreen implements Screen {
     @Override
     public void dispose() {
 
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        if (keycode == Input.Keys.ESCAPE) {
+            game.showPauseMenu();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
     }
 }
