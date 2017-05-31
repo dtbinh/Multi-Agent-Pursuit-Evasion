@@ -173,13 +173,14 @@ public class PursuerSystem extends IteratingSystem {
                 break;
             }
             case Moving:{
-                this.printStateAndLocation("Moving",new CXPoint(stateC.position.x, stateC.position.z));
+                CXPoint curLocation = new CXPoint(stateC.position.x, stateC.position.z);
+                this.printStateAndLocation("Moving", curLocation);
                 CXAgentTask task = (CXAgentTask) pursuerC.taskList.get(0);
                 CXPoint destination = task.movingTask.movingDestination;
 
                 // Get the update location
                 float velocity = stateC.velocity.x;
-                CXPoint updateLocation = this.agentUtility.getNextMovingPoint(destination,destination,velocity);
+                CXPoint updateLocation = this.agentUtility.getNextMovingPoint(curLocation, destination, velocity);
 
                 CXPoint newDestination = CXPoint.converToGraphCoordination(destination);
                 CXPoint newUpdateLocation = CXPoint.converToGraphCoordination(updateLocation);
