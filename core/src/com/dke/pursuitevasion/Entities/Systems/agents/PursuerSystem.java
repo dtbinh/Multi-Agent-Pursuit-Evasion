@@ -16,6 +16,7 @@ import com.dke.pursuitevasion.CXSearchingAlgorithm.CXAgentTaskType.CXAgentMoving
 import com.dke.pursuitevasion.CXSearchingAlgorithm.CXAgentUtility;
 import com.dke.pursuitevasion.CXSearchingAlgorithm.CXMessage.CXMessage;
 import com.dke.pursuitevasion.CellDecompose.Graph.*;
+import com.dke.pursuitevasion.Entities.Components.AgentComponent;
 import com.dke.pursuitevasion.Entities.Components.ObservableComponent;
 import com.dke.pursuitevasion.Entities.Components.ObserverComponent;
 import com.dke.pursuitevasion.Entities.Components.StateComponent;
@@ -39,7 +40,7 @@ public class PursuerSystem extends IteratingSystem {
     private ImmutableArray<Entity> evaders;
     private VisionSystem visionSystem;
     private Vector2 position = new Vector2();
-
+    private Engine engine;
     private PathFinder pathFinder;
     List<Node> p;
 
@@ -82,6 +83,9 @@ public class PursuerSystem extends IteratingSystem {
     @Override
     public void addedToEngine(Engine engine) {
         super.addedToEngine(engine);
+        if (!runOnce) {
+            this.engine = engine;
+        }
         evaders = engine.getEntitiesFor(Family.all(ObservableComponent.class).get());
     }
 
@@ -105,6 +109,7 @@ public class PursuerSystem extends IteratingSystem {
         CXAgentTask task2 = new CXAgentTask(CXAgentState.Scanning);
         task2.scanTask.scanScope.add((Float)45.0f);
         task2.scanTask.scanScope.add((Float)90.0f);
+        task2.scanTask.scanScope.add((Float)125.f);
 
         pC.taskList.add(task1);
         pC.setState(CXAgentState.Moving);
@@ -393,30 +398,15 @@ public class PursuerSystem extends IteratingSystem {
         if (visionSystem.canSee(entity,target)) {
             pursuer.alerted = true;
             pursuer.targetPosition.set(targetPos);
+            capture(target);
         }
     }
 
-    private ArrayList<CXPoint> discretizePath(CXPoint start, CXPoint end){
-        ArrayList<CXPoint> path= new ArrayList<CXPoint>();
-        double distX = end.x-start.x;
-        double distY = end.y-start.y;
-        double distance = Math.sqrt((distX*distX)+(distY*distY));
-
-        double steps = Math.floor(distance/0.2);
-        double stepSize = 15;
-        double scale = 1/(steps*stepSize);
-        for(int i = 1;i < stepSize*steps;i++){
-            BigDecimal sc = BigDecimal.valueOf(scale);
-            BigDecimal xX = BigDecimal.valueOf(distX);
-            BigDecimal zZ = BigDecimal.valueOf(distY);
-            BigDecimal newX = sc.multiply(xX);
-            BigDecimal newZ = sc.multiply(zZ);
-            double adjustX = newX.doubleValue();
-            double adjustY = newZ.doubleValue();
-            CXPoint nextPos = new CXPoint(start.x+adjustX, start.y+adjustY);
-            path.add(nextPos);
-        }
-        return path;
+    private void capture(Entity target) {
+        AgentComponent agentComponent = Mappers.agentMapper.get(target);
+        agentComponent.captured = true;
+        engine.removeEntity(target);
     }
+
 
 }

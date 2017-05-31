@@ -12,4 +12,5 @@ public class AgentComponent implements Component {
     public float radius;
     public ArrayList<Vector3> evaderPath;
     public Vector3 position;
+    public boolean captured = false;
 }
