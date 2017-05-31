@@ -5,8 +5,10 @@ import com.dke.pursuitevasion.CXSearchingAlgorithm.CXMessage.*;
 import com.dke.pursuitevasion.CellDecompose.Graph.*;
 import com.dke.pursuitevasion.Entities.Components.StateComponent;
 import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
+import sun.misc.Queue;
 
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -63,44 +65,27 @@ public class CXAgentUtility {
     }
 
     public PursuerComponent tranferSearchingTaskToMovingTask(PursuerComponent agent){
+
+        // warning bug!!!!!!!!!!!!
         CXAgentTask task = (CXAgentTask) agent.taskList.getFirst();
         CXDecomposedGraphNode searchingArea = task.searchTask.searchArea;
         agent.currentSearchArea = task.searchTask.searchArea.nodeNumber;
 
-        CXGraphNode  topLeftNode  = searchingArea.getTopLeftNode();
         CXGraphNode  topRightNode = searchingArea.getTopRightNode();
-        CXGraphNode  downLeftNode = searchingArea.getDownLeftNode();
+        CXPoint destination = topRightNode.location;
 
-        ArrayList destinationList = new ArrayList();
-
-        // Hint: Can consider saving the vertices as a map in CXDecomposedNode property
-        // Segment the task
-        for (int i = 0 ; i < searchingArea.vertices.size();i++){
-            CXGraphNode node = (CXGraphNode) searchingArea.vertices.get(i);
-            if (node.location.x > topLeftNode.location.x && node.location.x < topRightNode.location.x){
-                if (CXPoint.distance(node.location,topLeftNode.location) < CXPoint.distance(node.location,downLeftNode.location)){
-                    destinationList.add(node.location);
-                }
-            }
-        }
-        destinationList.add(topRightNode.location);
-
-        // Remove searchingTask
         agent.taskList.removeFirst();
 
-        // Add Moving task
-        for (int i = 0; i < destinationList.size(); i++) {
-                CXAgentTask newTask = new CXAgentTask(CXAgentState.Moving);
+        CXAgentTask newTask = new CXAgentTask(CXAgentState.Moving);
 
-                CXPoint destination = (CXPoint)destinationList.get(i);
-                destination =  CXPoint.convertToOriginalCoordination(destination);
+        destination =  CXPoint.convertToOriginalCoordination(destination);
 
-                CXAgentMovingTask movingTask = new CXAgentMovingTask(destination);
-                newTask.movingTask = movingTask;
+        CXAgentMovingTask movingTask = new CXAgentMovingTask(destination);
+        newTask.movingTask = movingTask;
 
-                agent.taskList.addFirst(newTask);
-                agent.setState(CXAgentState.Moving);
-        }
+        agent.taskList.addFirst(newTask);
+        agent.setState(CXAgentState.Moving);
+
         return agent;
     }
 
@@ -126,6 +111,7 @@ public class CXAgentUtility {
                     // The reason use CXPoint.distance instead of  equal because the number has too much decimal
                     if (CXPoint.distance(agentLocation,newPoint) < 0.0001) { // 转变了坐标
                         // If the next search area is the final Area
+                        System.out.println(rightNode.nodeNumber);
                         if (rightNode.nodeNumber == this.finalArea.nodeNumber){
                             CXAgentTask newTask = new CXAgentTask(CXAgentState.Scanning);
                             newTask.scanTask.scanScope.add((Float)0.0f);
@@ -136,13 +122,12 @@ public class CXAgentUtility {
                             CXAgentTask finishTask = new CXAgentTask(CXAgentState.FinishGame);
                             pursuerComponent.taskList.add(finishTask);
                         }
-                        else {
-                            CXAgentTask newTask = new CXAgentTask(CXAgentState.Searching);
-                            newTask.searchTask.searchArea = dNode;
-                            pursuerComponent.taskList.add(newTask);
-                            pursuerComponent.currentSearchArea = dNode.nodeNumber;
-                            pursuerComponent.setState(CXAgentState.Searching);
-                        }
+                        CXAgentTask newTask = new CXAgentTask(CXAgentState.Searching);
+                        newTask.searchTask.searchArea = dNode;
+                        pursuerComponent.taskList.add(newTask);
+                        pursuerComponent.currentSearchArea = dNode.nodeNumber;
+                        pursuerComponent.setState(CXAgentState.Searching);
+
                     }
                     else pursuerComponent.setState(CXAgentState.Free);
                 } else {
@@ -152,48 +137,78 @@ public class CXAgentUtility {
             }
 
             default:{
-                // # Warning: 如果有两个以上的话，那么这就不适合了。 先从两个的开始试起。
-                 LinkedList downUpList = new LinkedList();
 
-                 CXDecomposedGraphNode dNode = (CXDecomposedGraphNode) rightNeighbours.get(0);
-                 double y = dNode.getTopLeftNode().location.x;
+                LinkedList downUpList = new LinkedList();
 
-                 CXDecomposedGraphNode dNode1 = (CXDecomposedGraphNode) rightNeighbours.get(1);
-                 double y1 = dNode1.getTopLeftNode().location.x;
+                CXDecomposedGraphNode dNode = (CXDecomposedGraphNode) rightNeighbours.get(0);
+                double y = dNode.getTopLeftNode().location.y;
 
-                 if (y > y1){
-                     downUpList.add(dNode);
-                     downUpList.add(dNode1);
-                 }
-                 else {
-                     downUpList.add(dNode);
-                     downUpList.add(dNode1);
-                 }
-                    CXMessage message = new CXMessage();
-                    message.sender = pursuerComponent.number;
-                    message.messageType = CXMessageType.CallBackUp;
+                CXDecomposedGraphNode dNode1 = (CXDecomposedGraphNode) rightNeighbours.get(1);
+                double y1 = dNode1.getTopLeftNode().location.y;
 
-                    CXAgentTask messageContent = new CXAgentTask();
-                    messageContent.taskState = CXAgentState.Searching;
+                if (y > y1){
+                    downUpList.add(dNode);
+                    downUpList.add(dNode1);
+                }
+                else {
+                    downUpList.add(dNode);
+                    downUpList.add(dNode1);
+                }
+                CXMessage message = new CXMessage();
+                message.sender = pursuerComponent.number;
+                message.messageType = CXMessageType.CallBackUp;
 
-                    CXAgentSearchTask searchingTask = new CXAgentSearchTask();
-                    searchingTask.searchArea = (CXDecomposedGraphNode)downUpList.getLast();
-                    messageContent.searchTask = searchingTask;
+                CXAgentTask messageContent = new CXAgentTask();
+                messageContent.taskState = CXAgentState.Searching;
 
-                    message.messageContent = messageContent;
+                CXAgentSearchTask searchingTask = new CXAgentSearchTask();
+                searchingTask.searchArea = (CXDecomposedGraphNode)downUpList.getLast();
+                messageContent.searchTask = searchingTask;
 
-                    messageLinkedList.add(message);
-                    pursuerComponent.setState(CXAgentState.WaitBackup);
-                    System.out.println("Agent " + pursuerComponent.number + " Send a backUp message, Search Area " + searchingTask.searchArea.nodeNumber );
+                message.messageContent = messageContent;
+
+                messageLinkedList.add(message);
+                pursuerComponent.setState(CXAgentState.WaitBackup);
+                System.out.println("Agent " + pursuerComponent.number + " Send a backUp message, Search Area " + searchingTask.searchArea.nodeNumber );
 
                 return pursuerComponent;
             }
         }
     }
 
-    public CXPoint getNextMovingPoint(CXPoint currentPoint, CXPoint destination,float velocity){
-        // TBD
-        return destination;
+    public CXPoint getNextMovingPoint(PursuerComponent pC, CXPoint currentPoint, CXPoint destination){
+        if(pC.pursuerPointPath.size()==0){
+            pC.pursuerPointPath = discretizePath(currentPoint, destination);
+        }
+        if(pC.pursuerPointPath.size()>1){
+            return pC.pursuerPointPath.remove(0);
+        }else {
+            pC.pursuerPointPath.remove(0);
+            return destination;
+        }
+    }
+
+    private ArrayList<CXPoint> discretizePath(CXPoint start, CXPoint end){
+        ArrayList<CXPoint> path = new ArrayList<CXPoint>();
+        double distX = end.x - start.x;
+        double distY = end.y - start.y;
+        double distance = Math.sqrt((distX*distX)+(distY*distY));
+        double steps = distance/0.2;
+        double stepSize = 15;
+
+        for(int i=0;i<steps*stepSize;i++){
+            double scale = i/(steps*stepSize);
+            BigDecimal sc = BigDecimal.valueOf(scale);
+            BigDecimal xX = BigDecimal.valueOf(distX);
+            BigDecimal zZ = BigDecimal.valueOf(distY);
+            BigDecimal newX = sc.multiply(xX);
+            BigDecimal newZ = sc.multiply(zZ);
+            double bDX = newX.doubleValue();
+            double bDZ = newZ.doubleValue();
+            CXPoint position = new CXPoint(start.x+bDX, start.y+bDZ);
+            path.add(position);
+        }
+        return path;
     }
 
     public PursuerComponent checkLeftAreaIsBeenSearched(CXGraph decomposedGraph, PursuerComponent pursuerComponent, HashMap searchedArea, StateComponent stateComponent){
@@ -206,20 +221,30 @@ public class CXAgentUtility {
         ArrayList toBesearchedArea = GraphTool.findTheRightNeighbours(decomposedGraph,node);
         CXDecomposedGraphNode rightNode = (CXDecomposedGraphNode)toBesearchedArea.get(0);
 
-        ArrayList leftNeighbours = GraphTool.findtheLeftNeighbours(decomposedGraph,node);
+        ArrayList leftNeighbours = GraphTool.findtheLeftNeighbours(decomposedGraph,rightNode);
 
         // 2. check the area
         if (theAreaIsBeenSearched(leftNeighbours,searchedArea)){
             // 1. Check Location --> Free / New Task
 
+            // Change agentLocation to graph coordination system
             CXPoint agentLocation = new CXPoint(stateComponent.position.x,stateComponent.position.z);
+            agentLocation = CXPoint.converToGraphCoordination(agentLocation);
 
-            agentLocation = CXPoint.convertToOriginalCoordination(agentLocation);
-            if (agentLocation == rightNode.getTopLeftNode().location) { // 转变了坐标
-                CXAgentTask newTask = new CXAgentTask(CXAgentState.Searching);
-                newTask.searchTask.searchArea = rightNode;
-                pursuerComponent.taskList.add(newTask);
-                pursuerComponent.currentSearchArea = rightNode.nodeNumber;
+            float  distance =  (float) CXPoint.distance(agentLocation,rightNode.getTopLeftNode().location);
+            System.out.println(rightNode.getTopLeftNode().location.x + " " + rightNode.getTopLeftNode().location.y);
+            if (CXPoint.distance(agentLocation,rightNode.getTopLeftNode().location) < 0.001) {
+                if (rightNode.nodeNumber == this.finalArea.nodeNumber){
+                    CXAgentTask newTask = new CXAgentTask(CXAgentState.Scanning);
+                    newTask.scanTask.scanScope.add((Float)0.0f);
+                    pursuerComponent.taskList.add(newTask);
+                    pursuerComponent.currentSearchArea = finalArea.nodeNumber;
+                    pursuerComponent.setState(CXAgentState.Scanning);
+
+                    CXAgentTask finishTask = new CXAgentTask(CXAgentState.FinishGame);
+                    pursuerComponent.taskList.add(finishTask);
+                }
+                else pursuerComponent.setState(CXAgentState.FinisihSearching); // Should invoke find new path
             }
             else pursuerComponent.setState(CXAgentState.Free);
         }
@@ -241,14 +266,12 @@ public class CXAgentUtility {
                 waitSeachNode = node;
             }
         }
-
         if (count == rightNeighbours.size() -1){
             CXAgentTask searchTask = new CXAgentTask(CXAgentState.Searching);
             searchTask.searchTask.searchArea = waitSeachNode;
             pursuerComponent.taskList.add(searchTask);
             pursuerComponent.setState(CXAgentState.Searching);
         }
-
         return pursuerComponent;
     }
 

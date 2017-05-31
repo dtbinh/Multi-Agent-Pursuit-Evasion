@@ -122,8 +122,8 @@ public class PursuerSystem extends IteratingSystem {
         // Get the pursuer current state
         PursuerComponent pursuerC = Mappers.pursuerMapper.get(entity);
         StateComponent stateC = Mappers.stateMapper.get(entity);
-        System.out.println();
-        System.out.println("------------- Agent: "+ pursuerC.number + " -------------");
+        //System.out.println();
+        //System.out.println("------------- Agent: "+ pursuerC.number + " -------------");
 
         switch (pursuerC.getState()){
             case Free:{
@@ -184,11 +184,11 @@ public class PursuerSystem extends IteratingSystem {
 
                 // Get the update location
                 float velocity = stateC.velocity.x;
-                CXPoint updateLocation = this.agentUtility.getNextMovingPoint(curLocation, destination, velocity);
+                CXPoint updateLocation = this.agentUtility.getNextMovingPoint(pursuerC, curLocation, destination);
 
                 CXPoint newDestination = CXPoint.converToGraphCoordination(destination);
                 CXPoint newUpdateLocation = CXPoint.converToGraphCoordination(updateLocation);
-                System.out.println("Moving destination x = "+ newDestination.x + " y = "+newDestination.y + " ; UpdateLocation is x = "+ newUpdateLocation.x + " y = " + newUpdateLocation.y);
+                //System.out.println("Moving destination x = "+ newDestination.x + " y = "+newDestination.y + " ; UpdateLocation is x = "+ newUpdateLocation.x + " y = " + newUpdateLocation.y);
 
                 stateC.position = stateC.position.set((float)updateLocation.x,stateC.position.y,(float)updateLocation.y);
                 if (updateLocation == destination){
@@ -199,7 +199,7 @@ public class PursuerSystem extends IteratingSystem {
                     else {
                         pursuerC.taskList.removeFirst();
 
-                        System.out.println("Agent " + pursuerC.number + " is arrived Destination ");
+                        //System.out.println("Agent " + pursuerC.number + " is arrived Destination ");
                         if (!pursuerC.taskList.isEmpty()){
                             CXAgentTask newTask = (CXAgentTask) pursuerC.taskList.getFirst();
                             pursuerC.setState(newTask.taskState);
@@ -214,7 +214,7 @@ public class PursuerSystem extends IteratingSystem {
             case Scanning:{
                 this.printStateAndLocation("Scanning",new CXPoint(stateC.position.x, stateC.position.z));
                 float value =  this.agentUtility.getTheNextScanPosition(pursuerC);
-                System.out.println("Current Radius is " + stateC.angle + " TargetRadius is "+ value);
+                //System.out.println("Current Radius is " + stateC.angle + " TargetRadius is "+ value);
                 stateC.angle = value;
                 pursuerC.currentAngle = value; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -254,7 +254,7 @@ public class PursuerSystem extends IteratingSystem {
 
     private void printStateAndLocation(String state,CXPoint location){
         CXPoint point = CXPoint.converToGraphCoordination(location);
-        System.out.println("State: " + state +  ",Current Location " + point.x + " " +point.y);
+        //System.out.println("State: " + state +  ",Current Location " + point.x + " " +point.y);
     }
 
     private void movePursuer(Entity entity, float deltaTime) {
@@ -385,29 +385,6 @@ public class PursuerSystem extends IteratingSystem {
             }
         }
         return pC.pursuerPath;
-    }
-
-    private ArrayList<CXPoint> discretizePath(CXPoint start, CXPoint end){
-        ArrayList<CXPoint> path = new ArrayList<CXPoint>();
-        double distX = end.x - start.x;
-        double distY = end.y - start.y;
-        double distance = Math.sqrt((distX*distX)+(distY*distY));
-        double steps = distance/0.2;
-        double stepSize = 15;
-
-        for(int i=0;i<steps*stepSize;i++){
-            double scale = i/(steps*stepSize);
-            BigDecimal sc = BigDecimal.valueOf(scale);
-            BigDecimal xX = BigDecimal.valueOf(distX);
-            BigDecimal zZ = BigDecimal.valueOf(distY);
-            BigDecimal newX = sc.multiply(xX);
-            BigDecimal newZ = sc.multiply(zZ);
-            double bDX = newX.doubleValue();
-            double bDZ = newZ.doubleValue();
-            CXPoint position = new CXPoint(start.x+bDX, start.y+bDZ);
-            path.add(position);
-        }
-        return path;
     }
 
     private void updateDetection(Entity entity, Entity target) {

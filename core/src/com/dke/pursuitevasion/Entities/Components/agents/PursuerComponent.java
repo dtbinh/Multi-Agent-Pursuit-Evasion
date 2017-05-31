@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.dke.pursuitevasion.CXSearchingAlgorithm.CXAgentState;
+import com.dke.pursuitevasion.CellDecompose.Graph.CXPoint;
 import com.dke.pursuitevasion.Entities.Direction;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class PursuerComponent implements Component {
     public float moveTime = 0.0f;
     public Vector3 position;
     public ArrayList<Vector3> pursuerPath = new ArrayList<Vector3>();
+    public ArrayList<CXPoint> pursuerPointPath = new ArrayList<CXPoint>();
 
     private CXAgentState state;
     public LinkedList taskList = new LinkedList();
@@ -36,7 +38,7 @@ public class PursuerComponent implements Component {
     public int currentSearchArea;
 
     public void setState(CXAgentState state){
-        System.out.println("Change State from "+ this.state +  " to "+ state);
+        //System.out.println("ComponentOperationHandlerge State from "+ this.state +  " to "+ state);
         this.state = state;
     }
     public CXAgentState getState(){
