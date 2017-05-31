@@ -54,8 +54,10 @@ public class NewSimulationWindow extends Window {
         startButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                    game.setScreen(new SimulatorScreen(game, file));
+                if(file!= null) {
+                    game.setScreen(new SimulatorScreen(game, file, null));
                     remove();
+                }
             }
         });
         //selectMapButton.setPosition(140,150);

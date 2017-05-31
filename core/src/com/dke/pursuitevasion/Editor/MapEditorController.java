@@ -36,6 +36,7 @@ public class MapEditorController {
     private short[] mIndices;
     private int vertListSize;
     public Texture texture;
+    public PolyMap localMap;
 
 
     //for wall info
@@ -335,6 +336,7 @@ public class MapEditorController {
                 map.setEdgeVectors(edges);
                 map.setAgentsInfo(agentsInfo);
                 map.setEvaderInfo(evaderInfo);
+                localMap = map;
                 map.export();
             }
         };

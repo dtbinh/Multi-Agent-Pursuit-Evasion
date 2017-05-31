@@ -40,12 +40,16 @@ public class SimulatorScreen implements Screen {
     private Engine engine; // move to controller
     private EntityFactory entityFactory; // move to controller
 
-    public SimulatorScreen(PursuitEvasion game, FileHandle mapFile) {
+    public SimulatorScreen(PursuitEvasion game, FileHandle mapFile, PolyMap Map) {
 
         /* Load the course from a file */
         this.game = game;
-        Gson gson = new Gson();
-        map = gson.fromJson(mapFile.readString(), PolyMap.class);
+        if(Map == null) {
+            Gson gson = new Gson();
+            map = gson.fromJson(mapFile.readString(), PolyMap.class);
+        }else{
+            map = Map;
+        }
 
         /* Set up the camera */
         cam = new PerspectiveCamera(60f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

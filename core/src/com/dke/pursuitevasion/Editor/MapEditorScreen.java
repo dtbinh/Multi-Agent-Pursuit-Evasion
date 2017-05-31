@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.dke.pursuitevasion.Menu.MenuScreen;
 import com.dke.pursuitevasion.Menu.NewSimulationWindow;
 import com.dke.pursuitevasion.PursuitEvasion;
+import com.dke.pursuitevasion.Simulator.SimulatorScreen;
 import com.dke.pursuitevasion.TrackingCameraController;
 
 
@@ -198,10 +199,11 @@ public class MapEditorScreen implements Screen, InputProcessor {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
 
-                NewSimulationWindow sim = new NewSimulationWindow(skin, game, simMenu);
-                stage.addActor(sim);
-
-                //game.setScreen(new SimulatorScreen(game, save);
+                //NewSimulationWindow sim = new NewSimulationWindow(skin, game, simMenu);
+                //stage.addActor(sim);
+                if(controller.localMap!=null) {
+                    game.setScreen(new SimulatorScreen(game, null, controller.localMap));
+                }
 
             }
         });
