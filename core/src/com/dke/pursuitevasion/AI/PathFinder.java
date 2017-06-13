@@ -39,13 +39,12 @@ public class PathFinder implements Screen {
     Vector3 intersection3;
     float[] vertices;
     short[] indices;
-    AStarPathFinder pF;
+    public AStarPathFinder pF;
     Engine engine;
     EntityFactory entityFactory;
     ArrayList<CustomPoint> CP;
 
     public void create(){
-
         gapSize = 0.2f;
         width = 60;
         height = width;
@@ -77,6 +76,13 @@ public class PathFinder implements Screen {
         for (int i=0; i<map.geteV().length; i++) {
             engine.addEntity(entityFactory.createBoundary(map.geteV()[i]));
         }
+    }
+
+    public static Vector3 positionFromIndex(int x, int z, AStarPathFinder ASPathFinder){
+        int index = height*x+z;
+        float worldX = ASPathFinder.allNodes.get(ASPathFinder.CC.get(index)).worldX;
+        float worldZ = ASPathFinder.allNodes.get(ASPathFinder.CC.get(index)).worldZ;
+        return new Vector3(worldX, 0, worldZ);
     }
 
     public PathFinder(PolyMap Map){

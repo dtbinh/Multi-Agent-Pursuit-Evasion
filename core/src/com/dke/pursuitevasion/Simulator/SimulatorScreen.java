@@ -75,9 +75,11 @@ public class SimulatorScreen implements Screen, InputProcessor{
             // 1.1 Transfer the location ( x = x + 5 , y = (y) * (-1) + 5)
             EdgeVectors vectors = edge[i];
             double x1 = vectors.Vector1.x + 5;
-            double y1 = vectors.Vector1.z * (-1) + 5;
+            double y1 = vectors.Vector1.z * (-1) + 5-0.08;
             double x2 = vectors.Vector2.x + 5;
-            double y2 = vectors.Vector2.z * (-1) + 5;
+            double y2 = vectors.Vector2.z * (-1) + 5-0.08;
+
+
             // 1.2 add Node
             CXGraphNode node1 = new CXGraphNode(new CXPoint(x1,y1));
             CXGraphNode node2 = new CXGraphNode(new CXPoint(x2,y2));
@@ -92,10 +94,24 @@ public class SimulatorScreen implements Screen, InputProcessor{
         for (int i = 0; i < wI.length ; i++) {
             WallInfo info = wI[i];
             double x1 = info.start.x + 5;
-
             double y1 = info.start.z * (-1) + 5;
+
             double x2 = info.end.x + 5;
             double y2 = info.end.z * (-1) + 5;
+
+            //1.1.1 some changes to the wall pos for pathfinder
+            if(Math.abs(x1-x2)>Math.abs(y1-y2)){
+                y1-=0.15;
+                y2-=0.15;
+            }else if(Math.abs(Math.abs(x1-x2)-Math.abs(y1-y2))<0.15){
+                y1-=0.15;
+                y2-=0.15;
+            }else{
+                x1+=0.13;
+                x1+=0.13;
+            }
+
+
             CXGraphNode node1 = new CXGraphNode(new CXPoint(x1,y1));
             CXGraphNode node2 = new CXGraphNode(new CXPoint(x2,y2));
             node1 = obstacle.add_vertex(node1);

@@ -25,8 +25,8 @@ public class AStarPathFinder {
     IndexedAStarPathFinder pathFinder;
     private IndexedGraph graph;
     Heuristic<Node> heuristic;
-    HashMap<CustomPoint, Node> allNodes;
-    ArrayList<CustomPoint> CC;
+    public HashMap<CustomPoint, Node> allNodes;
+    public ArrayList<CustomPoint> CC;
     int startIndex, endIndex;
     float gap;
 

@@ -71,7 +71,6 @@ public class EvaderSystem extends IteratingSystem {
     }
     public static ArrayList<Vector3> addAdditionalSteps(AgentComponent eC, List<Node> p){
         eC.evaderPath = new ArrayList<Vector3>();
-        p.size();
         float stepSize = 10;
         float diagStepSize = (float) Math.floor(1.4*stepSize);
         if(p.size()>1) {

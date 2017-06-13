@@ -107,7 +107,7 @@ public class PursuerSystem extends IteratingSystem {
 
 
         CXAgentTask task2 = new CXAgentTask(CXAgentState.Scanning);
-        task2.scanTask.scanScope.add((Float)45.0f);
+        task2.scanTask.scanScope.add((Float)180.0f);
         task2.scanTask.scanScope.add((Float)90.0f);
 
         pC.taskList.add(task1);
@@ -184,7 +184,8 @@ public class PursuerSystem extends IteratingSystem {
 
                 // Get the update location
                 float velocity = stateC.velocity.x;
-                CXPoint updateLocation = this.agentUtility.getNextMovingPoint(pursuerC, curLocation, destination);
+
+                CXPoint updateLocation = this.agentUtility.getNextMovingPoint(pursuerC, curLocation, destination, pathFinder);
 
                 CXPoint newDestination = CXPoint.converToGraphCoordination(destination);
                 CXPoint newUpdateLocation = CXPoint.converToGraphCoordination(updateLocation);
@@ -194,7 +195,8 @@ public class PursuerSystem extends IteratingSystem {
                 if (updateLocation == destination){
                     // Check the angle is correct
                     if (task.movingTask.radius != -1.0 && stateC.angle != task.movingTask.radius){
-                        stateC.angle = task.movingTask.radius;
+                        stateC.angle  = task.movingTask.radius;
+                        pursuerC.currentAngle = task.movingTask.radius;
                     }
                     else {
                         pursuerC.taskList.removeFirst();
@@ -332,7 +334,7 @@ public class PursuerSystem extends IteratingSystem {
         /*if (pursuer.cctvAlerted)
             pursuer.alerted = true;
         else*/
-            pursuer.alerted = false;
+        pursuer.alerted = false;
 
         for (Entity target : evaders) {
             updateDetection(entity, target);

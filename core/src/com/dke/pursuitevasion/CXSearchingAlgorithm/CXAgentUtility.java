@@ -1,5 +1,8 @@
 package com.dke.pursuitevasion.CXSearchingAlgorithm;
 
+import com.badlogic.gdx.math.Vector3;
+import com.dke.pursuitevasion.AI.Node;
+import com.dke.pursuitevasion.AI.PathFinder;
 import com.dke.pursuitevasion.CXSearchingAlgorithm.CXAgentTaskType.*;
 import com.dke.pursuitevasion.CXSearchingAlgorithm.CXMessage.*;
 import com.dke.pursuitevasion.CellDecompose.Graph.*;
@@ -12,6 +15,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by chenxi on 5/20/17.
@@ -51,6 +55,7 @@ public class CXAgentUtility {
         // 1. Moving to the area
         CXAgentTask newTask = new CXAgentTask(CXAgentState.Moving);
         CXAgentMovingTask movingTask = new CXAgentMovingTask(destination);
+        movingTask.radius = 90.0f;
         newTask.movingTask = movingTask;
         pursuerComponent.taskList.add(newTask);
 
@@ -114,7 +119,7 @@ public class CXAgentUtility {
                         System.out.println(rightNode.nodeNumber);
                         if (rightNode.nodeNumber == this.finalArea.nodeNumber){
                             CXAgentTask newTask = new CXAgentTask(CXAgentState.Scanning);
-                            newTask.scanTask.scanScope.add((Float)0.0f);
+                            newTask.scanTask.scanScope.add((Float)0f);
                             pursuerComponent.taskList.add(newTask);
                             pursuerComponent.currentSearchArea = dNode.nodeNumber;
                             pursuerComponent.setState(CXAgentState.Scanning);
@@ -176,16 +181,68 @@ public class CXAgentUtility {
         }
     }
 
-    public CXPoint getNextMovingPoint(PursuerComponent pC, CXPoint currentPoint, CXPoint destination){
+    public CXPoint getNextMovingPoint(PursuerComponent pC, CXPoint currentPoint, CXPoint destination, PathFinder pathfinder){
+        if (currentPoint.x == destination.x && currentPoint.y == destination.y) return destination;
         if(pC.pursuerPointPath.size()==0){
             pC.pursuerPointPath = discretizePath(currentPoint, destination);
+            Vector3 start = new Vector3((float)currentPoint.x, 0, (float)(currentPoint.y));
+            Vector3 end = new Vector3((float)destination.x, 0, (float)(destination.y));
+            List<Node> path = pathfinder.findPath(start, end, null);
+            if(path.size()>0) {
+                path.get(0).worldX = (float) currentPoint.x;
+                path.get(0).worldZ = (float) currentPoint.y;
+            }
+            pC.pursuerPointPath = addAdditionalSteps(pC, path);
         }
         if(pC.pursuerPointPath.size()>1){
             return pC.pursuerPointPath.remove(0);
         }else {
-            pC.pursuerPointPath.remove(0);
+            if(pC.pursuerPointPath.size()>0)
+                pC.pursuerPointPath.remove(0);
             return destination;
         }
+    }
+
+    public ArrayList<CXPoint> addAdditionalSteps(PursuerComponent pC, List<Node> p){
+        pC.pursuerPointPath= new ArrayList<CXPoint>();
+        float stepSize = 8;
+        float diagStepSize = (float) Math.floor(1.4*stepSize);
+        if(p.size()>1) {
+            for (int i = 0; i < p.size() - 1; i++) {
+                Vector3 start = new Vector3(p.get(i).worldX, p.get(i).worldY, p.get(i).worldZ);
+                Vector3 end = new Vector3(p.get(i + 1).worldX, p.get(i + 1).worldY, p.get(i + 1).worldZ);
+                float adjX = end.x - start.x;
+                float adjZ = end.z - start.z;
+                if(adjX!=0 && adjZ!=0){
+                    for (float j = 1; j < diagStepSize; j++) {
+                        double scale = j / diagStepSize;
+                        BigDecimal sc = BigDecimal.valueOf(scale);
+                        BigDecimal xX = BigDecimal.valueOf(adjX);
+                        BigDecimal zZ = BigDecimal.valueOf(adjZ);
+                        BigDecimal newX = sc.multiply(xX);
+                        BigDecimal newZ = sc.multiply(zZ);
+                        float bDX = newX.floatValue();
+                        float bDZ = newZ.floatValue();
+                        CXPoint position = new CXPoint(start.x+bDX, start.z+bDZ);
+                        pC.pursuerPointPath.add(position);
+                    }
+                }else {
+                    for (float j = 1; j < stepSize; j++) {
+                        double scale = j / stepSize;
+                        BigDecimal sc = BigDecimal.valueOf(scale);
+                        BigDecimal xX = BigDecimal.valueOf(adjX);
+                        BigDecimal zZ = BigDecimal.valueOf(adjZ);
+                        BigDecimal newX = sc.multiply(xX);
+                        BigDecimal newZ = sc.multiply(zZ);
+                        double bDX = newX.doubleValue();
+                        double bDZ = newZ.doubleValue();
+                        CXPoint position = new CXPoint(start.x+bDX, start.z+bDZ);
+                        pC.pursuerPointPath.add(position);
+                    }
+                }
+            }
+        }
+        return pC.pursuerPointPath;
     }
 
     private ArrayList<CXPoint> discretizePath(CXPoint start, CXPoint end){
@@ -237,6 +294,7 @@ public class CXAgentUtility {
                 if (rightNode.nodeNumber == this.finalArea.nodeNumber){
                     CXAgentTask newTask = new CXAgentTask(CXAgentState.Scanning);
                     newTask.scanTask.scanScope.add((Float)0.0f);
+
                     pursuerComponent.taskList.add(newTask);
                     pursuerComponent.currentSearchArea = finalArea.nodeNumber;
                     pursuerComponent.setState(CXAgentState.Scanning);
