@@ -183,8 +183,9 @@ public class CXAgentUtility {
 
     public CXPoint getNextMovingPoint(PursuerComponent pC, CXPoint currentPoint, CXPoint destination, PathFinder pathfinder){
         if (currentPoint.x == destination.x && currentPoint.y == destination.y) return destination;
-        if(pC.pursuerPointPath.size()==0){
-            pC.pursuerPointPath = discretizePath(currentPoint, destination);
+
+        if(pC.pursuerPointPath.size()==0 && !pathfinder.checkStraightLinePath(currentPoint, destination)){
+            System.out.println("Pf path------------------------------------------------");
             Vector3 start = new Vector3((float)currentPoint.x, 0, (float)(currentPoint.y));
             Vector3 end = new Vector3((float)destination.x, 0, (float)(destination.y));
             List<Node> path = pathfinder.findPath(start, end, null);
@@ -194,6 +195,11 @@ public class CXAgentUtility {
             }
             pC.pursuerPointPath = addAdditionalSteps(pC, path);
         }
+        if(pC.pursuerPointPath.size()==0 && pathfinder.checkStraightLinePath(currentPoint, destination)){
+            System.out.println("smooth path-------------------------------------------");
+            pC.pursuerPointPath = discretizePath(currentPoint, destination);
+        }
+
         if(pC.pursuerPointPath.size()>1){
             return pC.pursuerPointPath.remove(0);
         }else {

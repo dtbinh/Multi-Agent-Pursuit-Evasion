@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.Ray;
+import com.dke.pursuitevasion.CellDecompose.Graph.CXPoint;
 import com.dke.pursuitevasion.Entities.EntityFactory;
 import com.dke.pursuitevasion.Entities.Systems.GraphicsSystem;
 import com.dke.pursuitevasion.Entities.Systems.SimulationSystem;
@@ -45,8 +46,8 @@ public class PathFinder implements Screen {
     ArrayList<CustomPoint> CP;
 
     public void create(){
-        gapSize = 0.2f;
-        width = 60;
+        gapSize = 0.1f;
+        width = 100;
         height = width;
 
         cam = new PerspectiveCamera(60f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -281,6 +282,23 @@ public class PathFinder implements Screen {
                 }
             }
         }
+    }
+
+    public boolean checkStraightLinePath(CXPoint start, CXPoint end){
+        for (int i = 0; i < walls.size() / 2; i++) {
+            Line2D line = new Line2D((float) start.x,(float) start.y,(float) end.x,(float) end.y);
+            float x1 = walls.get(i * 2).x;
+            float z1 = walls.get(i * 2).z;
+            float x2 = walls.get(i * 2 + 1).x;
+            float z2 = walls.get(i * 2 + 1).z;
+
+            Line2D wall = new Line2D(x1, z1, x2, z2);
+
+            if(wall.intersectsLine(line)){
+                return false;
+            }
+        }
+            return true;
     }
 
     public static float toWorldCoorX(float fX){

@@ -75,7 +75,7 @@ public class AStarPathFinder {
         return result;
     }
 
-        public void setStartEndWorldCoor(Vector3 startVec, Vector3 endVec, /*Vector3 strNorm,*/ Vector3 endNorm){
+    public void setStartEndWorldCoor(Vector3 startVec, Vector3 endVec, /*Vector3 strNorm,*/ Vector3 endNorm){
         allNodes.get(CC.get(startIndex)).worldX = startVec.x;
         allNodes.get(CC.get(startIndex)).worldY = startVec.y;
         allNodes.get(CC.get(startIndex)).worldZ = startVec.z;
@@ -325,7 +325,7 @@ public class AStarPathFinder {
     }
 
     public void addConnection(Array<CustomConnection> connections, CustomPoint from, CustomPoint to) {
-        float cost = 2;
+        float cost = 1.4f;
         if ((from.x == to.x && from.y != to.y) || (from.x != to.x && from.y == to.y)) {
             cost = 1;
         }
@@ -333,9 +333,6 @@ public class AStarPathFinder {
         Node toNode = allNodes.get(to);
 
         //This will make the path avoid  any slopes if possible
-        if(fromNode.worldY!=toNode.worldY){
-            cost+=10;
-        }
 
         if (notBlocked[to.x][to.y]) {
             connections.add(new CustomConnection(fromNode, toNode, cost));

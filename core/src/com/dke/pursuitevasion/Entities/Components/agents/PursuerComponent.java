@@ -31,6 +31,7 @@ public class PursuerComponent implements Component {
     public Vector3 position;
     public ArrayList<Vector3> pursuerPath = new ArrayList<Vector3>();
     public ArrayList<CXPoint> pursuerPointPath = new ArrayList<CXPoint>();
+    public boolean pfMove = true;
 
     private CXAgentState state;
     public LinkedList taskList = new LinkedList();
