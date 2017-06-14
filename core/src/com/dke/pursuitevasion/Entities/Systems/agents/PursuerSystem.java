@@ -27,10 +27,7 @@ import com.dke.pursuitevasion.PolyMap;
 import sun.management.Agent;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Nicola Gheza on 23/05/2017.
@@ -43,6 +40,9 @@ public class PursuerSystem extends IteratingSystem {
     private Vector2 position = new Vector2();
 
     private PathFinder pathFinder;
+
+    private CXDecomposedGraphNode finalSearchingNode;
+
     List<Node> p;
 
     CXGraph graph;
@@ -131,10 +131,14 @@ public class PursuerSystem extends IteratingSystem {
                 if (pursuerC.taskList.size() != 0){
                     CXAgentTask task = (CXAgentTask)pursuerC.taskList.getFirst();
                     pursuerC.setState(task.taskState);
+                    pursuerC.freeStateRoutine = null;
                     break;
                 }
                 else {
                     pursuerC = this.agentUtility.checkMessage(this.messageArrayList, pursuerC);
+                    if (pursuerC.taskList.size() == 0){
+                        stateC = this.agentUtility.randomMovment(stateC, pursuerC,pathFinder,graph );
+                    }
                     break;
                 }
             }
@@ -201,7 +205,7 @@ public class PursuerSystem extends IteratingSystem {
                     else {
                         pursuerC.taskList.removeFirst();
 
-                        //System.out.println("Agent " + pursuerC.number + " is arrived Destination ");
+                        //System.out.println("Agent " + pursuerC.number + " arrived Destination ");
                         if (!pursuerC.taskList.isEmpty()){
                             CXAgentTask newTask = (CXAgentTask) pursuerC.taskList.getFirst();
                             pursuerC.setState(newTask.taskState);
@@ -247,6 +251,7 @@ public class PursuerSystem extends IteratingSystem {
             }
             case FinishGame:{
                 pursuerC.setState(CXAgentState.Free);
+                // Later
                 break;
             }
         }

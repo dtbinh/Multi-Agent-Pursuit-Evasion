@@ -20,6 +20,7 @@ import com.sun.javafx.geom.Line2D;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * Created by Envy on 4/20/2017.
@@ -117,6 +118,7 @@ public class PathFinder implements Screen {
         }
     }
 
+
     public List<Node> findPath(Vector3 pursuerPos, Vector3 evaderPos, CustomPoint overrideEnd){
         CP = pF.CC;
         CustomPoint start = getNodeFromWorldCoor(pursuerPos.x, pursuerPos.z);
@@ -124,7 +126,7 @@ public class PathFinder implements Screen {
         if(overrideEnd!=null){
             end = overrideEnd;
         }
-        int sIndex = 1;;
+        int sIndex = 1;
         int eIndex = 1;
 
         try {

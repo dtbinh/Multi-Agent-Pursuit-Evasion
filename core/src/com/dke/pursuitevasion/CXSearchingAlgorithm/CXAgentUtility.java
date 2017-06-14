@@ -8,9 +8,12 @@ import com.dke.pursuitevasion.CXSearchingAlgorithm.CXMessage.*;
 import com.dke.pursuitevasion.CellDecompose.Graph.*;
 import com.dke.pursuitevasion.Entities.Components.StateComponent;
 import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
+import com.dke.pursuitevasion.PolyMap;
 import sun.misc.Queue;
 
 
+import javax.print.attribute.standard.Destination;
+import javax.swing.plaf.nimbus.State;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -362,5 +365,30 @@ public class CXAgentUtility {
         }
 
         return nextMovePostion;
+    }
+    public StateComponent randomMovment(StateComponent state, PursuerComponent pursuer, PathFinder finder, CXGraph graph){
+
+        if (pursuer.freeStateRoutine != null && pursuer.freeStateRoutine.size() != 0){
+
+            Node node = pursuer.freeStateRoutine.get(0);
+            pursuer.freeStateRoutine.remove(0);
+
+            state.position.set(node.worldX,state.position.y,node.worldZ);
+
+            return state;
+        }
+
+
+        CXGraphNode topLeftNode = this.finalArea.getTopLeftNode();
+        CXGraphNode downLeftNode = this.finalArea.getDownLeftNode();
+
+        CXPoint destination = new CXPoint( (topLeftNode.location.x + downLeftNode.location.x)/2,(topLeftNode.location.y + downLeftNode.location.y)/2 );
+
+        Vector3 destinationV = new Vector3((float) destination.x,0,(float) destination.y);
+
+        pursuer.freeStateRoutine  = finder.findPath(state.position,destinationV,null);
+
+
+        return state;
     }
 }

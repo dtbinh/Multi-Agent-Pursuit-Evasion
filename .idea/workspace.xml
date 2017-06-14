@@ -2,14 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="41dcac44-571c-45b2-a08c-b296523670aa" name="Default" comment="Fixed some more bugs.. MOVEMENT STILL BROKEN. (As in too fast)">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/CXSearchingAlgorithm/CXMessage/CXMessage.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/CXSearchingAlgorithm/CXMessage/CXMessageType.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Entities/EntityFactory.class" afterPath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Entities/EntityFactory.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Entities/Systems/agents/CCTvSystem.class" afterPath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Entities/Systems/agents/CCTvSystem.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Simulator/SimulatorScreen.class" afterPath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Simulator/SimulatorScreen.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/core/core.iml" afterPath="$PROJECT_DIR$/.idea/modules/core/core.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/core/core_main.iml" afterPath="$PROJECT_DIR$/.idea/modules/core/core_main.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/core/core_test.iml" afterPath="$PROJECT_DIR$/.idea/modules/core/core_test.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/desktop/desktop.iml" afterPath="$PROJECT_DIR$/.idea/modules/desktop/desktop.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/desktop/desktop_main.iml" afterPath="$PROJECT_DIR$/.idea/modules/desktop/desktop_main.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/desktop/desktop_test.iml" afterPath="$PROJECT_DIR$/.idea/modules/desktop/desktop_test.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/html/html.iml" afterPath="$PROJECT_DIR$/.idea/modules/html/html.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/html/html_main.iml" afterPath="$PROJECT_DIR$/.idea/modules/html/html_main.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/html/html_test.iml" afterPath="$PROJECT_DIR$/.idea/modules/html/html_test.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/AI/PathFinder.java" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/AI/PathFinder.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/CXSearchingAlgorithm/CXAgentUtility.java" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/CXSearchingAlgorithm/CXAgentUtility.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Components/agents/PursuerComponent.java" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Components/agents/PursuerComponent.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/PursuerSystem.java" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/PursuerSystem.java" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -63,7 +70,7 @@
                 <option name="myItemType" value="com.intellij.openapi.externalSystem.view.ExternalProjectsStructure$RootNode" />
               </PATH_ELEMENT>
               <PATH_ELEMENT>
-                <option name="myItemId" value="Multi-Agent-Pursuit-Evasion" />
+                <option name="myItemId" value="Multi-Agent-Pursuit-Evasion2" />
                 <option name="myItemType" value="com.intellij.openapi.externalSystem.view.ProjectNode" />
               </PATH_ELEMENT>
             </PATH>
@@ -76,7 +83,60 @@
     <favorites_list name="Multi-Agent-Pursuit-Evasion" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="600" />
+    <leaf>
+      <file leaf-file-name="PursuerSystem.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/PursuerSystem.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-165">
+              <caret line="183" column="55" lean-forward="false" selection-start-line="183" selection-start-column="55" selection-end-line="183" selection-end-column="55" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PursuerComponent.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Components/agents/PursuerComponent.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="104">
+              <caret line="41" column="38" lean-forward="false" selection-start-line="41" selection-start-column="38" selection-end-line="41" selection-end-column="38" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CXAgentUtility.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/CXSearchingAlgorithm/CXAgentUtility.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="367">
+              <caret line="388" column="19" lean-forward="false" selection-start-line="388" selection-start-column="19" selection-end-line="388" selection-end-column="19" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PathFinder.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/AI/PathFinder.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="122">
+              <caret line="121" column="11" lean-forward="false" selection-start-line="121" selection-start-column="11" selection-end-line="121" selection-end-column="21" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Node.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/AI/Node.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="150">
+              <caret line="11" column="39" lean-forward="false" selection-start-line="11" selection-start-column="33" selection-end-line="11" selection-end-column="39" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -89,8 +149,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>System.out.println</find>
-      <find>detectionTime</find>
       <find>System.out</find>
       <find>addAge</find>
       <find>setAgentInfo</find>
@@ -119,6 +177,8 @@
       <find>INT</find>
       <find>intruder detecte</find>
       <find>html</find>
+      <find>map</find>
+      <find>Free</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -129,7 +189,7 @@
   <component name="GradleLocalSettings">
     <option name="myGradleHomes">
       <map>
-        <entry key="$PROJECT_DIR$" value="C:\Users\Nicola Gheza\.gradle\wrapper\dists\gradle-2.10-all\a4w5fzrkeut1ox71xslb49gst\gradle-2.10" />
+        <entry key="$PROJECT_DIR$" value="$USER_HOME$/.gradle/wrapper/dists/gradle-2.10-all/a4w5fzrkeut1ox71xslb49gst/gradle-2.10" />
       </map>
     </option>
     <option name="myGradleVersions">
@@ -142,7 +202,7 @@
         <entry>
           <key>
             <ExternalProjectPojo>
-              <option name="name" value="Multi-Agent-Pursuit-Evasion" />
+              <option name="name" value="Multi-Agent-Pursuit-Evasion2" />
               <option name="path" value="$PROJECT_DIR$" />
             </ExternalProjectPojo>
           </key>
@@ -157,7 +217,7 @@
                 <option name="path" value="$PROJECT_DIR$/desktop" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
-                <option name="name" value="Multi-Agent-Pursuit-Evasion" />
+                <option name="name" value="Multi-Agent-Pursuit-Evasion2" />
                 <option name="path" value="$PROJECT_DIR$" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
@@ -175,7 +235,7 @@
           <value>
             <list>
               <ExternalTaskPojo>
-                <option name="description" value="Displays the sub-projects of root project 'Multi-Agent-Pursuit-Evasion'." />
+                <option name="description" value="Displays the sub-projects of root project 'Multi-Agent-Pursuit-Evasion2'." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="projects" />
               </ExternalTaskPojo>
@@ -203,7 +263,7 @@
                 <option name="name" value="eclipseClasspath" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Displays the configuration model of root project 'Multi-Agent-Pursuit-Evasion'. [incubating]" />
+                <option name="description" value="Displays the configuration model of root project 'Multi-Agent-Pursuit-Evasion2'. [incubating]" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="model" />
               </ExternalTaskPojo>
@@ -218,7 +278,7 @@
                 <option name="name" value="processResources" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Displays the tasks runnable from root project 'Multi-Agent-Pursuit-Evasion' (some of the displayed tasks may belong to subprojects)." />
+                <option name="description" value="Displays the tasks runnable from root project 'Multi-Agent-Pursuit-Evasion2' (some of the displayed tasks may belong to subprojects)." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="tasks" />
               </ExternalTaskPojo>
@@ -248,7 +308,7 @@
                 <option name="name" value="compileGwt" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Displays all dependencies declared in root project 'Multi-Agent-Pursuit-Evasion'." />
+                <option name="description" value="Displays all dependencies declared in root project 'Multi-Agent-Pursuit-Evasion2'." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="dependencies" />
               </ExternalTaskPojo>
@@ -283,7 +343,7 @@
                 <option name="name" value="eclipseProject" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Displays the components produced by root project 'Multi-Agent-Pursuit-Evasion'. [incubating]" />
+                <option name="description" value="Displays the components produced by root project 'Multi-Agent-Pursuit-Evasion2'. [incubating]" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="components" />
               </ExternalTaskPojo>
@@ -322,7 +382,7 @@
                 <option name="name" value="classes" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Displays all buildscript dependencies declared in root project 'Multi-Agent-Pursuit-Evasion'." />
+                <option name="description" value="Displays all buildscript dependencies declared in root project 'Multi-Agent-Pursuit-Evasion2'." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="buildEnvironment" />
               </ExternalTaskPojo>
@@ -377,7 +437,7 @@
                 <option name="name" value="war" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Displays the insight into a specific dependency in root project 'Multi-Agent-Pursuit-Evasion'." />
+                <option name="description" value="Displays the insight into a specific dependency in root project 'Multi-Agent-Pursuit-Evasion2'." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="dependencyInsight" />
               </ExternalTaskPojo>
@@ -417,7 +477,7 @@
                 <option name="name" value="gwtSuperDev" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Displays the properties of root project 'Multi-Agent-Pursuit-Evasion'." />
+                <option name="description" value="Displays the properties of root project 'Multi-Agent-Pursuit-Evasion2'." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="properties" />
               </ExternalTaskPojo>
@@ -1007,11 +1067,6 @@
         </entry>
       </map>
     </option>
-    <option name="modificationStamps">
-      <map>
-        <entry key="$PROJECT_DIR$" value="7454173020488" />
-      </map>
-    </option>
     <option name="projectBuildClasspath">
       <map>
         <entry key="$PROJECT_DIR$">
@@ -1236,12 +1291,13 @@
         <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Editor/MapEditorScreen.java" />
         <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/AI/PathTest.java" />
         <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/CCTvSystem.java" />
-        <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Components/agents/PursuerComponent.java" />
         <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/EntityFactory.java" />
-        <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/CXSearchingAlgorithm/CXAgentUtility.java" />
         <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Simulator/SimulatorScreen.java" />
-        <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/PursuerSystem.java" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/AI/PathFinder.java" />
+        <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/PursuerSystem.java" />
+        <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Components/agents/PursuerComponent.java" />
+        <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/CXSearchingAlgorithm/CXAgentUtility.java" />
       </list>
     </option>
   </component>
@@ -1252,9 +1308,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-7" />
-    <option name="width" value="1933" />
-    <option name="height" value="1047" />
+    <option name="x" value="83" />
+    <option name="y" value="34" />
+    <option name="width" value="1187" />
+    <option name="height" value="716" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -1275,21 +1332,21 @@
         <subPane>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion" />
+              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion2" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion" />
+              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion2" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion" />
+              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion2" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion" />
+              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion2" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -1299,29 +1356,11 @@
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion" />
+              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion2" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="org.jetbrains.plugins.gradle.projectView.GradleTreeStructureProvider$GradleSourceSetDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion" />
+              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion2" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -1332,18 +1371,14 @@
               <option name="myItemId" value="src" />
               <option name="myItemType" value="org.jetbrains.plugins.gradle.projectView.GradleTreeStructureProvider$GradleSourceSetDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pursuitevasion" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion" />
+              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion2" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion" />
+              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion2" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -1358,18 +1393,14 @@
               <option name="myItemId" value="pursuitevasion" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="CXSearchingAlgorithm" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion" />
+              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion2" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion" />
+              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion2" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -1385,19 +1416,143 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="CXSearchingAlgorithm" />
+              <option name="myItemId" value="Entities" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion2" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="CXMessage" />
+              <option name="myItemId" value="core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="org.jetbrains.plugins.gradle.projectView.GradleTreeStructureProvider$GradleSourceSetDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pursuitevasion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Entities" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Systems" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="org.jetbrains.plugins.gradle.projectView.GradleTreeStructureProvider$GradleSourceSetDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pursuitevasion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Entities" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Systems" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="agents" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="org.jetbrains.plugins.gradle.projectView.GradleTreeStructureProvider$GradleSourceSetDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pursuitevasion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Entities" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Components" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Multi-Agent-Pursuit-Evasion2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="org.jetbrains.plugins.gradle.projectView.GradleTreeStructureProvider$GradleSourceSetDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pursuitevasion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Entities" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Components" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="agents" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="Scratches" />
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -1406,7 +1561,7 @@
     <property name="nodejs_interpreter_path" value="C:/Program Files/nodejs/node" />
     <property name="js.eslint.eslintPackage" value="" />
     <property name="js-jscs-nodeInterpreter" value="C:\Program Files\nodejs\node.exe" />
-    <property name="settings.editor.selected.configurable" value="vcs.Git" />
+    <property name="settings.editor.selected.configurable" value="vcs.Mercurial" />
     <property name="SearchEverywhereHistoryKey" value="pursuer&#9;FILE&#9;file://C:/Users/Nicola Gheza/IdeaProjects/Multi-Agent-Pursuit-Evasion/core/src/com/dke/pursuitevasion/Entities/Components/agents/PursuerComponent.java&#10;Simulat&#9;FILE&#9;file://C:/Users/Nicola Gheza/IdeaProjects/Multi-Agent-Pursuit-Evasion/core/src/com/dke/pursuitevasion/Simulator/SimulatorScreen.java&#10;Editor&#9;FILE&#9;file://C:/Users/Nicola Gheza/IdeaProjects/Multi-Agent-Pursuit-Evasion/core/src/com/dke/pursuitevasion/Editor/MapEditorScreen.java&#10;MODE&#9;PSI&#9;JAVA://com.dke.pursuitevasion.Editor.Mode&#10;controller&#9;FILE&#9;file://C:/Users/Nicola Gheza/IdeaProjects/Multi-Agent-Pursuit-Evasion/core/src/com/dke/pursuitevasion/Editor/MapEditorController.java&#10;agentin&#9;PSI&#9;JAVA://com.dke.pursuitevasion.AgentInfo&#10;observerc&#9;FILE&#9;file://C:/Users/Nicola Gheza/IdeaProjects/Multi-Agent-Pursuit-Evasion/core/src/com/dke/pursuitevasion/Entities/Components/ObserverComponent.java&#10;vision&#9;FILE&#9;file://C:/Users/Nicola Gheza/IdeaProjects/Multi-Agent-Pursuit-Evasion/core/src/com/dke/pursuitevasion/Entities/Systems/VisionSystem.java&#10;state&#9;FILE&#9;file://C:/Users/Nicola Gheza/IdeaProjects/Multi-Agent-Pursuit-Evasion/core/src/com/dke/pursuitevasion/Entities/Components/StateComponent.java&#10;Graphics&#9;FILE&#9;file://C:/Users/Nicola Gheza/IdeaProjects/Multi-Agent-Pursuit-Evasion/core/src/com/dke/pursuitevasion/Entities/Systems/GraphicsSystem.java&#10;simulation&#9;FILE&#9;file://C:/Users/Nicola Gheza/IdeaProjects/Multi-Agent-Pursuit-Evasion/core/src/com/dke/pursuitevasion/Entities/Systems/SimulationSystem.java" />
     <property name="project.structure.last.edited" value="SDKs" />
     <property name="project.structure.proportion" value="0.15" />
@@ -1425,7 +1580,7 @@
       <recent name="com.dke.pursuitevasion.Entities.Systems" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.DesktopLauncher">
     <configuration default="false" name="DesktopLauncher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
@@ -1549,140 +1704,6 @@
       <envs />
       <method />
     </configuration>
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
-      <method />
-    </configuration>
-    <configuration default="true" type="ArquillianTestNG" factoryName="">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="SUITE_NAME" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="GROUP_NAME" />
-      <option name="TEST_OBJECT" value="CLASS" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="OUTPUT_DIRECTORY" />
-      <option name="ANNOTATION_TYPE" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <option name="USE_DEFAULT_REPORTERS" value="false" />
-      <option name="PROPERTIES_FILE" />
-      <envs />
-      <properties />
-      <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="Cold Fusion runner description" factoryName="Cold Fusion" custom_browser="" web_path="">
-      <method />
-    </configuration>
-    <configuration default="true" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <option name="myFilePath" />
-      <option name="GLUE" />
-      <option name="myNameFilter" />
-      <option name="myGeneratedName" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="" />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="FlashRunConfigurationType" factoryName="Flash App">
-      <option name="BCName" value="" />
-      <option name="IOSSimulatorSdkPath" value="" />
-      <option name="adlOptions" value="" />
-      <option name="airProgramParameters" value="" />
-      <option name="appDescriptorForEmulator" value="Android" />
-      <option name="debugTransport" value="USB" />
-      <option name="debuggerSdkRaw" value="BC SDK" />
-      <option name="emulator" value="NexusOne" />
-      <option name="emulatorAdlOptions" value="" />
-      <option name="fastPackaging" value="true" />
-      <option name="fullScreenHeight" value="0" />
-      <option name="fullScreenWidth" value="0" />
-      <option name="launchUrl" value="false" />
-      <option name="launcherParameters">
-        <LauncherParameters>
-          <option name="browser" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8" />
-          <option name="launcherType" value="OSDefault" />
-          <option name="newPlayerInstance" value="false" />
-          <option name="playerPath" value="FlashPlayerDebugger.exe" />
-        </LauncherParameters>
-      </option>
-      <option name="mobileRunTarget" value="Emulator" />
-      <option name="moduleName" value="" />
-      <option name="overriddenMainClass" value="" />
-      <option name="overriddenOutputFileName" value="" />
-      <option name="overrideMainClass" value="false" />
-      <option name="runTrusted" value="true" />
-      <option name="screenDpi" value="0" />
-      <option name="screenHeight" value="0" />
-      <option name="screenWidth" value="0" />
-      <option name="url" value="http://" />
-      <option name="usbDebugPort" value="7936" />
-      <method />
-    </configuration>
-    <configuration default="true" type="FlexUnitRunConfigurationType" factoryName="FlexUnit" appDescriptorForEmulator="Android" class_name="" emulatorAdlOptions="" method_name="" package_name="" scope="Class">
-      <option name="BCName" value="" />
-      <option name="launcherParameters">
-        <LauncherParameters>
-          <option name="browser" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8" />
-          <option name="launcherType" value="OSDefault" />
-          <option name="newPlayerInstance" value="false" />
-          <option name="playerPath" value="FlashPlayerDebugger.exe" />
-        </LauncherParameters>
-      </option>
-      <option name="moduleName" value="" />
-      <option name="trusted" value="true" />
-      <method />
-    </configuration>
-    <configuration default="true" type="GWT.ConfigurationType" factoryName="GWT Configuration">
-      <module name="" />
-      <method />
-    </configuration>
     <configuration default="true" type="GradleRunConfiguration" factoryName="Gradle">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -1697,15 +1718,6 @@
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <method />
-    </configuration>
-    <configuration default="true" type="GrailsRunConfigurationType" factoryName="Grails">
-      <setting name="vmparams" value="" />
-      <setting name="cmdLine" value="run-app" />
-      <setting name="passParentEnv" value="true" />
-      <setting name="launchBrowser" value="true" />
-      <setting name="launchBrowserUrl" value="" />
-      <setting name="depsClasspath" value="false" />
       <method />
     </configuration>
     <configuration default="true" type="GroovyScriptRunConfiguration" factoryName="Groovy">
@@ -1759,15 +1771,6 @@
       <envs />
       <method />
     </configuration>
-    <configuration default="true" type="JavaScriptTestRunnerProtractor" factoryName="Protractor">
-      <config-file value="" />
-      <node-interpreter value="project" />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
-      <method />
-    </configuration>
     <configuration default="true" type="JetRunConfigurationType" factoryName="Kotlin">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" />
@@ -1801,12 +1804,6 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
-    <configuration default="true" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <envs />
-      <method />
-    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="" />
@@ -1833,28 +1830,6 @@
       <envs />
       <properties />
       <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
-      <node-interpreter>project</node-interpreter>
-      <node-options />
-      <gulpfile />
-      <tasks />
-      <arguments />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="js.build_tools.npm" factoryName="npm">
-      <command value="run-script" />
-      <scripts />
-      <node-interpreter value="project" />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="osgi.bnd.run" factoryName="Run Launcher">
-      <method />
-    </configuration>
-    <configuration default="true" type="osgi.bnd.run" factoryName="Test Launcher (JUnit)">
       <method />
     </configuration>
     <list size="2">
@@ -2198,42 +2173,42 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="0" width="1933" height="1047" extended-state="0" />
-    <editor active="false" />
+    <frame x="83" y="34" width="1187" height="716" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26588628" sideWeight="0.4904051" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3261105" sideWeight="0.50959486" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25250837" sideWeight="0.49135137" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32719395" sideWeight="0.49253732" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25502184" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.13344453" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25266525" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.49124727" sideWeight="0.49870968" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2603939" sideWeight="0.4904051" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32719395" sideWeight="0.49253732" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.7253829" sideWeight="0.49135137" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21356113" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
-      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3105836" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32441473" sideWeight="0.49870968" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969153" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969153" sideWeight="0.5" order="12" side_tool="true" content_ui="tabs" />
+      <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936078" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -2317,7 +2292,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="38" />
+      <option name="time" value="41" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -2326,20 +2301,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Menu/MenuScreen.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="33">
-          <caret line="76" column="47" lean-forward="false" selection-start-line="76" selection-start-column="47" selection-end-line="76" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx/1.9.5/df0e6a52ed42009b20ab64cc81e57c3ae24d9109/gdx-1.9.5-sources.jar!/com/badlogic/gdx/Game.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
-          <caret line="45" column="0" lean-forward="false" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Components/GraphicsComponent.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="297">
@@ -2468,13 +2429,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/AI/Node.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-225">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/AI/AStarPathFinder.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
@@ -2552,23 +2506,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/assets/maps/q">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/AI/PathFinder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="56" column="21" lean-forward="false" selection-start-line="56" selection-start-column="21" selection-end-line="56" selection-end-column="21" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/core/assets/maps/q" />
     <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Components/agents/CCTvComponent.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
@@ -2580,7 +2518,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="566">
           <caret line="89" column="12" lean-forward="false" selection-start-line="89" selection-start-column="12" selection-end-line="89" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2588,7 +2525,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
           <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2596,17 +2532,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1496">
           <caret line="115" column="52" lean-forward="false" selection-start-line="115" selection-start-column="52" selection-end-line="115" selection-end-column="52" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#1970#1971#0" expanded="false" />
-            <element signature="e#2034#2035#0" expanded="false" />
-            <element signature="e#2764#2765#0" expanded="false" />
-            <element signature="e#2823#2824#0" expanded="false" />
-            <element signature="e#2885#2886#0" expanded="false" />
-            <element signature="e#2922#2923#0" expanded="false" />
-            <element signature="e#5439#5440#0" expanded="false" />
-            <element signature="e#5491#5492#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2614,10 +2539,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="612">
           <caret line="44" column="0" lean-forward="false" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="method#stepUpdate#0;class#SimulationSystem#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2625,10 +2546,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="578">
           <caret line="87" column="38" lean-forward="false" selection-start-line="87" selection-start-column="38" selection-end-line="87" selection-end-column="38" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="method#createAgent#0;class#EntityFactory#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2636,11 +2553,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1717">
           <caret line="124" column="10" lean-forward="false" selection-start-line="124" selection-start-column="10" selection-end-line="124" selection-end-column="10" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#5812#5813#0" expanded="false" />
-            <element signature="e#5873#5874#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2655,7 +2567,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="12" column="6" lean-forward="true" selection-start-line="12" selection-start-column="6" selection-end-line="12" selection-end-column="6" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2663,7 +2574,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2685,35 +2595,61 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/PursuerSystem.java">
+    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/EvaderSystem.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-238">
-          <caret line="212" column="37" lean-forward="false" selection-start-line="212" selection-start-column="37" selection-end-line="212" selection-end-column="37" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="method#followPath#0;class#PursuerSystem#0" expanded="false" />
-            <element signature="method#moveVision#0;class#PursuerSystem#0" expanded="false" />
-            <element signature="method#updateObserver#0;class#PursuerSystem#0" expanded="false" />
-            <element signature="method#addAdditionalSteps#0;class#PursuerSystem#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="216">
+          <caret line="105" column="12" lean-forward="false" selection-start-line="105" selection-start-column="12" selection-end-line="105" selection-end-column="12" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/CXSearchingAlgorithm/CXAgentUtility.java">
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_121.jdk/Contents/Home/src.zip!/java/util/Collection.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="198" column="34" lean-forward="false" selection-start-line="198" selection-start-column="34" selection-end-line="198" selection-end-column="34" />
+        <state relative-caret-position="139">
+          <caret line="310" column="12" lean-forward="false" selection-start-line="310" selection-start-column="12" selection-end-line="310" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/AI/PathFinder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="122">
+          <caret line="121" column="11" lean-forward="false" selection-start-line="121" selection-start-column="11" selection-end-line="121" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/AI/Node.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="11" column="39" lean-forward="false" selection-start-line="11" selection-start-column="33" selection-end-line="11" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/PursuerSystem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-165">
+          <caret line="183" column="55" lean-forward="false" selection-start-line="183" selection-start-column="55" selection-end-line="183" selection-end-column="55" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Components/agents/PursuerComponent.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="554">
-          <caret line="33" column="50" lean-forward="false" selection-start-line="33" selection-start-column="50" selection-end-line="33" selection-end-column="50" />
+        <state relative-caret-position="104">
+          <caret line="41" column="38" lean-forward="false" selection-start-line="41" selection-start-column="38" selection-end-line="41" selection-end-column="38" />
           <folding>
-            <element signature="imports" expanded="false" />
+            <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/CXSearchingAlgorithm/CXAgentUtility.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="367">
+          <caret line="388" column="19" lean-forward="false" selection-start-line="388" selection-start-column="19" selection-end-line="388" selection-end-column="19" />
+          <folding />
         </state>
       </provider>
     </entry>
