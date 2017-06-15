@@ -86,7 +86,7 @@ public class PursuerSystem extends IteratingSystem {
     public void addedToEngine(Engine engine) {
         super.addedToEngine(engine);
         if (!runOnce) this.engine = engine;
-        evaders = engine.getEntitiesFor(Family.all(ObservableComponent.class).get());
+        evaders = engine.getEntitiesFor(Family.all(AgentComponent.class).get());
     }
 
     private void assignInitialTask(Entity entity){
@@ -400,10 +400,12 @@ public class PursuerSystem extends IteratingSystem {
         if (visionSystem.canSee(entity,target)) {
             pursuer.alerted = true;
             pursuer.targetPosition.set(targetPos);
+            System.out.println(evader);
             //evader.captured = true;
             System.out.println(evader + " is captured.");
             //engine.removeEntity(target);
         }
+        
     }
 
 

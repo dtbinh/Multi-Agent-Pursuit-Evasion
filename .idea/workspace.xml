@@ -2,21 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="41dcac44-571c-45b2-a08c-b296523670aa" name="Default" comment="Fixed some more bugs.. MOVEMENT STILL BROKEN. (As in too fast)">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/AI/AStarPathFinder.class" afterPath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/AI/AStarPathFinder.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Entities/Components/AgentComponent.class" afterPath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Entities/Components/AgentComponent.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Entities/EntityFactory.class" afterPath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Entities/EntityFactory.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Menu/MenuScreen$1.class" afterPath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Menu/MenuScreen$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Menu/MenuScreen$2.class" afterPath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Menu/MenuScreen$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Menu/MenuScreen$3.class" afterPath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Menu/MenuScreen$3.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Menu/MenuScreen.class" afterPath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Menu/MenuScreen.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Simulator/SimulatorScreen.class" afterPath="$PROJECT_DIR$/core/build/classes/main/com/dke/pursuitevasion/Simulator/SimulatorScreen.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Components/AgentComponent.java" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Components/AgentComponent.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/EntityFactory.java" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/EntityFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/EvaderSystem.java" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/EvaderSystem.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/PursuerSystem.java" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/PursuerSystem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Menu/MenuScreen.java" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Menu/MenuScreen.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Simulator/SimulatorScreen.java" afterPath="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Simulator/SimulatorScreen.java" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -83,7 +70,7 @@
     <favorites_list name="Multi-Agent-Pursuit-Evasion" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5875536">
+    <splitter split-orientation="horizontal" split-proportion="0.26180258">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="600">
           <file leaf-file-name="PursuerSystem.java" pinned="false" current-in-tab="false">
@@ -143,8 +130,8 @@
           <file leaf-file-name="CXGraph.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/CellDecompose/Graph/CXGraph.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="42">
-                  <caret line="56" column="0" lean-forward="false" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
+                <state relative-caret-position="-3251">
+                  <caret line="55" column="35" lean-forward="true" selection-start-line="55" selection-start-column="35" selection-end-line="55" selection-end-column="35" />
                   <folding />
                 </state>
               </provider>
@@ -228,17 +215,17 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="PursuerSystem.java" pinned="false" current-in-tab="false">
+          <file leaf-file-name="PursuerSystem.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/PursuerSystem.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="329">
-                  <caret line="75" column="0" lean-forward="false" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
+                <state relative-caret-position="917">
+                  <caret line="407" column="8" lean-forward="false" selection-start-line="407" selection-start-column="8" selection-end-line="407" selection-end-column="8" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="AgentComponent.java" pinned="false" current-in-tab="true">
+          <file leaf-file-name="AgentComponent.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Components/AgentComponent.java">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="252">
@@ -251,8 +238,8 @@
           <file leaf-file-name="EntityFactory.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/EntityFactory.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="720">
-                  <caret line="169" column="38" lean-forward="false" selection-start-line="169" selection-start-column="38" selection-end-line="169" selection-end-column="38" />
+                <state relative-caret-position="792">
+                  <caret line="168" column="40" lean-forward="false" selection-start-line="168" selection-start-column="40" selection-end-line="168" selection-end-column="40" />
                   <folding>
                     <element signature="method#createAgent#0;class#EntityFactory#0" expanded="false" />
                   </folding>
@@ -275,7 +262,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>detecte</find>
       <find>movePurs</find>
       <find>IN</find>
       <find>DETECTE</find>
@@ -301,10 +287,11 @@
       <find>Observer</find>
       <find>pursuers</find>
       <find>angle</find>
-      <find>observable</find>
       <find>Pu</find>
       <find>Sys</find>
       <find>System.out</find>
+      <find>observable</find>
+      <find>captu</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -1426,10 +1413,10 @@
         <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Simulator/SimulatorScreen.java" />
         <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Components/agents/PursuerComponent.java" />
         <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Components/AgentComponent.java" />
-        <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/EntityFactory.java" />
         <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/CellDecompose/Graph/GraphTool.java" />
-        <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/PursuerSystem.java" />
         <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/EvaderSystem.java" />
+        <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/EntityFactory.java" />
+        <option value="$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/PursuerSystem.java" />
       </list>
     </option>
   </component>
@@ -2287,7 +2274,7 @@
       <workItem from="1496259526614" duration="1092000" />
       <workItem from="1497357477888" duration="1616000" />
       <workItem from="1497440052990" duration="7872000" />
-      <workItem from="1497529110325" duration="1582000" />
+      <workItem from="1497529110325" duration="2453000" />
     </task>
     <task id="LOCAL-00001" summary="Starting to build simulation part.">
       <created>1489706067873</created>
@@ -2538,7 +2525,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="214526000" />
+    <option name="totallyTimeSpent" value="215397000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -2551,7 +2538,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="107" y="42" width="3093" height="1758" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -3003,16 +2990,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/EntityFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="720">
-          <caret line="169" column="38" lean-forward="false" selection-start-line="169" selection-start-column="38" selection-end-line="169" selection-end-column="38" />
-          <folding>
-            <element signature="method#createAgent#0;class#EntityFactory#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Simulator/SimulatorScreen.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
@@ -3029,22 +3006,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Components/AgentComponent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="11" column="13" lean-forward="false" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/PursuerSystem.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="37" column="13" lean-forward="false" selection-start-line="121" selection-start-column="19" selection-end-line="121" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/EvaderSystem.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="401">
@@ -3057,8 +3018,34 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/CellDecompose/Graph/CXGraph.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="42">
-          <caret line="56" column="0" lean-forward="false" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
+        <state relative-caret-position="-3251">
+          <caret line="55" column="35" lean-forward="true" selection-start-line="55" selection-start-column="35" selection-end-line="55" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/EntityFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="792">
+          <caret line="168" column="40" lean-forward="false" selection-start-line="168" selection-start-column="40" selection-end-line="168" selection-end-column="40" />
+          <folding>
+            <element signature="method#createAgent#0;class#EntityFactory#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Components/AgentComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="11" column="13" lean-forward="false" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/com/dke/pursuitevasion/Entities/Systems/agents/PursuerSystem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="917">
+          <caret line="407" column="8" lean-forward="false" selection-start-line="407" selection-start-column="8" selection-end-line="407" selection-end-column="8" />
           <folding />
         </state>
       </provider>
