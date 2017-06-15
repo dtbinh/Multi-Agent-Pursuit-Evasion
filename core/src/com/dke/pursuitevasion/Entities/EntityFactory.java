@@ -88,6 +88,11 @@ public class EntityFactory {
         observerComponent.distance = 4.5f;
         entity.add(observerComponent);
 
+        // Adding ObserverComponent for VisionSystem
+        ObservableComponent observableComponent = new ObservableComponent();
+        observableComponent.position = new Vector2(transformComponent.position.x, transformComponent.position.y);
+        entity.add(observableComponent);
+
         PursuerComponent pursuerComponent = new PursuerComponent();
         pursuerComponent.position = position;
         pursuerComponent.number = pursuerCounter++;
@@ -156,6 +161,13 @@ public class EntityFactory {
         ObservableComponent observableComponent = new ObservableComponent();
         observableComponent.position = new Vector2(transformComponent.position.x, transformComponent.position.y);
         entity.add(observableComponent);
+
+        // Adding ObserverComponent for VisionSystem
+        ObserverComponent observerComponent = new ObserverComponent();
+        observerComponent.position = new Vector2(transformComponent.position.x, transformComponent.position.y);
+        observerComponent.fovAngle = 45f;
+        observerComponent.distance = 4.5f;
+        entity.add(observerComponent);
 
         //Create a sphere collider component
         AgentComponent sphereColliderComponent = new AgentComponent();

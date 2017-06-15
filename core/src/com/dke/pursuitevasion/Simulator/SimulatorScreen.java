@@ -131,7 +131,7 @@ public class SimulatorScreen implements Screen, InputProcessor{
         //engine.addSystem(new SimulationSystem());
         VisionSystem visionSystem = new VisionSystem();
         engine.addSystem(visionSystem);
-        engine.addSystem(new EvaderSystem(map));
+        engine.addSystem(new EvaderSystem(visionSystem, map, engine));
         engine.addSystem(new CCTvSystem(visionSystem, map));
         engine.addSystem(new PursuerSystem(visionSystem, graph, map));
 

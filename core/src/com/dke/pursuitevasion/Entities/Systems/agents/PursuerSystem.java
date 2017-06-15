@@ -400,9 +400,9 @@ public class PursuerSystem extends IteratingSystem {
         if (visionSystem.canSee(entity,target)) {
             pursuer.alerted = true;
             pursuer.targetPosition.set(targetPos);
-            evader.captured = true;
+            //evader.captured = true;
             System.out.println(evader + " is captured.");
-            engine.removeEntity(target);
+            //engine.removeEntity(target);
         }
     }
 

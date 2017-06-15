@@ -1,16 +1,23 @@
 package com.dke.pursuitevasion.Entities.Systems.agents;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Path;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.dke.pursuitevasion.AI.CustomPoint;
 import com.dke.pursuitevasion.AI.Node;
 import com.dke.pursuitevasion.AI.PathFinder;
 import com.dke.pursuitevasion.Entities.Components.AgentComponent;
+import com.dke.pursuitevasion.Entities.Components.ObservableComponent;
+import com.dke.pursuitevasion.Entities.Components.ObserverComponent;
 import com.dke.pursuitevasion.Entities.Components.StateComponent;
+import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
 import com.dke.pursuitevasion.Entities.Mappers;
+import com.dke.pursuitevasion.Entities.Systems.VisionSystem;
 import com.dke.pursuitevasion.PolyMap;
 
 import java.math.BigDecimal;
@@ -22,9 +29,17 @@ import java.util.Random;
  * Created by Envy on 5/30/2017.
  */
 public class EvaderSystem extends IteratingSystem {
-    PathFinder pathFinder;
-    public EvaderSystem(PolyMap map) {
+    private static final float DETECTION_TIME = 0.0f;
+    private PathFinder pathFinder;
+    private ImmutableArray<Entity> pursuers;
+    private VisionSystem visionSystem;
+
+    private Engine engine;
+
+    public EvaderSystem(VisionSystem visionSystem, PolyMap map, Engine engine) {
         super(Family.all(AgentComponent.class).get());
+        this.engine = engine;
+        this.visionSystem = visionSystem;
         pathFinder = new PathFinder(map);
     }
 
@@ -37,6 +52,47 @@ public class EvaderSystem extends IteratingSystem {
         }
         if (!evaderComponent.captured) {
             moveEvaders(evaderComponent, stateComponent);
+        }
+        updateObserver(entity);
+        updateDetection(entity, deltaTime);
+
+    }
+
+    private void updateObserver(Entity entity) {
+        AgentComponent evaderComponent = Mappers.agentMapper.get(entity);
+        ObserverComponent observerComponent = Mappers.observerMapper.get(entity);
+        observerComponent.angle = evaderComponent.currentAngle;
+    }
+
+    private void updateDetection(Entity entity, float deltaTime) {
+        AgentComponent evader = Mappers.agentMapper.get(entity);
+        evader.alerted = false;
+        pursuers = engine.getEntitiesFor(Family.all(PursuerComponent.class).get());
+        for (Entity target : pursuers) {
+            updateDetection(entity, target);
+            if (evader.alerted)
+                break;
+        }
+
+        evader.detectionTime = evader.alerted ? evader.detectionTime + deltaTime : 0.0f;
+
+        if (evader.detectionTime > DETECTION_TIME) {
+            System.out.println("PURSUER DETECTED");
+        }
+    }
+
+    private void updateDetection(Entity entity, Entity target) {
+        Vector2 targetPos = Mappers.observableMapper.get(target).position;
+        AgentComponent evader = Mappers.agentMapper.get(entity);
+        PursuerComponent pursuer = Mappers.pursuerMapper.get(target);
+
+        evader.alerted = false;
+        evader.targetPosition.set(0.0f, 0.0f);
+
+        if(visionSystem.canSee(entity,target)) {
+            evader.alerted = true;
+            evader.targetPosition.set(targetPos);
+            System.out.println("Evader can see: " + pursuer);
         }
     }
 
