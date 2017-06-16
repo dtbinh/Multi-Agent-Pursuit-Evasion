@@ -5,14 +5,12 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.math.Path;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.dke.pursuitevasion.AI.CustomPoint;
 import com.dke.pursuitevasion.AI.Node;
 import com.dke.pursuitevasion.AI.PathFinder;
-import com.dke.pursuitevasion.Entities.Components.AgentComponent;
-import com.dke.pursuitevasion.Entities.Components.ObservableComponent;
+import com.dke.pursuitevasion.Entities.Components.agents.EvaderComponent;
 import com.dke.pursuitevasion.Entities.Components.ObserverComponent;
 import com.dke.pursuitevasion.Entities.Components.StateComponent;
 import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
@@ -37,7 +35,7 @@ public class EvaderSystem extends IteratingSystem {
     private Engine engine;
 
     public EvaderSystem(VisionSystem visionSystem, PolyMap map, Engine engine) {
-        super(Family.all(AgentComponent.class).get());
+        super(Family.all(EvaderComponent.class).get());
         this.engine = engine;
         this.visionSystem = visionSystem;
         pathFinder = new PathFinder(map);
@@ -45,7 +43,7 @@ public class EvaderSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        AgentComponent evaderComponent = Mappers.agentMapper.get(entity);
+        EvaderComponent evaderComponent = Mappers.agentMapper.get(entity);
         StateComponent stateComponent = Mappers.stateMapper.get(entity);
         if(evaderComponent.evaderPath==null||evaderComponent.evaderPath.size()==0){
             createPath(evaderComponent, evaderComponent.position);
@@ -59,13 +57,13 @@ public class EvaderSystem extends IteratingSystem {
     }
 
     private void updateObserver(Entity entity) {
-        AgentComponent evaderComponent = Mappers.agentMapper.get(entity);
+        EvaderComponent evaderComponent = Mappers.agentMapper.get(entity);
         ObserverComponent observerComponent = Mappers.observerMapper.get(entity);
         observerComponent.angle = evaderComponent.currentAngle;
     }
 
     private void updateDetection(Entity entity, float deltaTime) {
-        AgentComponent evader = Mappers.agentMapper.get(entity);
+        EvaderComponent evader = Mappers.agentMapper.get(entity);
         evader.alerted = false;
         pursuers = engine.getEntitiesFor(Family.all(PursuerComponent.class).get());
         for (Entity target : pursuers) {
@@ -83,7 +81,7 @@ public class EvaderSystem extends IteratingSystem {
 
     private void updateDetection(Entity entity, Entity target) {
         Vector2 targetPos = Mappers.observableMapper.get(target).position;
-        AgentComponent evader = Mappers.agentMapper.get(entity);
+        EvaderComponent evader = Mappers.agentMapper.get(entity);
         PursuerComponent pursuer = Mappers.pursuerMapper.get(target);
 
         evader.alerted = false;
@@ -96,7 +94,7 @@ public class EvaderSystem extends IteratingSystem {
         }
     }
 
-    private void createPath(AgentComponent evader, Vector3 lastPosition){
+    private void createPath(EvaderComponent evader, Vector3 lastPosition){
         boolean[][] nodeGrid = pathFinder.getNodeGrid();
         int width = pathFinder.width;
         Random rand = new Random();
@@ -116,7 +114,7 @@ public class EvaderSystem extends IteratingSystem {
         addAdditionalSteps(evader, p);
     }
 
-    private void moveEvaders(AgentComponent evader, StateComponent stateComponent){
+    private void moveEvaders(EvaderComponent evader, StateComponent stateComponent){
         if(evader.evaderPath!=null && evader.evaderPath.size()>0){
             Vector3 pos = evader.evaderPath.remove(0);
             evader.position = pos;
@@ -125,7 +123,7 @@ public class EvaderSystem extends IteratingSystem {
         }
 
     }
-    public static ArrayList<Vector3> addAdditionalSteps(AgentComponent eC, List<Node> p){
+    public static ArrayList<Vector3> addAdditionalSteps(EvaderComponent eC, List<Node> p){
         eC.evaderPath = new ArrayList<Vector3>();
         float stepSize = 10;
         float diagStepSize = (float) Math.floor(1.4*stepSize);

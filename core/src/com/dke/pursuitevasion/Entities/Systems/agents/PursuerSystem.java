@@ -16,15 +16,13 @@ import com.dke.pursuitevasion.CXSearchingAlgorithm.CXAgentTaskType.CXAgentMoving
 import com.dke.pursuitevasion.CXSearchingAlgorithm.CXAgentUtility;
 import com.dke.pursuitevasion.CXSearchingAlgorithm.CXMessage.CXMessage;
 import com.dke.pursuitevasion.CellDecompose.Graph.*;
-import com.dke.pursuitevasion.Entities.Components.AgentComponent;
-import com.dke.pursuitevasion.Entities.Components.ObservableComponent;
+import com.dke.pursuitevasion.Entities.Components.agents.EvaderComponent;
 import com.dke.pursuitevasion.Entities.Components.ObserverComponent;
 import com.dke.pursuitevasion.Entities.Components.StateComponent;
 import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
 import com.dke.pursuitevasion.Entities.Mappers;
 import com.dke.pursuitevasion.Entities.Systems.VisionSystem;
 import com.dke.pursuitevasion.PolyMap;
-import sun.management.Agent;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -86,7 +84,7 @@ public class PursuerSystem extends IteratingSystem {
     public void addedToEngine(Engine engine) {
         super.addedToEngine(engine);
         if (!runOnce) this.engine = engine;
-        evaders = engine.getEntitiesFor(Family.all(AgentComponent.class).get());
+        evaders = engine.getEntitiesFor(Family.all(EvaderComponent.class).get());
     }
 
     private void assignInitialTask(Entity entity){
@@ -392,7 +390,7 @@ public class PursuerSystem extends IteratingSystem {
     private void updateDetection(Entity entity, Entity target) {
         Vector2 targetPos = Mappers.observableMapper.get(target).position;
         PursuerComponent pursuer = Mappers.pursuerMapper.get(entity);
-        AgentComponent evader = Mappers.agentMapper.get(target);
+        EvaderComponent evader = Mappers.agentMapper.get(target);
 
         pursuer.alerted = false;
         pursuer.targetPosition.set(0.0f, 0.0f);

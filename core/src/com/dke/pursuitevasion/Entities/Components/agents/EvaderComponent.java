@@ -1,4 +1,4 @@
-package com.dke.pursuitevasion.Entities.Components;
+package com.dke.pursuitevasion.Entities.Components.agents;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 /**
  * Created by Nicola Gheza on 29/03/2017.
  */
-public class AgentComponent implements Component {
+public class EvaderComponent implements Component {
     public float radius;
     public ArrayList<Vector3> evaderPath;
     public Vector3 position;

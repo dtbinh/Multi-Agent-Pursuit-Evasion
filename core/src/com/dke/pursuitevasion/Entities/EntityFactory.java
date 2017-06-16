@@ -17,6 +17,7 @@ import com.dke.pursuitevasion.CXSearchingAlgorithm.CXAgentState;
 import com.dke.pursuitevasion.EdgeVectors;
 import com.dke.pursuitevasion.Entities.Components.*;
 import com.dke.pursuitevasion.Entities.Components.agents.CCTvComponent;
+import com.dke.pursuitevasion.Entities.Components.agents.EvaderComponent;
 import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
 import com.dke.pursuitevasion.WallInfo;
 
@@ -52,7 +53,7 @@ public class EntityFactory {
         entity.add(observerComponent);
 
         //Create a sphere collider component
-        AgentComponent sphereColliderComponent = new AgentComponent();
+        EvaderComponent sphereColliderComponent = new EvaderComponent();
         sphereColliderComponent.radius = 0.15f;
         entity.add(sphereColliderComponent);
 
@@ -170,7 +171,7 @@ public class EntityFactory {
         entity.add(observerComponent);
 
         //Create a sphere collider component
-        AgentComponent sphereColliderComponent = new AgentComponent();
+        EvaderComponent sphereColliderComponent = new EvaderComponent();
         sphereColliderComponent.radius = 0.15f;
         sphereColliderComponent.position = position;
         entity.add(sphereColliderComponent);

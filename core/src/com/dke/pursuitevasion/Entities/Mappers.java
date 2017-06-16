@@ -3,6 +3,7 @@ package com.dke.pursuitevasion.Entities;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.dke.pursuitevasion.Entities.Components.*;
 import com.dke.pursuitevasion.Entities.Components.agents.CCTvComponent;
+import com.dke.pursuitevasion.Entities.Components.agents.EvaderComponent;
 import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
 
 /**
@@ -10,7 +11,7 @@ import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
  */
 public class Mappers {
     public static ComponentMapper<StateComponent> stateMapper = ComponentMapper.getFor(StateComponent.class);
-    public static ComponentMapper<AgentComponent> agentMapper = ComponentMapper.getFor(AgentComponent.class);
+    public static ComponentMapper<EvaderComponent> agentMapper = ComponentMapper.getFor(EvaderComponent.class);
     public static ComponentMapper<WallComponent> wallMapper = ComponentMapper.getFor(WallComponent.class);
     public static ComponentMapper<GraphicsComponent> graphicsMapper = ComponentMapper.getFor(GraphicsComponent.class);
 

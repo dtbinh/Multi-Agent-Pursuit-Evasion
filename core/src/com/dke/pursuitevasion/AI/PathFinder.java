@@ -66,7 +66,6 @@ public class PathFinder implements Screen {
 
         engine = new Engine();
         engine.addSystem(new GraphicsSystem(cam, environment));
-        engine.addSystem(new SimulationSystem());
 
         entityFactory = new EntityFactory();
 
