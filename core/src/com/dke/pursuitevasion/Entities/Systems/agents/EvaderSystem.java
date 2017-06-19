@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.dke.pursuitevasion.AI.CustomPoint;
@@ -31,7 +32,7 @@ public class EvaderSystem extends IteratingSystem {
     private PathFinder pathFinder;
     private ImmutableArray<Entity> pursuers;
     private VisionSystem visionSystem;
-
+    private Vector2 position = new Vector2();
     private Engine engine;
 
     public EvaderSystem(VisionSystem visionSystem, PolyMap map, Engine engine) {
@@ -51,11 +52,68 @@ public class EvaderSystem extends IteratingSystem {
         if (!evaderComponent.captured) {
             moveEvaders(evaderComponent, stateComponent);
         }
+        movePursuer(entity, deltaTime);
         updateObserver(entity);
         updateDetection(entity, deltaTime);
+    }
+
+
+    private void movePursuer(Entity entity, float deltaTime) {
+        EvaderComponent evaderComponent = Mappers.agentMapper.get(entity);
+        StateComponent stateComponent = Mappers.stateMapper.get(entity);
+        if(evaderComponent.alerted) {
+            trackTarget(evaderComponent, stateComponent);
+        }
+        else {
+            moveVision(evaderComponent, stateComponent, deltaTime);
+        }
+        moveVision(evaderComponent, stateComponent, deltaTime);
+        limitAngle(evaderComponent);
 
     }
 
+    private void limitAngle(EvaderComponent evaderComponent) {
+        evaderComponent.currentAngle = MathUtils.clamp(
+                evaderComponent.currentAngle,
+                evaderComponent.minAngle,
+                evaderComponent.maxAngle
+        );
+    }
+
+    private void trackTarget(EvaderComponent evader, StateComponent state) {
+        position.set(evader.targetPosition);
+        Vector2 cameraPosition = new Vector2(state.position.x, state.position.z);
+        position.sub(cameraPosition);
+        position.nor();
+        float angle = position.angle();
+        evader.currentAngle = angle;
+        state.angle = angle;
+    }
+
+    private void moveVision(EvaderComponent evaderComponent, StateComponent stateComponent, float deltaTime) {
+        if (evaderComponent.waitTime == 0) {
+            evaderComponent.currentAngle += evaderComponent.angularVelocity * evaderComponent.direction.value() * deltaTime;
+            if (evaderComponent.currentAngle <= evaderComponent.minAngle) {
+                evaderComponent.waitTime = evaderComponent.waitTimeMinAngle;
+                evaderComponent.direction = evaderComponent.direction.invert();
+            }
+            else if (evaderComponent.currentAngle >= evaderComponent.maxAngle) {
+                evaderComponent.waitTime = evaderComponent.waitTimeMaxAngle;
+                evaderComponent.direction = evaderComponent.direction.invert();
+            }
+        } else {
+            evaderComponent.waitTime = Math.max(evaderComponent.waitTime - deltaTime, 0.0f);
+        }
+        stateComponent.angle = evaderComponent.currentAngle;
+    }
+
+    private void limitAngle(PursuerComponent pursuerComponent) {
+        pursuerComponent.currentAngle = MathUtils.clamp(
+                pursuerComponent.currentAngle,
+                pursuerComponent.minAngle,
+                pursuerComponent.maxAngle
+        );
+    }
     private void updateObserver(Entity entity) {
         EvaderComponent evaderComponent = Mappers.agentMapper.get(entity);
         ObserverComponent observerComponent = Mappers.observerMapper.get(entity);
