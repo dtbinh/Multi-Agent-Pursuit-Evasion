@@ -75,7 +75,7 @@ public class PursuerSystem extends IteratingSystem {
         } else {
             updateTask(entity);
         }
-        movePursuer(entity, deltaTime);
+        //movePursuer(entity, deltaTime);
         updateObserver(entity);
         updateDetection(entity, deltaTime);
     }
@@ -244,7 +244,7 @@ public class PursuerSystem extends IteratingSystem {
                 break;
             }
             case FinishGame:{
-                pursuerC.setState(CXAgentState.Moving);
+                pursuerC.setState(CXAgentState.Free);
                 break;
             }
         }
@@ -344,7 +344,7 @@ public class PursuerSystem extends IteratingSystem {
 
         if (pursuer.detectionTime > DETECTION_TIME) {
             System.out.println("INTRUDER DETECTED");
-            /*Vector3 start = new Vector3(pursuer.position.x, 0, pursuer.position.z);
+            Vector3 start = new Vector3(pursuer.position.x, 0, pursuer.position.z);
             Vector3 end = new Vector3(pursuer.targetPosition.x, 0, pursuer.targetPosition.y);
             p = pathFinder.findPath(start, end, null);
             //reset start node to current position of pursuer.
@@ -354,7 +354,7 @@ public class PursuerSystem extends IteratingSystem {
             }
 
 
-            addAdditionalSteps(pursuer, p, start);*/
+            addAdditionalSteps(pursuer, p, start);
             pursuer.detectionTime = 0.0f;
         }
     }
