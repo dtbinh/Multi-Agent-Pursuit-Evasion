@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -20,26 +21,29 @@ import com.dke.pursuitevasion.Entities.Components.agents.EvaderComponent;
 import com.dke.pursuitevasion.Entities.Components.ObserverComponent;
 import com.dke.pursuitevasion.Entities.Components.StateComponent;
 import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
+import com.dke.pursuitevasion.Entities.EntityFactory;
 import com.dke.pursuitevasion.Entities.Mappers;
 import com.dke.pursuitevasion.Entities.Systems.VisionSystem;
 import com.dke.pursuitevasion.PolyMap;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by Nicola Gheza on 23/05/2017.
  */
-
 public class PursuerSystem extends IteratingSystem {
     private static final float DETECTION_TIME = 0.0f;
 
     private ImmutableArray<Entity> evaders;
     private VisionSystem visionSystem;
     private Vector2 position = new Vector2();
-    private PathFinder pathFinder;
-    private CXDecomposedGraphNode finalSearchingNode;
 
+    private PathFinder pathFinder;
+    private EntityFactory entityFactory;
     List<Node> p;
 
     CXGraph graph;
@@ -57,6 +61,7 @@ public class PursuerSystem extends IteratingSystem {
     private CXAgentUtility agentUtility = new CXAgentUtility();
 
     private boolean runOnce = false;
+    private int messageNumber;
     private Engine engine;
 
     public PursuerSystem(VisionSystem visionSystem, CXGraph graph, PolyMap map) {
@@ -65,6 +70,7 @@ public class PursuerSystem extends IteratingSystem {
         this.visionSystem = visionSystem;
         this.graph = graph;
         pathFinder = new PathFinder(map);
+        entityFactory = new EntityFactory();
     }
 
     @Override
@@ -102,7 +108,6 @@ public class PursuerSystem extends IteratingSystem {
         CXDecomposedGraphNode finalNode = GraphTool.findTheFarRightNode(graph);
         this.agentUtility.finalArea = finalNode;
 
-
         CXAgentTask task2 = new CXAgentTask(CXAgentState.Scanning);
         task2.scanTask.scanScope.add((Float)180.0f);
         task2.scanTask.scanScope.add((Float)90.0f);
@@ -122,20 +127,26 @@ public class PursuerSystem extends IteratingSystem {
         //System.out.println();
         //System.out.println("------------- Agent: "+ pursuerC.number + " -------------");
 
+        if (this.messageArrayList.size() > 0) {
+            messageNumber++;
+            if (messageNumber > 5) {
+                engine.addEntity(entityFactory.createPursuer(new Vector3(0f,0f,0f), Color.BLUE));
+                messageNumber = 0;
+            }
+        } else {
+            messageNumber = 0;
+        }
+
         switch (pursuerC.getState()){
             case Free:{
                 this.printStateAndLocation("Free",new CXPoint(stateC.position.x, stateC.position.z));
                 if (pursuerC.taskList.size() != 0){
                     CXAgentTask task = (CXAgentTask)pursuerC.taskList.getFirst();
                     pursuerC.setState(task.taskState);
-                    pursuerC.freeStateRoutine = null;
                     break;
                 }
                 else {
                     pursuerC = this.agentUtility.checkMessage(this.messageArrayList, pursuerC);
-                    if (pursuerC.taskList.size() == 0){
-                        stateC = this.agentUtility.randomMovment(stateC, pursuerC,pathFinder,graph );
-                    }
                     break;
                 }
             }
@@ -186,8 +197,8 @@ public class PursuerSystem extends IteratingSystem {
                 // Get the update location
                 float velocity = stateC.velocity.x;
 
-                // Get the next movement
                 CXPoint updateLocation = this.agentUtility.getNextMovingPoint(pursuerC, curLocation, destination, pathFinder);
+
                 CXPoint newDestination = CXPoint.converToGraphCoordination(destination);
                 CXPoint newUpdateLocation = CXPoint.converToGraphCoordination(updateLocation);
                 //System.out.println("Moving destination x = "+ newDestination.x + " y = "+newDestination.y + " ; UpdateLocation is x = "+ newUpdateLocation.x + " y = " + newUpdateLocation.y);
@@ -202,7 +213,7 @@ public class PursuerSystem extends IteratingSystem {
                     else {
                         pursuerC.taskList.removeFirst();
 
-                        //System.out.println("Agent " + pursuerC.number + " arrived Destination ");
+                        //System.out.println("Agent " + pursuerC.number + " is arrived Destination ");
                         if (!pursuerC.taskList.isEmpty()){
                             CXAgentTask newTask = (CXAgentTask) pursuerC.taskList.getFirst();
                             pursuerC.setState(newTask.taskState);
@@ -243,12 +254,12 @@ public class PursuerSystem extends IteratingSystem {
             case WaitSearching:{
                 this.printStateAndLocation("WaitSearching",new CXPoint(stateC.position.x, stateC.position.z));
                 // 1. Check the left area is been searched or not ? --> Yes, Check the location --> It's in the top-right location? Add Searching task: state = Free;
-                pursuerC   = this.agentUtility.checkLeftAreaIsBeenSearched(this.graph,pursuerC,this.searchedArea,stateC);
+                pursuerC = this.agentUtility.checkLeftAreaIsBeenSearched(this.graph,pursuerC,this.searchedArea,stateC);
                 break;
             }
             case FinishGame:{
                 pursuerC.setState(CXAgentState.Free);
-                // Later
+                System.out.println("The game is over.");
                 break;
             }
         }
@@ -347,8 +358,8 @@ public class PursuerSystem extends IteratingSystem {
         pursuer.detectionTime = pursuer.alerted ? pursuer.detectionTime + deltaTime : 0.0f;
 
         if (pursuer.detectionTime > DETECTION_TIME) {
-            //System.out.println("INTRUDER DETECTED");
-            Vector3 start = new Vector3(pursuer.position.x, 0, pursuer.position.z);
+            System.out.println("INTRUDER DETECTED");
+            /*Vector3 start = new Vector3(pursuer.position.x, 0, pursuer.position.z);
             Vector3 end = new Vector3(pursuer.targetPosition.x, 0, pursuer.targetPosition.y);
             p = pathFinder.findPath(start, end, null);
             //reset start node to current position of pursuer.
@@ -358,7 +369,7 @@ public class PursuerSystem extends IteratingSystem {
             }
 
 
-            addAdditionalSteps(pursuer, p, start);
+            addAdditionalSteps(pursuer, p, start);*/
             pursuer.detectionTime = 0.0f;
         }
     }
@@ -405,7 +416,7 @@ public class PursuerSystem extends IteratingSystem {
             pursuer.targetPosition.set(targetPos);
             //System.out.println(evader);
             evader.captured = true;
-            //System.out.println(evader + " is captured.");
+            System.out.println(evader + " is captured.");
             engine.removeEntity(target);
         }
 
