@@ -85,8 +85,8 @@ public class EntityFactory {
         // Adding ObserverComponent for VisionSystem
         ObserverComponent observerComponent = new ObserverComponent();
         observerComponent.position = new Vector2(transformComponent.position.x, transformComponent.position.y);
-        observerComponent.fovAngle = 45f;
-        observerComponent.distance = 3.5f;
+        observerComponent.fovAngle = 20f;
+        observerComponent.distance = 1f;
         entity.add(observerComponent);
 
         // Adding ObserverComponent for VisionSystem
@@ -246,7 +246,7 @@ public class EntityFactory {
         entity.add(transformComponent);
 
         ModelBuilder modelBuilder = new ModelBuilder();
-        Model wall = modelBuilder.createBox(wallInfo.length-0.05f,wallInfo.height,0.08f,new Material(ColorAttribute.createDiffuse(Color.LIGHT_GRAY)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+        Model wall = modelBuilder.createBox(wallInfo.length-0.05f,wallInfo.height,0.08f,new Material(ColorAttribute.createDiffuse(Color.BLACK)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
         ModelInstance wallInstance = new ModelInstance(wall);
         wallInstance.transform = transformComponent.transform;
 

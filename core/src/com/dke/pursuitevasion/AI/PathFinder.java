@@ -118,12 +118,22 @@ public class PathFinder implements Screen {
         }
     }
 
-    public List<Node> findPath(Vector3 pursuerPos, Vector3 evaderPos, CustomPoint overrideEnd){
+    public List<Node> findPath(Vector3 currentPos, Vector3 targetPos, CustomPoint overrideEnd){
+        boolean apxStart = false;
+        boolean apxEnd = false;
         CP = pF.CC;
-        CustomPoint start = getNodeFromWorldCoor(pursuerPos.x, pursuerPos.z);
-        CustomPoint end = getNodeFromWorldCoor(evaderPos.x, evaderPos.z);
+        CustomPoint start = getNodeFromWorldCoor(currentPos.x, currentPos.z);
+        CustomPoint end = getNodeFromWorldCoor(targetPos.x, targetPos.z);
         if(overrideEnd!=null){
             end = overrideEnd;
+        }
+        if(start == null){
+            start = approximatePosition(currentPos.x, currentPos.z);
+            apxStart = true;
+        }
+        if(end == null){
+            end = approximatePosition(targetPos.x, targetPos.z);
+            apxEnd = true;
         }
         int sIndex = 1;;
         int eIndex = 1;
@@ -143,7 +153,63 @@ public class PathFinder implements Screen {
         }
         //System.out.println(sIndex+"  "+eIndex);
         path = pF.findPath(sIndex, eIndex);
+        if(apxStart){
+            Node newStart = new Node(0,0,0,0,0,0);
+            newStart.worldX = currentPos.x;
+            newStart.worldZ = currentPos.z;
+            path.add(0,newStart);
+        }
+        //add on accurate end if approximation used
+        if(apxEnd){
+            Node newEnd = new Node (0,0,0,0,0,0);
+            newEnd.worldX = targetPos.x;
+            newEnd.worldZ = targetPos.z;
+            path.add(newEnd);
+        }
         return path;
+    }
+    public CustomPoint approximatePosition(float X, float Y){
+        int xIndex = 1;
+        int yIndex = 1;
+        int newXIndex = 0;
+        int newYIndex = 0;
+        outerloop:
+        for (int j = 0; j < width; j++) {
+            for (int k = 0; k < height; k++) {
+                float offset = gapSize / 2;
+                float x = toWorldCoorX(j) + offset;
+                float y = toWorldCoorY(k) + offset;
+                float corner1 = x + gapSize / 2;
+                float corner2 = x - gapSize / 2;
+                float corner3 = y + gapSize / 2;
+                float corner4 = y - gapSize / 2;
+
+                if(X < corner1 && X > corner2 && Y < corner3 && Y > corner4){
+                    xIndex = j;
+                    yIndex = k;
+                    break outerloop;
+                }
+            }
+        }
+        if(xIndex == 0 && yIndex == 0){
+            System.out.println("Approximation failed");
+        }
+        float distance = Float.MAX_VALUE;
+        for (int i=-1;i<2;i++){
+            for(int j=-1;j<2;j++){
+                if((j!=0 || i!=0) && nodeGrid[xIndex+i][yIndex+j]){
+                    Vector3 adjacentPos = positionFromIndex(xIndex+i, yIndex+j, pF);
+                    Vector3 position = new Vector3(X, 0, Y);
+                    float checkDistance = position.dst(adjacentPos);
+                    if(distance>checkDistance){
+                        distance = checkDistance;
+                        newXIndex = xIndex+i;
+                        newYIndex = yIndex+j;
+                    }
+                }
+            }
+        }
+        return new CustomPoint(newXIndex, newYIndex);
     }
 
     public void checkInMesh(int nodeX, int nodeY){

@@ -6,11 +6,15 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.VertexAttributes;
+import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.dke.pursuitevasion.*;
+import com.dke.pursuitevasion.AI.PathFinder;
 import com.dke.pursuitevasion.CellDecompose.Graph.CXGraph;
 import com.dke.pursuitevasion.CellDecompose.Graph.CXGraphNode;
 import com.dke.pursuitevasion.CellDecompose.Graph.CXPoint;
@@ -22,6 +26,8 @@ import com.dke.pursuitevasion.Entities.Systems.agents.CCTvSystem;
 import com.dke.pursuitevasion.Entities.Systems.agents.EvaderSystem;
 import com.dke.pursuitevasion.Entities.Systems.agents.PursuerSystem;
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
 
 /**
  * Created by Nicola Gheza on 08/03/2017.
@@ -36,6 +42,9 @@ public class SimulatorScreen implements Screen, InputProcessor{
 
     private Engine engine; // move to controller
     private EntityFactory entityFactory; // move to controller
+
+    ArrayList<ModelInstance> nodes =  new ArrayList<ModelInstance>();
+    ModelBatch modelBatch = new ModelBatch();
 
     public SimulatorScreen(PursuitEvasion game, FileHandle mapFile, PolyMap Map) {
 
@@ -147,6 +156,24 @@ public class SimulatorScreen implements Screen, InputProcessor{
             engine.addEntity(entityFactory.createEvader(map.geteI()[i].position, Color.RED));
         }
 
+        ModelBuilder modelBuilder = new ModelBuilder();
+        Model box = modelBuilder.createBox(0.05f, 0.02f, 0.05f,new Material(ColorAttribute.createDiffuse(Color.RED)),
+                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+        Model bbox = modelBuilder.createBox(0.08f, 0.2f, 0.08f,new Material(ColorAttribute.createDiffuse(Color.BLUE)),
+                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+
+        /*PathFinder pf = new PathFinder(map);
+        boolean[][] nodeGrid = pf.getNodeGrid();
+        for(int i=0;i<pf.getNodeGrid().length;i++){
+            for(int j=0;j<pf.getNodeGrid().length;j++){
+                if(nodeGrid[i][j]) {
+                    Vector3 pos = PathFinder.positionFromIndex(i, j, pf.pF);
+                    pos.y+=0.1f;
+                    ModelInstance mBox = new ModelInstance(box, pos);
+                    nodes.add(mBox);
+                }
+            }
+        }*/
     }
 
     @Override
@@ -158,6 +185,14 @@ public class SimulatorScreen implements Screen, InputProcessor{
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
         Gdx.gl20.glEnable(GL20.GL_DEPTH_TEST);
+
+        modelBatch.begin(cam);
+        if(nodes.size()>0){
+            for(int i=0;i<nodes.size();i++){
+                modelBatch.render(nodes.get(i));
+            }
+        }
+        modelBatch.end();
 
         trackingCameraController.update(delta);
         engine.update(delta);

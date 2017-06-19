@@ -52,13 +52,13 @@ public class EvaderSystem extends IteratingSystem {
         if (!evaderComponent.captured) {
             moveEvaders(evaderComponent, stateComponent);
         }
-        movePursuer(entity, deltaTime);
+        moveEvader(entity, deltaTime);
         updateObserver(entity);
         updateDetection(entity, deltaTime);
     }
 
 
-    private void movePursuer(Entity entity, float deltaTime) {
+    private void moveEvader(Entity entity, float deltaTime) {
         EvaderComponent evaderComponent = Mappers.agentMapper.get(entity);
         StateComponent stateComponent = Mappers.stateMapper.get(entity);
         if(evaderComponent.alerted) {
@@ -107,13 +107,6 @@ public class EvaderSystem extends IteratingSystem {
         stateComponent.angle = evaderComponent.currentAngle;
     }
 
-    private void limitAngle(PursuerComponent pursuerComponent) {
-        pursuerComponent.currentAngle = MathUtils.clamp(
-                pursuerComponent.currentAngle,
-                pursuerComponent.minAngle,
-                pursuerComponent.maxAngle
-        );
-    }
     private void updateObserver(Entity entity) {
         EvaderComponent evaderComponent = Mappers.agentMapper.get(entity);
         ObserverComponent observerComponent = Mappers.observerMapper.get(entity);
@@ -133,7 +126,7 @@ public class EvaderSystem extends IteratingSystem {
         evader.detectionTime = evader.alerted ? evader.detectionTime + deltaTime : 0.0f;
 
         if (evader.detectionTime > DETECTION_TIME) {
-            System.out.println("PURSUER DETECTED");
+            //System.out.println("PURSUER DETECTED");
         }
     }
 
@@ -148,7 +141,7 @@ public class EvaderSystem extends IteratingSystem {
         if(visionSystem.canSee(entity,target)) {
             evader.alerted = true;
             evader.targetPosition.set(targetPos);
-            System.out.println("Evader can see: " + pursuer);
+            //System.out.println("Evader can see: " + pursuer);
         }
     }
 

@@ -33,7 +33,7 @@ public class CXAgentUtility {
         for (int i = 0; i < messageArrayList.size() ; i++) {
             CXMessage message = (CXMessage)messageArrayList.get(i);
             if (message.receiver == -1 || message.receiver == pursuerComponent.number){
-                System.out.println("Received message " + message.messageType );
+                //System.out.println("Received message " + message.messageType );
                 switch (message.messageType){
                     case CallBackUp:
                     {
@@ -116,7 +116,7 @@ public class CXAgentUtility {
                     // The reason use CXPoint.distance instead of  equal because the number has too much decimal
                     if (CXPoint.distance(agentLocation,newPoint) < 0.0001) { // 转变了坐标
                         // If the next search area is the final Area
-                        System.out.println(rightNode.nodeNumber);
+                        //System.out.println(rightNode.nodeNumber);
                         if (rightNode.nodeNumber == this.finalArea.nodeNumber){
                             CXAgentTask newTask = new CXAgentTask(CXAgentState.Scanning);
                             newTask.scanTask.scanScope.add((Float)0f);
@@ -174,7 +174,7 @@ public class CXAgentUtility {
 
                 messageLinkedList.add(message);
                 pursuerComponent.setState(CXAgentState.WaitBackup);
-                System.out.println("Agent " + pursuerComponent.number + " Send a backUp message, Search Area " + searchingTask.searchArea.nodeNumber );
+                //System.out.println("Agent " + pursuerComponent.number + " Send a backUp message, Search Area " + searchingTask.searchArea.nodeNumber );
 
                 return pursuerComponent;
             }
@@ -185,7 +185,6 @@ public class CXAgentUtility {
         if (currentPoint.x == destination.x && currentPoint.y == destination.y) return destination;
 
         if(pC.pursuerPointPath.size()==0 && !pathfinder.checkStraightLinePath(currentPoint, destination)){
-            System.out.println("Pf path------------------------------------------------");
             Vector3 start = new Vector3((float)currentPoint.x, 0, (float)(currentPoint.y));
             Vector3 end = new Vector3((float)destination.x, 0, (float)(destination.y));
             List<Node> path = pathfinder.findPath(start, end, null);
@@ -196,7 +195,6 @@ public class CXAgentUtility {
             pC.pursuerPointPath = addAdditionalSteps(pC, path);
         }
         if(pC.pursuerPointPath.size()==0 && pathfinder.checkStraightLinePath(currentPoint, destination)){
-            System.out.println("smooth path-------------------------------------------");
             pC.pursuerPointPath = discretizePath(currentPoint, destination);
         }
 
@@ -212,7 +210,7 @@ public class CXAgentUtility {
     public ArrayList<CXPoint> addAdditionalSteps(PursuerComponent pC, List<Node> p){
         pC.pursuerPointPath= new ArrayList<CXPoint>();
         float stepSize = 8;
-        float diagStepSize = (float) Math.floor(1.4*stepSize);
+        float diagStepSize= (float) Math.floor(1.4*stepSize);
         if(p.size()>1) {
             for (int i = 0; i < p.size() - 1; i++) {
                 Vector3 start = new Vector3(p.get(i).worldX, p.get(i).worldY, p.get(i).worldZ);
@@ -257,7 +255,7 @@ public class CXAgentUtility {
         double distY = end.y - start.y;
         double distance = Math.sqrt((distX*distX)+(distY*distY));
         double steps = distance/0.2;
-        double stepSize = 15;
+        double stepSize = 8;
 
         for(int i=0;i<steps*stepSize;i++){
             double scale = i/(steps*stepSize);
@@ -295,7 +293,7 @@ public class CXAgentUtility {
             agentLocation = CXPoint.converToGraphCoordination(agentLocation);
 
             float  distance =  (float) CXPoint.distance(agentLocation,rightNode.getTopLeftNode().location);
-            System.out.println(rightNode.getTopLeftNode().location.x + " " + rightNode.getTopLeftNode().location.y);
+            //System.out.println(rightNode.getTopLeftNode().location.x + " " + rightNode.getTopLeftNode().location.y);
             if (CXPoint.distance(agentLocation,rightNode.getTopLeftNode().location) < 0.001) {
                 if (rightNode.nodeNumber == this.finalArea.nodeNumber){
                     CXAgentTask newTask = new CXAgentTask(CXAgentState.Scanning);
