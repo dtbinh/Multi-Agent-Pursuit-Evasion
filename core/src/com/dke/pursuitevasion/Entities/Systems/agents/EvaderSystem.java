@@ -126,7 +126,7 @@ public class EvaderSystem extends IteratingSystem {
         evader.detectionTime = evader.alerted ? evader.detectionTime + deltaTime : 0.0f;
 
         if (evader.detectionTime > DETECTION_TIME) {
-            System.out.println("PURSUER DETECTED");
+            //System.out.println("PURSUER DETECTED");
         }
     }
 
@@ -141,7 +141,7 @@ public class EvaderSystem extends IteratingSystem {
         if(visionSystem.canSee(entity,target)) {
             evader.alerted = true;
             evader.targetPosition.set(targetPos);
-            System.out.println("Evader can see: " + pursuer);
+            //System.out.println("Evader can see: " + pursuer);
         }
     }
 

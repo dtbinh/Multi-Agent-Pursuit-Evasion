@@ -246,7 +246,7 @@ public class EntityFactory {
         entity.add(transformComponent);
 
         ModelBuilder modelBuilder = new ModelBuilder();
-        Model wall = modelBuilder.createBox(wallInfo.length-0.05f,wallInfo.height,0.08f,new Material(ColorAttribute.createDiffuse(Color.LIGHT_GRAY)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+        Model wall = modelBuilder.createBox(wallInfo.length-0.05f,wallInfo.height,0.08f,new Material(ColorAttribute.createDiffuse(Color.BLACK)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
         ModelInstance wallInstance = new ModelInstance(wall);
         wallInstance.transform = transformComponent.transform;
 
