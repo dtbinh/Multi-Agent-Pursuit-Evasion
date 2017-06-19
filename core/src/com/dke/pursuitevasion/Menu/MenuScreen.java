@@ -40,7 +40,6 @@ public class MenuScreen implements Screen {
         table.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         Label project = new Label("Multi-Agent Pursuit Evasion", skin);
-        project.setFontScale(2);
 
         TextButton buttonMapBuilder = new TextButton("Map Editor", skin);
         //buttonMapBuilder.setPosition(550, 350);

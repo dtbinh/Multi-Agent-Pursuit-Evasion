@@ -11,8 +11,8 @@ public class CXGraph<E> implements Serializable{
 
     // The vertices have to be add in order, can't remove any vertices otherwise the graph doesn't work properly
     // only if you write your own remove method
-    private int [][] edgeValueArray = new int[100][100];
-    private ArrayList[] verticesList  = new ArrayList[100];  // can use Dictionary instead of ArrayList
+    private int [][] edgeValueArray = new int[1000][1000];
+    private ArrayList[] verticesList  = new ArrayList[1000];  // can use Dictionary instead of ArrayList
     public ArrayList allVertices = new ArrayList();
 
     /*
@@ -52,6 +52,9 @@ public class CXGraph<E> implements Serializable{
         this.add_vertex(y);
         if (adjacency(x,y)){
             return true;
+        }
+        if (verticesList == null){
+            System.out.print("vertices is empty");
         }
         verticesList[x.nodeNumber].add(y);
         verticesList[y.nodeNumber].add(x);

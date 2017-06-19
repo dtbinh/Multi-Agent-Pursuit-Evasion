@@ -17,6 +17,7 @@ import com.dke.pursuitevasion.CXSearchingAlgorithm.CXAgentState;
 import com.dke.pursuitevasion.EdgeVectors;
 import com.dke.pursuitevasion.Entities.Components.*;
 import com.dke.pursuitevasion.Entities.Components.agents.CCTvComponent;
+import com.dke.pursuitevasion.Entities.Components.agents.EvaderComponent;
 import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
 import com.dke.pursuitevasion.WallInfo;
 
@@ -52,7 +53,7 @@ public class EntityFactory {
         entity.add(observerComponent);
 
         //Create a sphere collider component
-        AgentComponent sphereColliderComponent = new AgentComponent();
+        EvaderComponent sphereColliderComponent = new EvaderComponent();
         sphereColliderComponent.radius = 0.15f;
         entity.add(sphereColliderComponent);
 
@@ -84,9 +85,14 @@ public class EntityFactory {
         // Adding ObserverComponent for VisionSystem
         ObserverComponent observerComponent = new ObserverComponent();
         observerComponent.position = new Vector2(transformComponent.position.x, transformComponent.position.y);
-        observerComponent.fovAngle = 45f;
-        observerComponent.distance = 4.5f;
+        observerComponent.fovAngle = 20f;
+        observerComponent.distance = 1f;
         entity.add(observerComponent);
+
+        // Adding ObserverComponent for VisionSystem
+        ObservableComponent observableComponent = new ObservableComponent();
+        observableComponent.position = new Vector2(transformComponent.position.x, transformComponent.position.y);
+        entity.add(observableComponent);
 
         PursuerComponent pursuerComponent = new PursuerComponent();
         pursuerComponent.position = position;
@@ -157,8 +163,15 @@ public class EntityFactory {
         observableComponent.position = new Vector2(transformComponent.position.x, transformComponent.position.y);
         entity.add(observableComponent);
 
+        // Adding ObserverComponent for VisionSystem
+        ObserverComponent observerComponent = new ObserverComponent();
+        observerComponent.position = new Vector2(transformComponent.position.x, transformComponent.position.y);
+        observerComponent.fovAngle = 45f;
+        observerComponent.distance = 1f;
+        entity.add(observerComponent);
+
         //Create a sphere collider component
-        AgentComponent sphereColliderComponent = new AgentComponent();
+        EvaderComponent sphereColliderComponent = new EvaderComponent();
         sphereColliderComponent.radius = 0.15f;
         sphereColliderComponent.position = position;
         entity.add(sphereColliderComponent);
@@ -233,7 +246,7 @@ public class EntityFactory {
         entity.add(transformComponent);
 
         ModelBuilder modelBuilder = new ModelBuilder();
-        Model wall = modelBuilder.createBox(wallInfo.length-0.05f,wallInfo.height,0.08f,new Material(ColorAttribute.createDiffuse(Color.LIGHT_GRAY)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+        Model wall = modelBuilder.createBox(wallInfo.length-0.05f,wallInfo.height,0.08f,new Material(ColorAttribute.createDiffuse(Color.BLACK)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
         ModelInstance wallInstance = new ModelInstance(wall);
         wallInstance.transform = transformComponent.transform;
 
