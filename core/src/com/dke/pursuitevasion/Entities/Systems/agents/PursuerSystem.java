@@ -32,15 +32,14 @@ import java.util.*;
 /**
  * Created by Nicola Gheza on 23/05/2017.
  */
+
 public class PursuerSystem extends IteratingSystem {
     private static final float DETECTION_TIME = 0.0f;
 
     private ImmutableArray<Entity> evaders;
     private VisionSystem visionSystem;
     private Vector2 position = new Vector2();
-
     private PathFinder pathFinder;
-
     private CXDecomposedGraphNode finalSearchingNode;
 
     List<Node> p;
@@ -189,8 +188,8 @@ public class PursuerSystem extends IteratingSystem {
                 // Get the update location
                 float velocity = stateC.velocity.x;
 
+                // Get the next movement
                 CXPoint updateLocation = this.agentUtility.getNextMovingPoint(pursuerC, curLocation, destination, pathFinder);
-
                 CXPoint newDestination = CXPoint.converToGraphCoordination(destination);
                 CXPoint newUpdateLocation = CXPoint.converToGraphCoordination(updateLocation);
                 //System.out.println("Moving destination x = "+ newDestination.x + " y = "+newDestination.y + " ; UpdateLocation is x = "+ newUpdateLocation.x + " y = " + newUpdateLocation.y);

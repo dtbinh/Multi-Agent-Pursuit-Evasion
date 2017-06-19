@@ -367,17 +367,20 @@ public class CXAgentUtility {
         return nextMovePostion;
     }
     public StateComponent randomMovment(StateComponent state, PursuerComponent pursuer, PathFinder finder, CXGraph graph){
+        // 1. Check the current location;
+
+        // 2. Set the next vertices as the destination;
 
         if (pursuer.freeStateRoutine != null && pursuer.freeStateRoutine.size() != 0){
 
             Node node = pursuer.freeStateRoutine.get(0);
+
             pursuer.freeStateRoutine.remove(0);
 
             state.position.set(node.worldX,state.position.y,node.worldZ);
 
             return state;
         }
-
 
         CXGraphNode topLeftNode = this.finalArea.getTopLeftNode();
         CXGraphNode downLeftNode = this.finalArea.getDownLeftNode();
