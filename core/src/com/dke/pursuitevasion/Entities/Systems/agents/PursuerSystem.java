@@ -343,7 +343,7 @@ public class PursuerSystem extends IteratingSystem {
         pursuer.detectionTime = pursuer.alerted ? pursuer.detectionTime + deltaTime : 0.0f;
 
         if (pursuer.detectionTime > DETECTION_TIME) {
-            //System.out.println("INTRUDER DETECTED");
+            System.out.println("INTRUDER DETECTED");
             Vector3 start = new Vector3(pursuer.position.x, 0, pursuer.position.z);
             Vector3 end = new Vector3(pursuer.targetPosition.x, 0, pursuer.targetPosition.y);
             p = pathFinder.findPath(start, end, null);
@@ -389,20 +389,20 @@ public class PursuerSystem extends IteratingSystem {
     }
 
     private void updateDetection(Entity entity, Entity target) {
-        Vector2 targetPos = Mappers.observableMapper.get(target).position;
+        //Vector2 targetPos = Mappers.observableMapper.get(target).position;
         PursuerComponent pursuer = Mappers.pursuerMapper.get(entity);
         EvaderComponent evader = Mappers.agentMapper.get(target);
 
         pursuer.alerted = false;
-        pursuer.targetPosition.set(0.0f, 0.0f);
+        //pursuer.targetPosition.set(0.0f, 0.0f);
 
         if (visionSystem.canSee(entity,target)) {
             pursuer.alerted = true;
-            pursuer.targetPosition.set(targetPos);
+            //pursuer.targetPosition.set(targetPos);
             //System.out.println(evader);
-            evader.captured = true;
-            //System.out.println(evader + " is captured.");
-            engine.removeEntity(target);
+            //evader.captured = true;
+            System.out.println(evader + " is captured.");
+            //engine.removeEntity(target);
         }
 
     }
