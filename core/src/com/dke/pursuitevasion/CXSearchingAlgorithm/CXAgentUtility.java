@@ -1,6 +1,7 @@
 package com.dke.pursuitevasion.CXSearchingAlgorithm;
 
 import com.badlogic.gdx.math.Vector3;
+import com.dke.pursuitevasion.AI.CustomPoint;
 import com.dke.pursuitevasion.AI.Node;
 import com.dke.pursuitevasion.AI.PathFinder;
 import com.dke.pursuitevasion.CXSearchingAlgorithm.CXAgentTaskType.*;
@@ -15,10 +16,7 @@ import sun.misc.Queue;
 import javax.print.attribute.standard.Destination;
 import javax.swing.plaf.nimbus.State;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by chenxi on 5/20/17.
@@ -74,9 +72,9 @@ public class CXAgentUtility {
 
     public PursuerComponent tranferSearchingTaskToMovingTask(PursuerComponent agent){
 
-        // warning bug!!!!!!!!!!!!
         CXAgentTask task = (CXAgentTask) agent.taskList.getFirst();
         CXDecomposedGraphNode searchingArea = task.searchTask.searchArea;
+        System.out.println(task.searchTask.searchArea.nodeNumber);
         agent.currentSearchArea = task.searchTask.searchArea.nodeNumber;
 
         CXGraphNode  topRightNode = searchingArea.getTopRightNode();
@@ -130,12 +128,13 @@ public class CXAgentUtility {
                             CXAgentTask finishTask = new CXAgentTask(CXAgentState.FinishGame);
                             pursuerComponent.taskList.add(finishTask);
                         }
-                        CXAgentTask newTask = new CXAgentTask(CXAgentState.Searching);
-                        newTask.searchTask.searchArea = dNode;
-                        pursuerComponent.taskList.add(newTask);
-                        pursuerComponent.currentSearchArea = dNode.nodeNumber;
-                        pursuerComponent.setState(CXAgentState.Searching);
-
+                        else {
+                            CXAgentTask newTask = new CXAgentTask(CXAgentState.Searching);
+                            newTask.searchTask.searchArea = dNode;
+                            pursuerComponent.taskList.add(newTask);
+                            pursuerComponent.currentSearchArea = dNode.nodeNumber;
+                            pursuerComponent.setState(CXAgentState.Searching);
+                        }
                     }
                     else pursuerComponent.setState(CXAgentState.Free);
                 } else {
@@ -145,7 +144,6 @@ public class CXAgentUtility {
             }
 
             default:{
-
                 LinkedList downUpList = new LinkedList();
 
                 CXDecomposedGraphNode dNode = (CXDecomposedGraphNode) rightNeighbours.get(0);
@@ -178,7 +176,6 @@ public class CXAgentUtility {
                 messageLinkedList.add(message);
                 pursuerComponent.setState(CXAgentState.WaitBackup);
                 //System.out.println("Agent " + pursuerComponent.number + " Send a backUp message, Search Area " + searchingTask.searchArea.nodeNumber );
-
                 return pursuerComponent;
             }
         }
@@ -212,7 +209,7 @@ public class CXAgentUtility {
 
     public ArrayList<CXPoint> addAdditionalSteps(PursuerComponent pC, List<Node> p){
         pC.pursuerPointPath= new ArrayList<CXPoint>();
-        float stepSize = 8;
+        float stepSize = 10;
         float diagStepSize= (float) Math.floor(1.4*stepSize);
         if(p.size()>1) {
             for (int i = 0; i < p.size() - 1; i++) {
@@ -258,7 +255,7 @@ public class CXAgentUtility {
         double distY = end.y - start.y;
         double distance = Math.sqrt((distX*distX)+(distY*distY));
         double steps = distance/0.2;
-        double stepSize = 8;
+        double stepSize = 10;
 
         for(int i=0;i<steps*stepSize;i++){
             double scale = i/(steps*stepSize);
@@ -351,45 +348,70 @@ public class CXAgentUtility {
         return true;
     }
 
-    public float getTheNextScanPosition(PursuerComponent pursuerComponent){
+    public float getTheNextScanPosition(PursuerComponent pursuerComponent,Float targetRadius){
         CXAgentTask task = (CXAgentTask) pursuerComponent.taskList.getFirst();
-        Float targetRadius = (Float) task.scanTask.scanScope.getFirst();
 
         // Write a function to decide the next move position
-        float nextMovePostion = targetRadius.floatValue();
-
-        if (nextMovePostion == targetRadius.floatValue()){
-            task.scanTask.scanScope.removeFirst();
+        float nextMovePosition = 0f;
+        if (pursuerComponent.currentAngle < targetRadius.floatValue()){
+            nextMovePosition = pursuerComponent.currentAngle + pursuerComponent.angularVelocity * 0.01f;
+            if (nextMovePosition >= targetRadius.floatValue()) {
+                nextMovePosition = targetRadius.floatValue();
+                task.scanTask.scanScope.removeFirst();
+            }
+        }
+        else {
+             nextMovePosition = pursuerComponent.currentAngle - pursuerComponent.angularVelocity * 0.01f;
+            if (nextMovePosition <= targetRadius.floatValue()) {
+                nextMovePosition = targetRadius.floatValue();
+                task.scanTask.scanScope.removeFirst();
+            }
         }
 
-        return nextMovePostion;
+
+        return nextMovePosition;
     }
-    public StateComponent randomMovment(StateComponent state, PursuerComponent pursuer, PathFinder finder, CXGraph graph){
-        // 1. Check the current location;
 
-        // 2. Set the next vertices as the destination;
-
-        if (pursuer.freeStateRoutine != null && pursuer.freeStateRoutine.size() != 0){
-
-            Node node = pursuer.freeStateRoutine.get(0);
-
-            pursuer.freeStateRoutine.remove(0);
-
-            state.position.set(node.worldX,state.position.y,node.worldZ);
-
-            return state;
+    public  float getNextScanPositionForMoving(PursuerComponent pursuerComponent, Float targetRadius){
+        float nextMovePosition = 0f;
+        if (pursuerComponent.currentAngle < targetRadius.floatValue()){
+            nextMovePosition = pursuerComponent.currentAngle + pursuerComponent.angularVelocity * 0.01f;
+            if (nextMovePosition >= targetRadius.floatValue()) {
+                nextMovePosition = targetRadius.floatValue();
+            }
+        }
+        else {
+            nextMovePosition = pursuerComponent.currentAngle - pursuerComponent.angularVelocity * 0.01f;
+            if (nextMovePosition <= targetRadius.floatValue()) {
+                nextMovePosition = targetRadius.floatValue();
+            }
         }
 
-        CXGraphNode topLeftNode = this.finalArea.getTopLeftNode();
-        CXGraphNode downLeftNode = this.finalArea.getDownLeftNode();
 
-        CXPoint destination = new CXPoint( (topLeftNode.location.x + downLeftNode.location.x)/2,(topLeftNode.location.y + downLeftNode.location.y)/2 );
+        return nextMovePosition;
+    }
+    public StateComponent randomMovement(StateComponent state, PursuerComponent pursuer, PathFinder pathFinder){
 
-        Vector3 destinationV = new Vector3((float) destination.x,0,(float) destination.y);
+        boolean[][] nodeGrid = pathFinder.getNodeGrid();
+        int width = pathFinder.width;
+        Random rand = new Random();
+        int counter = 0;
+        List<Node> p = null;
 
-        pursuer.freeStateRoutine  = finder.findPath(state.position,destinationV,null);
-
+        while (counter<1){
+            int  n = rand.nextInt(width-1) + 1;
+            int  m = rand.nextInt(width-1) + 1;
+            if(nodeGrid[n][m]){
+                CustomPoint endCP = new CustomPoint(n, m);
+                Vector3 end = new Vector3(PathFinder.toWorldCoorX(endCP.x), 0, PathFinder.toWorldCoorX(endCP.y));
+                p = pathFinder.findPath(state.position, end, endCP);
+                counter++;
+            }
+        }
+        pursuer.pursuerPointPath = addAdditionalSteps(pursuer, p);
 
         return state;
     }
+
+
 }

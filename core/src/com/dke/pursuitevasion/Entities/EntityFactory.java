@@ -28,7 +28,7 @@ import static com.badlogic.gdx.graphics.GL20.GL_TRIANGLES;
  */
 public class EntityFactory {
 
-    static int pursuerCounter = 0;
+    static public int pursuerCounter = 0;
 
     static EntityFactory instance;
 

@@ -172,8 +172,8 @@ public class EvaderSystem extends IteratingSystem {
             stateComponent.position = pos;
             stateComponent.update();
         }
-
     }
+
     public static ArrayList<Vector3> addAdditionalSteps(EvaderComponent eC, List<Node> p){
         eC.evaderPath = new ArrayList<Vector3>();
         float stepSize = 10;

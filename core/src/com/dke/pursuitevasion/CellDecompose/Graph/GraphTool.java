@@ -12,14 +12,13 @@ public class GraphTool {
     }
 
     public static CXGraph combineGraph(CXGraph graph, CXGraph obstacle){
-        CXGraph combinedGraph =  new CXGraph();
+       CXGraph combinedGraph =  new CXGraph();
        try {
             combinedGraph = (CXGraph) CXGraph.deepCopy(graph);
        }
        catch (Exception e){
            System.out.println(e);
        }
-
         ArrayList[] graph1VerticesList = obstacle.getVerticesList();
         for (int i = 0; i < graph1VerticesList.length ; i++){
             if (graph1VerticesList[i] != null){
@@ -28,7 +27,6 @@ public class GraphTool {
             }
         }
         return combinedGraph;
-
     }
 
     public  Boolean isConnectedInClosedPath(CXGraph graph, CXGraphNode originalNode, CXGraphNode searchingNode){
