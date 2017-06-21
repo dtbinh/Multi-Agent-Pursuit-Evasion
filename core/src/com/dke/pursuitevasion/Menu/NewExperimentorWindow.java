@@ -1,15 +1,23 @@
 package com.dke.pursuitevasion.Menu;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.graphics.VertexAttribute;
+import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.dke.pursuitevasion.PursuitEvasion;
+import com.dke.pursuitevasion.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.util.ArrayList;
 
 /**
  * Created by callum on 20/06/17.
  */
 public class NewExperimentorWindow extends Window {
+    private String name;
     private Skin skin;
     private PursuitEvasion game;
     private final MenuScreen menuScreen;
@@ -33,6 +41,7 @@ public class NewExperimentorWindow extends Window {
         Label numberLabel = new Label("Number to generate", skin);
         final TextField numberInput = new TextField("",skin);
         TextButton generateButton = new TextButton("Generate", skin);
+        TextButton backButton = new TextButton("Back",skin);
 
         generateButton.addListener(new ChangeListener(){
            @Override
@@ -41,8 +50,16 @@ public class NewExperimentorWindow extends Window {
                int number = Integer.valueOf(numberInput.getText());
                System.out.println("Density Threshold: " + densityThreshold);
                System.out.println("Number: " + number);
-
+               System.out.println((float) Math.floor((Math.random()*4)));
+               generateMap();
            }
+        });
+
+        backButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                          remove();
+            }
         });
 
         table.add(densityLabel);
@@ -53,6 +70,26 @@ public class NewExperimentorWindow extends Window {
         table.row();
         table.add();
         table.add(generateButton);
+        table.add(backButton);
         add(table);
     }
+
+    public PolyMap generateMap(){
+        PolyMap map = new PolyMap("POLYMAPTEST");
+        map.setPolygonMesh(map.generateMesh());
+        map.setEdgeVectors(new ArrayList<EdgeVectors>());
+        map.setAgentsInfo(new ArrayList<AgentInfo>());
+        map.setEvaderInfo(new ArrayList<EvaderInfo>());
+        map.setWalls(new ArrayList<WallInfo>());
+        map.export();
+        return map;
+    }
+
+
+
+
+
+
+
 }
+
