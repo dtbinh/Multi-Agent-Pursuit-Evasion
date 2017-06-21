@@ -48,7 +48,7 @@ public class PathFinder implements Screen {
     ArrayList<CustomPoint> CP;
 
     public void create(){
-        gapSize = 0.1f;
+        gapSize = 0.3f;
         width = 100;
         height = width;
 

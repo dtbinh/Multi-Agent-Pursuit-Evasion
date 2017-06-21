@@ -3,13 +3,13 @@ package com.dke.pursuitevasion.CXSearchingAlgorithm;
 import com.badlogic.gdx.math.Vector3;
 import com.dke.pursuitevasion.AI.Node;
 import com.dke.pursuitevasion.AI.PathFinder;
-import com.dke.pursuitevasion.CXSearchingAlgorithm.CXAgentTaskType.*;
-import com.dke.pursuitevasion.CXSearchingAlgorithm.CXMessage.*;
+import com.dke.pursuitevasion.CXSearchingAlgorithm.CXAgentTaskType.CXAgentMovingTask;
+import com.dke.pursuitevasion.CXSearchingAlgorithm.CXAgentTaskType.CXAgentSearchTask;
+import com.dke.pursuitevasion.CXSearchingAlgorithm.CXMessage.CXMessage;
+import com.dke.pursuitevasion.CXSearchingAlgorithm.CXMessage.CXMessageType;
 import com.dke.pursuitevasion.CellDecompose.Graph.*;
 import com.dke.pursuitevasion.Entities.Components.StateComponent;
 import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
-import sun.misc.Queue;
-
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -249,13 +249,13 @@ public class CXAgentUtility {
         return pC.pursuerPointPath;
     }
 
-    private ArrayList<CXPoint> discretizePath(CXPoint start, CXPoint end){
+    public ArrayList<CXPoint> discretizePath(CXPoint start, CXPoint end){
         ArrayList<CXPoint> path = new ArrayList<CXPoint>();
         double distX = end.x - start.x;
         double distY = end.y - start.y;
         double distance = Math.sqrt((distX*distX)+(distY*distY));
         double steps = distance/0.2;
-        double stepSize = 8;
+        double stepSize = 20;
 
         for(int i=0;i<steps*stepSize;i++){
             double scale = i/(steps*stepSize);
