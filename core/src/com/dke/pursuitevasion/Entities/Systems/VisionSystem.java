@@ -5,12 +5,14 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.graphics.g3d.utils.shapebuilders.EllipseShapeBuilder;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
@@ -178,30 +180,41 @@ public class VisionSystem extends IteratingSystem implements EntityListener, Deb
         ModelBuilder modelBuilder = new ModelBuilder();
         for (Entity entity : getEntities()) {
             modelBuilder.begin();
-            MeshPartBuilder builder = modelBuilder.part("triangle", 1, 3, new Material());
-            builder.setColor(Color.GREEN);
-
             ObserverComponent observer = observerMapper.get(entity);
-            float halfFov = observer.fovAngle * 0.5f;
+            if (observer.fovAngle < 360f) {
+                MeshPartBuilder builder = modelBuilder.part("triangle", 1, 3, new Material());
+                builder.setColor(Color.GREEN);
 
-            tmp1.set(observer.distance, 0.0f);
-            tmp1.rotate(observer.angle);
-            tmp1.rotate(halfFov);
-            tmp1.add(observer.position);
+                float halfFov = observer.fovAngle * 0.5f;
 
-            tmp2.set(observer.distance, 0.0f);
-            tmp2.rotate(observer.angle);
-            tmp2.rotate(-halfFov);
-            tmp2.add(observer.position);
+                tmp1.set(observer.distance, 0.0f);
+                tmp1.rotate(observer.angle);
+                tmp1.rotate(halfFov);
+                tmp1.add(observer.position);
 
-            Vector3 p1 = new Vector3(observer.position.x, 0, observer.position.y);
-            Vector3 p2 = new Vector3(tmp1.x, 0, tmp1.y);
-            Vector3 p3 = new Vector3(tmp2.x, 0, tmp2.y);
+                tmp2.set(observer.distance, 0.0f);
+                tmp2.rotate(observer.angle);
+                tmp2.rotate(-halfFov);
+                tmp2.add(observer.position);
 
-            builder.triangle(p1, p2, p3);
-            Model triangleModel = modelBuilder.end();
-            ModelInstance triangleInstance = new ModelInstance(triangleModel);
-            modelBatch.render(triangleInstance);
+                Vector3 p1 = new Vector3(observer.position.x, 0, observer.position.y);
+                Vector3 p2 = new Vector3(tmp1.x, 0, tmp1.y);
+                Vector3 p3 = new Vector3(tmp2.x, 0, tmp2.y);
+
+                builder.triangle(p1, p2, p3);
+                Model triangleModel = modelBuilder.end();
+                ModelInstance triangleInstance = new ModelInstance(triangleModel);
+                modelBatch.render(triangleInstance);
+            } else {
+                MeshPartBuilder builder = modelBuilder.part("circle", 1, 3, new Material());
+                builder.setColor(Color.GREEN);
+                float radius = observer.distance * 0.5f;
+                Vector3 center = new Vector3(observer.position.x, 0, observer.position.y);
+                builder.circle(radius, 180, center, new Vector3(0,1,0));
+                Model circleModel = modelBuilder.end();
+                ModelInstance circleInstance = new ModelInstance(circleModel);
+                modelBatch.render(circleInstance);
+            }
         }
     }
 }
