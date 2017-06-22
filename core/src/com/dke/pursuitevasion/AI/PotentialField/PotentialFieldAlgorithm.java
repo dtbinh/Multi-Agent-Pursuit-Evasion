@@ -18,20 +18,24 @@ public class PotentialFieldAlgorithm {
     private Engine engine;
     private boolean[][] bMap;
     private int[][] obstacleMap;
+    private boolean first;
     //private Entity evader;
     EvaderComponent evader;
     private Vector3 nextMove;
     PolyMap map;
+    PFMap pfMap;
 
     public PotentialFieldAlgorithm(Engine e, boolean[][] b, PolyMap map){
         this.engine = e;
         this.bMap = b;
         this.map = map;
+        this.first = true;
         generateInitialPFMap();
     }
 
     public void generateInitialPFMap(){
 
+        double startTime = System.nanoTime();
         int[][] map = new int[100][100];
 
         for (int i = 0; i < 100; i++) {
@@ -42,6 +46,9 @@ public class PotentialFieldAlgorithm {
         }
 
         this.obstacleMap = map;
+        double endTime = System.nanoTime();
+        double finished = endTime - startTime;
+        System.out.println("Finished generateInitialPFMap [PFA] in " + finished + "ns");
     }
 
     public void updateEvader(EvaderComponent evader) {
@@ -50,12 +57,17 @@ public class PotentialFieldAlgorithm {
 
     private void computePositionToMoveTo(){
 
-        PFMap pfMap = new PFMap(obstacleMap, engine, map, evader);
+        if (first) {
+            PFMap pfMap = new PFMap(obstacleMap, engine, map, evader);
+            this.pfMap = pfMap;
+            first = false;
+        }
+
         pfMap.updateMap();
 
         Vector3 v = pfMap.getNextMove();
-        this.nextMove = v;
 
+        this.nextMove = v;
     }
 
     public Vector3 computeNextVector() {

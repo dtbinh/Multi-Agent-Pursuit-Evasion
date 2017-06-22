@@ -48,10 +48,8 @@ public class EvaderSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         EvaderComponent evaderComponent = Mappers.agentMapper.get(entity);
         StateComponent stateComponent = Mappers.stateMapper.get(entity);
-        if(evaderComponent.evaderPath == null){
-            createPath(evaderComponent, vector3toCXPoint(evaderComponent.position));
-        }
-        else if (evaderComponent.evaderPath.size() < 15) {
+        if(evaderComponent.evaderPath == null || evaderComponent.evaderPath.size() == 0){
+            evaderComponent.evaderPath = new ArrayList<CXPoint>();
             createPath(evaderComponent, vector3toCXPoint(evaderComponent.position));
         }
         if (!evaderComponent.captured) {
@@ -146,7 +144,7 @@ public class EvaderSystem extends IteratingSystem {
         if(visionSystem.canSee(entity,target)) {
             evader.alerted = true;
             evader.targetPosition.set(targetPos);
-            //System.out.println("Evader can see: " + pursuer);
+            System.out.println("Evader can see: " + pursuer);
         }
     }
 
@@ -157,13 +155,8 @@ public class EvaderSystem extends IteratingSystem {
         evader.evaderPath = new ArrayList<CXPoint>();
         evader.evaderPath.add(currentPos);
         //evader.evaderPath.add(potentialFieldAlgorithm.computeNextVector());
-        double startTime = System.currentTimeMillis();
         evader.evaderPath.addAll(potentialFieldAlgorithm.calculateCXPoints());
-        //evader.endPoint = evader.evaderPath.get(evader.evaderPath.size()-1);
         //System.out.println(potentialFieldAlgorithm.calculateCXPoints().size() + " CXPoints");
-        double endTime = System.currentTimeMillis();
-        double totalTime = (endTime - startTime);
-        System.out.println("Finished in " + totalTime + "ms!");
     }
 
     /*private void createPath(EvaderComponent evader, Vector3 lastPosition){

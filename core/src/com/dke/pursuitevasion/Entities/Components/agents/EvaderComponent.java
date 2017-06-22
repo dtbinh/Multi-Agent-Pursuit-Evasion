@@ -14,11 +14,10 @@ import java.util.ArrayList;
 public class EvaderComponent implements Component {
     public float radius;
     public Vector3 position;
-    public CXPoint endPoint;
     //public CXPoint position;
     public boolean captured = false;
     //public ArrayList<Vector3> evaderPath = new ArrayList<Vector3>();
-    public ArrayList<CXPoint> evaderPath = new ArrayList<CXPoint>();
+    public ArrayList<CXPoint> evaderPath;
     public boolean alerted = false;
     public float detectionTime = 0.0f;
     public float angularVelocity = 80.0f;
