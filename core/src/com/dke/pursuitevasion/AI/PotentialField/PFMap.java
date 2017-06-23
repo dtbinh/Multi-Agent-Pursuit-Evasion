@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.dke.pursuitevasion.AI.CustomPoint;
 import com.dke.pursuitevasion.AI.PathFinder;
+import com.dke.pursuitevasion.CellDecompose.Graph.CXPoint;
 import com.dke.pursuitevasion.Entities.Components.StateComponent;
 import com.dke.pursuitevasion.Entities.Components.agents.EvaderComponent;
 import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
@@ -25,11 +26,13 @@ public class PFMap {
     private int[][] obstacleMap;
     private int[][] heatMap;
     private Engine engine;
-    private Entity evader;
+    int bestValue;
+    private Triplet coords;
+    private EvaderComponent evader;
     private PathFinder pathFinder;
     private ImmutableArray<Entity> entities;
 
-    public PFMap(int[][] o, Engine e, PolyMap map, Entity evader){
+    public PFMap(int[][] o, Engine e, PolyMap map, EvaderComponent evader){
         this.obstacleMap = o;
         this.engine = e;
         this.evader = evader;
@@ -37,10 +40,15 @@ public class PFMap {
         this.pathFinder = new PathFinder(map);
     }
 
+    public PFMap() {}
+
+    public void updateEvader(EvaderComponent evader) {
+        this.evader = evader;
+    }
+
     public Vector3 getNextMove() {
 
-        EvaderComponent evaderComponent = Mappers.agentMapper.get(evader);
-        Vector3 v3 = evaderComponent.position;
+        Vector3 v3 = evader.position;
         Vector2 v2 = coordsToArray(v3);
 
         Triplet triplet = findBestMove((int)v2.x, (int)v2.y);
@@ -48,88 +56,13 @@ public class PFMap {
         return new Vector3(arrayToCoords(new Vector2(triplet.getX(),triplet.getY())));
     }
 
-    private Triplet findBestMove(int x, int y) {
+    private Vector3 cxPointToVector(CXPoint cxPoint) {
+        Vector3 v3 = new Vector3((float)cxPoint.x, 0, (float)cxPoint.y);
+        return v3;
+    }
 
-        int currentValue = heatMap[x][y];
-        System.out.println("Current value = " + currentValue);
-        int bestValue = currentValue;
-        Triplet coords = new Triplet(x,y);
-
-        // implement corner checks
-
-        // check top
-        try {
-            if (heatMap[x-1][y] < bestValue){
-                bestValue = heatMap[x-1][y];
-                coords.setAll(x-1,y,bestValue);
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-        }
-
-        // check top right
-        try {
-            if (heatMap[x-1][y+1] < bestValue){
-                bestValue = heatMap[x-1][y+1];
-                coords.setAll(x-1,y+1,bestValue);
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-        }
-
-        // check right
-        try {
-            if (heatMap[x][y+1] < bestValue){
-                bestValue = heatMap[x][y+1];
-                coords.setAll(x,y+1,bestValue);
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-        }
-
-        // check bottom right
-        try {
-            if (heatMap[x+1][y+1] < bestValue){
-                bestValue = heatMap[x+1][y+1];
-                coords.setAll(x+1,y+1,bestValue);
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-        }
-
-        // check bottom
-        try {
-            if (heatMap[x+1][y] < bestValue){
-                bestValue = heatMap[x+1][y];
-                coords.setAll(x+1,y,bestValue);
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-        }
-
-        // check bottom left
-        try {
-            if (heatMap[x+1][y-1] < bestValue){
-                bestValue = heatMap[x+1][y-1];
-                coords.setAll(x+1,y-1,bestValue);
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-        }
-
-        // check left
-        try {
-            if (heatMap[x][y-1] < bestValue){
-                bestValue = heatMap[x][y-1];
-                coords.setAll(x,y-1,bestValue);
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-        }
-
-        // check top left
-        try {
-            if (heatMap[x-1][y-1] < bestValue){
-                bestValue = heatMap[x-1][y-1];
-                coords.setAll(x-1,y-1,bestValue);
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-        }
-
-        return coords;
+    private void updateEntities() {
+        this.entities = engine.getEntitiesFor(Family.all(StateComponent.class).get());
     }
 
     public void updateMap(){
@@ -140,6 +73,7 @@ public class PFMap {
         ArrayList<Vector2> pursuerPositions = new ArrayList<Vector2>();
         Vector3 tempVector = new Vector3();
 
+        updateEntities();
         for (Entity e : entities) {
             if (Mappers.pursuerMapper.has(e)) {
                 PursuerComponent pursuerComponent = Mappers.pursuerMapper.get(e);
@@ -201,5 +135,195 @@ public class PFMap {
                     heatMap[tempCX+i][tempCY] = var-i; } catch (ArrayIndexOutOfBoundsException e) {
             }
         }
+    }
+
+    private void switchCase(int firstCheck, int x, int y) {
+
+        switch (firstCheck) {
+            case 0:
+                try {
+                    if (heatMap[x-1][y] < bestValue){
+                        bestValue = heatMap[x-1][y];
+                        coords.setAll(x-1,y,bestValue);
+                        //System.out.println("TOP");
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {
+                }
+                break;
+            case 1:
+                try {
+                    if (heatMap[x-1][y+1] < bestValue){
+                        bestValue = heatMap[x-1][y+1];
+                        coords.setAll(x-1,y+1,bestValue);
+                        //System.out.println("TOP RIGHT");
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {
+                }
+                break;
+            case 2:
+                try {
+                    if (heatMap[x][y+1] < bestValue){
+                        bestValue = heatMap[x][y+1];
+                        coords.setAll(x,y+1,bestValue);
+                        //System.out.println("RIGHT");
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {
+                }
+                break;
+            case 3:
+                try {
+                    if (heatMap[x+1][y+1] < bestValue){
+                        bestValue = heatMap[x+1][y+1];
+                        coords.setAll(x+1,y+1,bestValue);
+                        //System.out.println("BOTTOM RIGHT");
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {
+                }
+                break;
+            case 4:
+                try {
+                    if (heatMap[x+1][y] < bestValue){
+                        bestValue = heatMap[x+1][y];
+                        coords.setAll(x+1,y,bestValue);
+                        //System.out.println("BOTTOM");
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {
+                }
+                break;
+            case 5:
+                try {
+                    if (heatMap[x+1][y-1] < bestValue){
+                        bestValue = heatMap[x+1][y-1];
+                        coords.setAll(x+1,y-1,bestValue);
+                        //System.out.println("BOTTOM LEFT");
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {
+                }
+                break;
+            case 6:
+                try {
+                    if (heatMap[x][y-1] < bestValue){
+                        bestValue = heatMap[x][y-1];
+                        coords.setAll(x,y-1,bestValue);
+                        //System.out.println("LEFT");
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {
+                }
+                break;
+            case 7:
+                try {
+                    if (heatMap[x-1][y-1] < bestValue){
+                        bestValue = heatMap[x-1][y-1];
+                        coords.setAll(x-1,y-1,bestValue);
+                        //System.out.println("TOP LEFT");
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {
+                }
+                break;
+            default:
+                System.out.println("ERROR");
+        }
+    }
+
+    private Triplet findBestMove(int x, int y) {
+
+        bestValue = 999; // this ensures the evaders move even when no pursuers have been detected
+        coords = new Triplet(x,y);
+        boolean dangerDetected = false;
+
+        int firstCheck = (int)(7*Math.random());
+        switchCase(firstCheck,x,y);
+
+        // check top
+        try {
+            if (heatMap[x-1][y] < bestValue){
+                bestValue = heatMap[x-1][y];
+                coords.setAll(x-1,y,bestValue);
+                if (heatMap[x-1][y] > 0 && heatMap[x-1][y] < 1000)
+                    dangerDetected = true;
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+        }
+
+        // check top right
+        try {
+            if (heatMap[x-1][y+1] < bestValue){
+                bestValue = heatMap[x-1][y+1];
+                coords.setAll(x-1,y+1,bestValue);
+                if (heatMap[x-1][y+1] > 0 && heatMap[x-1][y+1] < 1000)
+                    dangerDetected = true;
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+        }
+
+        // check right
+        try {
+            if (heatMap[x][y+1] < bestValue){
+                bestValue = heatMap[x][y+1];
+                coords.setAll(x,y+1,bestValue);
+                if (heatMap[x][y+1] > 0 && heatMap[x][y+1] < 1000)
+                    dangerDetected = true;
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+        }
+
+        // check bottom right
+        try {
+            if (heatMap[x+1][y+1] < bestValue){
+                bestValue = heatMap[x+1][y+1];
+                coords.setAll(x+1,y+1,bestValue);
+                if (heatMap[x+1][y+1] > 0 && heatMap[x+1][y+1] < 1000)
+                    dangerDetected = true;
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+        }
+
+        // check bottom
+        try {
+            if (heatMap[x+1][y] < bestValue){
+                bestValue = heatMap[x+1][y];
+                coords.setAll(x+1,y,bestValue);
+                if (heatMap[x+1][y] > 0 && heatMap[x+1][y] < 1000)
+                    dangerDetected = true;
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+        }
+
+        // check bottom left
+        try {
+            if (heatMap[x+1][y-1] < bestValue){
+                bestValue = heatMap[x+1][y-1];
+                coords.setAll(x+1,y-1,bestValue);
+                if (heatMap[x+1][y-1] > 0 && heatMap[x+1][y-1] < 1000)
+                    dangerDetected = true;
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+        }
+
+        // check left
+        try {
+            if (heatMap[x][y-1] < bestValue){
+                bestValue = heatMap[x][y-1];
+                coords.setAll(x,y-1,bestValue);
+                if (heatMap[x][y-1] > 0 && heatMap[x][y-1] < 1000)
+                    dangerDetected = true;
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+        }
+
+        // check top left
+        try {
+            if (heatMap[x-1][y-1] < bestValue){
+                bestValue = heatMap[x-1][y-1];
+                coords.setAll(x-1,y-1,bestValue);
+                if (heatMap[x-1][y-1] > 0 && heatMap[x-1][y-1] < 1000)
+                    dangerDetected = true;
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+        }
+
+        if (dangerDetected)
+            System.out.println("Danger detected");
+        return coords;
     }
 }

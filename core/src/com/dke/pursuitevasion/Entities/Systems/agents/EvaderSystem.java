@@ -8,12 +8,13 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.dke.pursuitevasion.AI.CustomPoint;
 import com.dke.pursuitevasion.AI.Node;
 import com.dke.pursuitevasion.AI.PathFinder;
-import com.dke.pursuitevasion.Entities.Components.agents.EvaderComponent;
+import com.dke.pursuitevasion.AI.PotentialField.PotentialFieldAlgorithm;
+import com.dke.pursuitevasion.CellDecompose.Graph.CXPoint;
 import com.dke.pursuitevasion.Entities.Components.ObserverComponent;
 import com.dke.pursuitevasion.Entities.Components.StateComponent;
+import com.dke.pursuitevasion.Entities.Components.agents.EvaderComponent;
 import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
 import com.dke.pursuitevasion.Entities.Mappers;
 import com.dke.pursuitevasion.Entities.Systems.VisionSystem;
@@ -22,7 +23,6 @@ import com.dke.pursuitevasion.PolyMap;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by Envy on 5/30/2017.
@@ -34,20 +34,23 @@ public class EvaderSystem extends IteratingSystem {
     private VisionSystem visionSystem;
     private Vector2 position = new Vector2();
     private Engine engine;
+    private PotentialFieldAlgorithm potentialFieldAlgorithm;
 
     public EvaderSystem(VisionSystem visionSystem, PolyMap map, Engine engine) {
         super(Family.all(EvaderComponent.class).get());
         this.engine = engine;
         this.visionSystem = visionSystem;
         pathFinder = new PathFinder(map);
+        this.potentialFieldAlgorithm = new PotentialFieldAlgorithm(engine,pathFinder.getNodeGrid(),map);
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         EvaderComponent evaderComponent = Mappers.agentMapper.get(entity);
         StateComponent stateComponent = Mappers.stateMapper.get(entity);
-        if(evaderComponent.evaderPath==null||evaderComponent.evaderPath.size()==0){
-            createPath(evaderComponent, evaderComponent.position);
+        if(evaderComponent.evaderPath == null || evaderComponent.evaderPath.size() == 0){
+            evaderComponent.evaderPath = new ArrayList<CXPoint>();
+            createPath(evaderComponent, vector3toCXPoint(evaderComponent.position));
         }
         if (!evaderComponent.captured) {
             moveEvaders(evaderComponent, stateComponent);
@@ -141,11 +144,20 @@ public class EvaderSystem extends IteratingSystem {
         if(visionSystem.canSee(entity,target)) {
             evader.alerted = true;
             evader.targetPosition.set(targetPos);
-            //System.out.println("Evader can see: " + pursuer);
+            System.out.println("Evader can see: " + pursuer);
         }
     }
 
-    private void createPath(EvaderComponent evader, Vector3 lastPosition){
+    private void createPath(EvaderComponent evader, CXPoint currentPos){
+
+        potentialFieldAlgorithm.updateEvader(evader);
+        evader.evaderPath = new ArrayList<CXPoint>();
+        evader.evaderPath.add(currentPos);
+        evader.evaderPath.addAll(potentialFieldAlgorithm.calculateCXPoints());
+
+    }
+
+    /*private void createPath(EvaderComponent evader, Vector3 lastPosition){
         boolean[][] nodeGrid = pathFinder.getNodeGrid();
         int width = pathFinder.width;
         Random rand = new Random();
@@ -163,19 +175,31 @@ public class EvaderSystem extends IteratingSystem {
             }
         }
         addAdditionalSteps(evader, p);
-    }
+    }*/
 
     private void moveEvaders(EvaderComponent evader, StateComponent stateComponent){
         if(evader.evaderPath!=null && evader.evaderPath.size()>0){
-            Vector3 pos = evader.evaderPath.remove(0);
+            Vector3 pos = cxPointToVector(evader.evaderPath.remove(0));
+            //CXPoint pos = evader.evaderPath.remove(0);
             evader.position = pos;
             stateComponent.position = pos;
             stateComponent.update();
         }
     }
 
-    public static ArrayList<Vector3> addAdditionalSteps(EvaderComponent eC, List<Node> p){
-        eC.evaderPath = new ArrayList<Vector3>();
+    private Vector3 cxPointToVector(CXPoint cxPoint) {
+        Vector3 v3 = new Vector3((float)cxPoint.x, 0, (float)cxPoint.y);
+        return v3;
+    }
+
+    private CXPoint vector3toCXPoint(Vector3 vector3) {
+        CXPoint cxPoint = new CXPoint((double)vector3.x,(double)vector3.z);
+        return cxPoint;
+    }
+
+    public static ArrayList<CXPoint> addAdditionalSteps(EvaderComponent eC, List<Node> p){
+        //eC.evaderPath = new ArrayList<Vector3>();
+        eC.evaderPath = new ArrayList<CXPoint>();
         float stepSize = 10;
         float diagStepSize = (float) Math.floor(1.4*stepSize);
         if(p.size()>1) {
@@ -195,7 +219,8 @@ public class EvaderSystem extends IteratingSystem {
                         float bDX = newX.floatValue();
                         float bDZ = newZ.floatValue();
                         Vector3 position = new Vector3(start.x + bDX, 0, start.z + bDZ);
-                        eC.evaderPath.add(position);
+                        CXPoint positionCX = new CXPoint(position.x,position.z);
+                        eC.evaderPath.add(positionCX);
                     }
                 }else {
                     for (float j = 1; j < stepSize; j++) {
@@ -208,7 +233,8 @@ public class EvaderSystem extends IteratingSystem {
                         float bDX = newX.floatValue();
                         float bDZ = newZ.floatValue();
                         Vector3 position = new Vector3(start.x + bDX, 0, start.z + bDZ);
-                        eC.evaderPath.add(position);
+                        CXPoint positionCX = new CXPoint(position.x,position.z);
+                        eC.evaderPath.add(positionCX);
                     }
                 }
             }
