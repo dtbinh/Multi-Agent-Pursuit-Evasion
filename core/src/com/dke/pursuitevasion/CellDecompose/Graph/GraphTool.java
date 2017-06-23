@@ -35,8 +35,7 @@ public class GraphTool {
         map.put(originalNode.location,originalNode);
         int count = 0;
         count = this.connected(graph,originalNode,searchingNode,map,count);
-        if (count == 2)return true;
-        return false;
+        return count == 2;
     }
 
     private int connected(CXGraph graph, CXGraphNode orginalNode, CXGraphNode searchingNode , HashMap map , int count){

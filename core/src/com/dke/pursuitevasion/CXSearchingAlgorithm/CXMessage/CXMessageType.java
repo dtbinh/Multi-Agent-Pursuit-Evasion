@@ -7,5 +7,5 @@ public enum CXMessageType {
     CallBackUp,
     WaitSearching,
     SearchFinished,
-    ArrivedDestination;
+    ArrivedDestination
 }

@@ -90,7 +90,6 @@ public class PotentialFieldAlgorithm {
 
         CXAgentUtility cxAgentUtility = new CXAgentUtility();
         ArrayList<CXPoint> cxPoints = cxAgentUtility.discretizePath(currentPos, nextPos);
-
         return cxPoints;
     }
 }

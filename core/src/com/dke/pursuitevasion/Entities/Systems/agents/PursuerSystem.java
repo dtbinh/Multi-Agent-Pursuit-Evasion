@@ -109,8 +109,8 @@ public class PursuerSystem extends IteratingSystem {
         this.agentUtility.finalArea = finalNode;
 
         CXAgentTask task2 = new CXAgentTask(CXAgentState.Scanning);
-        task2.scanTask.scanScope.add((Float)180.0f);
-        task2.scanTask.scanScope.add((Float)90.0f);
+        task2.scanTask.scanScope.add(180.0f);
+        task2.scanTask.scanScope.add(90.0f);
 
         pC.taskList.add(task1);
         pC.setState(CXAgentState.Moving);

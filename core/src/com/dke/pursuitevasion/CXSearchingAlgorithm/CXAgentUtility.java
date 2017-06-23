@@ -120,7 +120,7 @@ public class CXAgentUtility {
                         //System.out.println(rightNode.nodeNumber);
                         if (rightNode.nodeNumber == this.finalArea.nodeNumber){
                             CXAgentTask newTask = new CXAgentTask(CXAgentState.Scanning);
-                            newTask.scanTask.scanScope.add((Float)0f);
+                            newTask.scanTask.scanScope.add(0f);
                             pursuerComponent.taskList.add(newTask);
                             pursuerComponent.currentSearchArea = dNode.nodeNumber;
                             pursuerComponent.setState(CXAgentState.Scanning);
@@ -289,7 +289,7 @@ public class CXAgentUtility {
         return pC.pursuerPointPath;
     }
 
-    private ArrayList<CXPoint> discretizePath(CXPoint start, CXPoint end){
+    public ArrayList<CXPoint> discretizePath(CXPoint start, CXPoint end){
         ArrayList<CXPoint> path = new ArrayList<CXPoint>();
         double distX = end.x - start.x;
         double distY = end.y - start.y;
@@ -337,7 +337,7 @@ public class CXAgentUtility {
             if (CXPoint.distance(agentLocation,rightNode.getTopLeftNode().location) < 0.001) {
                 if (rightNode.nodeNumber == this.finalArea.nodeNumber){
                     CXAgentTask newTask = new CXAgentTask(CXAgentState.Scanning);
-                    newTask.scanTask.scanScope.add((Float)0.0f);
+                    newTask.scanTask.scanScope.add(0.0f);
 
                     pursuerComponent.taskList.add(newTask);
                     pursuerComponent.currentSearchArea = finalArea.nodeNumber;

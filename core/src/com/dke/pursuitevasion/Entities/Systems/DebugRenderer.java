@@ -8,5 +8,5 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
  * Created by Nicola Gheza on 02/05/2017.
  */
 public interface DebugRenderer {
-    public void render(ModelBatch modelBatch);
+    void render(ModelBatch modelBatch);
 }

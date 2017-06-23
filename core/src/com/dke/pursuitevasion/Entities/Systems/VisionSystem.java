@@ -117,9 +117,6 @@ public class VisionSystem extends IteratingSystem implements EntityListener, Deb
         ObserverComponent observer = observerMapper.get(entity);
         ObservableComponent observable = observableMapper.get(target);
 
-        //System.out.println("Observer position: " + observer.position );
-        //System.out.println("Observable position: " + observable.position);
-
         for (Entity wallEntity : walls) {
             if (wallMapper.get(wallEntity).innerWall) {
                 // It is an inner wall
@@ -165,10 +162,7 @@ public class VisionSystem extends IteratingSystem implements EntityListener, Deb
 
         angleDifference = Math.min(angleDifference, 360.0f - angleDifference);
 
-        if (angleDifference > observer.fovAngle)
-            return false;
-
-        return true;
+        return !(angleDifference > observer.fovAngle);
     }
 
 

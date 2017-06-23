@@ -80,7 +80,7 @@ public class SimulationSystem extends EntitySystem {
             Vector2 v1 = new Vector2(Mappers.wallMapper.get(bounds.get(i)).eV.Vector1.x,Mappers.wallMapper.get(bounds.get(i)).eV.Vector1.z);
             Vector2 v2 = new Vector2(Mappers.wallMapper.get(bounds.get(i)).eV.Vector2.x,Mappers.wallMapper.get(bounds.get(i)).eV.Vector2.z);
             Vector2 point = new Vector2(position.x, position.z);
-            float distance = intersector.distanceSegmentPoint(v1,v2, point);
+            float distance = Intersector.distanceSegmentPoint(v1,v2, point);
             if (distance - (radius/2) < 0.005) {
                 if(velo!=null) {
                     Vector3 one = Mappers.wallMapper.get(bounds.get(i)).eV.Vector1;
