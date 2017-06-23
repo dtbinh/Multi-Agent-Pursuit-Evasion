@@ -201,7 +201,7 @@ public class VisionSystem extends IteratingSystem implements EntityListener, Deb
                 modelBatch.render(triangleInstance);
             } else {
                 MeshPartBuilder builder = modelBuilder.part("circle", 1, 3, new Material());
-                builder.setColor(Color.GREEN);
+                builder.setColor(Color.PINK);
                 float radius = observer.distance;
                 Vector3 center = new Vector3(observer.position.x, 0, observer.position.y);
                 builder.circle(radius, 180, center, new Vector3(0,1,0));
