@@ -148,15 +148,13 @@ public class EvaderSystem extends IteratingSystem {
         }
     }
 
-    private void createPath(EvaderComponent evader, CXPoint currentPos){ // changed Vector3 to CXPoint
+    private void createPath(EvaderComponent evader, CXPoint currentPos){
 
         potentialFieldAlgorithm.updateEvader(evader);
-        //evader.evaderPath = new ArrayList<Vector3>();
         evader.evaderPath = new ArrayList<CXPoint>();
         evader.evaderPath.add(currentPos);
-        //evader.evaderPath.add(potentialFieldAlgorithm.computeNextVector());
         evader.evaderPath.addAll(potentialFieldAlgorithm.calculateCXPoints());
-        //System.out.println(potentialFieldAlgorithm.calculateCXPoints().size() + " CXPoints");
+
     }
 
     /*private void createPath(EvaderComponent evader, Vector3 lastPosition){

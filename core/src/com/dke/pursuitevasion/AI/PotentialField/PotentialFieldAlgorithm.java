@@ -19,7 +19,6 @@ public class PotentialFieldAlgorithm {
     private boolean[][] bMap;
     private int[][] obstacleMap;
     private boolean first;
-    //private Entity evader;
     EvaderComponent evader;
     private Vector3 nextMove;
     PolyMap map;
@@ -30,12 +29,11 @@ public class PotentialFieldAlgorithm {
         this.bMap = b;
         this.map = map;
         this.first = true;
-        generateInitialPFMap();
+        this.pfMap = new PFMap();
+        generateObstacleMap();
     }
 
-    public void generateInitialPFMap(){
-
-        double startTime = System.nanoTime();
+    public void generateObstacleMap(){
         int[][] map = new int[100][100];
 
         for (int i = 0; i < 100; i++) {
@@ -46,13 +44,11 @@ public class PotentialFieldAlgorithm {
         }
 
         this.obstacleMap = map;
-        double endTime = System.nanoTime();
-        double finished = endTime - startTime;
-        System.out.println("Finished generateInitialPFMap [PFA] in " + finished + "ns");
     }
 
     public void updateEvader(EvaderComponent evader) {
         this.evader = evader;
+        pfMap.updateEvader(evader);
     }
 
     private void computePositionToMoveTo(){
@@ -88,9 +84,6 @@ public class PotentialFieldAlgorithm {
 
     public ArrayList<CXPoint> calculateCXPoints() {
 
-        //EvaderComponent evaderComponent = Mappers.agentMapper.get(evader);
-
-        //Vector3 v3 = evader.position;
         CXPoint currentPos = vectorToCXPoint(evader.position);
         computePositionToMoveTo();
         CXPoint nextPos = new CXPoint(nextMove.x, nextMove.z);
