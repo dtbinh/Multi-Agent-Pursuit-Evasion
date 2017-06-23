@@ -226,7 +226,6 @@ public class PursuerSystem extends IteratingSystem {
                     }
                     else {
                         pursuerC.taskList.removeFirst();
-
                         //System.out.println("Agent " + pursuerC.number + " is arrived Destination ");
                         if (!pursuerC.taskList.isEmpty()){
                             CXAgentTask newTask = (CXAgentTask) pursuerC.taskList.getFirst();
@@ -283,8 +282,8 @@ public class PursuerSystem extends IteratingSystem {
     }
 
     private void printStateAndLocation(String state,CXPoint location){
-        CXPoint point = CXPoint.converToGraphCoordination(location);
-        //System.out.println("State: " + state +  ",Current Location " + point.x + " " +point.y);
+//        CXPoint point = CXPoint.converToGraphCoordination(location);
+//        System.out.println("State: " + state +  ",Current Location " + point.x + " " +point.y);
     }
 
     private void movePursuer(Entity entity, float deltaTime) {
@@ -383,8 +382,6 @@ public class PursuerSystem extends IteratingSystem {
                 p.get(0).worldX = pursuer.position.x;
                 p.get(0).worldZ = pursuer.position.z;
             }
-
-
             addAdditionalSteps(pursuer, p, start);*/
             pursuer.detectionTime = 0.0f;
         }

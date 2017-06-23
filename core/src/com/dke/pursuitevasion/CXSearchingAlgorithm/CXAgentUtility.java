@@ -146,37 +146,77 @@ public class CXAgentUtility {
             default:{
                 LinkedList downUpList = new LinkedList();
 
-                CXDecomposedGraphNode dNode = (CXDecomposedGraphNode) rightNeighbours.get(0);
-                double y = dNode.getTopLeftNode().location.y;
+                ArrayList sortedNeighbours = new ArrayList();
+                CXDecomposedGraphNode node0 = (CXDecomposedGraphNode) rightNeighbours.get(0);
+                sortedNeighbours.add(node0);
 
-                CXDecomposedGraphNode dNode1 = (CXDecomposedGraphNode) rightNeighbours.get(1);
-                double y1 = dNode1.getTopLeftNode().location.y;
+                for (int i = 1; i < rightNeighbours.size() ; i++) {
+                    CXDecomposedGraphNode dNode = (CXDecomposedGraphNode) rightNeighbours.get(i);
+                    double y = dNode.getTopLeftNode().location.y;
+                    for (int j = 0; j < sortedNeighbours.size() ; j++) {
+                       CXDecomposedGraphNode node1 = (CXDecomposedGraphNode) rightNeighbours.get(j);
+                       double compareValue = node1.getTopLeftNode().location.y;
+                       if ( y < compareValue){
+                           sortedNeighbours.add(j,dNode);
+                           break;
+                       }
 
-                if (y > y1){
-                    downUpList.add(dNode);
-                    downUpList.add(dNode1);
+                       if (j == sortedNeighbours.size()){
+                           sortedNeighbours.add(dNode);
+                       }
+                    }
                 }
-                else {
-                    downUpList.add(dNode);
-                    downUpList.add(dNode1);
+
+
+                for (int i = 0; i < sortedNeighbours.size()-1 ; i++) {
+                    CXMessage message = new CXMessage();
+                    message.sender = pursuerComponent.number;
+                    message.messageType = CXMessageType.CallBackUp;
+
+                    CXAgentTask messageContent = new CXAgentTask();
+                    messageContent.taskState = CXAgentState.Searching;
+
+                    CXAgentSearchTask searchingTask = new CXAgentSearchTask();
+                    searchingTask.searchArea = (CXDecomposedGraphNode) sortedNeighbours.get(i);
+                    messageContent.searchTask = searchingTask;
+
+                    message.messageContent = messageContent;
+
+                    messageLinkedList.add(message);
                 }
-                CXMessage message = new CXMessage();
-                message.sender = pursuerComponent.number;
-                message.messageType = CXMessageType.CallBackUp;
 
-                CXAgentTask messageContent = new CXAgentTask();
-                messageContent.taskState = CXAgentState.Searching;
-
-                CXAgentSearchTask searchingTask = new CXAgentSearchTask();
-                searchingTask.searchArea = (CXDecomposedGraphNode)downUpList.getLast();
-                messageContent.searchTask = searchingTask;
-
-                message.messageContent = messageContent;
-
-                messageLinkedList.add(message);
+//                CXDecomposedGraphNode dNode = (CXDecomposedGraphNode) rightNeighbours.get(0);
+//                double y = dNode.getTopLeftNode().location.y;
+//
+//                CXDecomposedGraphNode dNode1 = (CXDecomposedGraphNode) rightNeighbours.get(1);
+//                double y1 = dNode1.getTopLeftNode().location.y;
+//
+//                if (y > y1){
+//                    downUpList.add(dNode);
+//                    downUpList.add(dNode1);
+//                }
+//                else {
+//                    downUpList.add(dNode);
+//                    downUpList.add(dNode1);
+//                }
+//                CXMessage message = new CXMessage();
+//                message.sender = pursuerComponent.number;
+//                message.messageType = CXMessageType.CallBackUp;
+//
+//                CXAgentTask messageContent = new CXAgentTask();
+//                messageContent.taskState = CXAgentState.Searching;
+//
+//                CXAgentSearchTask searchingTask = new CXAgentSearchTask();
+//                searchingTask.searchArea = (CXDecomposedGraphNode)downUpList.getLast();
+//                messageContent.searchTask = searchingTask;
+//
+//                message.messageContent = messageContent;
+//
+//                messageLinkedList.add(message);
                 pursuerComponent.setState(CXAgentState.WaitBackup);
                 //System.out.println("Agent " + pursuerComponent.number + " Send a backUp message, Search Area " + searchingTask.searchArea.nodeNumber );
                 return pursuerComponent;
+
             }
         }
     }

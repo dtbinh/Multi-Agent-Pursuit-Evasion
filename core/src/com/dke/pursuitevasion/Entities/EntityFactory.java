@@ -21,6 +21,8 @@ import com.dke.pursuitevasion.Entities.Components.agents.EvaderComponent;
 import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
 import com.dke.pursuitevasion.WallInfo;
 
+import java.util.HashMap;
+
 import static com.badlogic.gdx.graphics.GL20.GL_TRIANGLES;
 
 /**
