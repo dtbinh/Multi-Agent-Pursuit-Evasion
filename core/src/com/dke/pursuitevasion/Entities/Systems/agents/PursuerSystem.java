@@ -124,18 +124,21 @@ public class PursuerSystem extends IteratingSystem {
         // Get the pursuer current state
         PursuerComponent pursuerC = Mappers.pursuerMapper.get(entity);
         StateComponent stateC = Mappers.stateMapper.get(entity);
-        //System.out.println();
-        //System.out.println("------------- Agent: "+ pursuerC.number + " -------------");
+        System.out.println();
+        System.out.println("------------- Agent: "+ pursuerC.number + " -------------");
 
-        if (this.messageArrayList.size() > 0) {
-            messageNumber++;
-            if (messageNumber > 5) {
-                engine.addEntity(entityFactory.createPursuer(new Vector3(0f,0f,0f), Color.BLUE));
-                messageNumber = 0;
-            }
-        } else {
+        if (pursuerC.number == 0){
             messageNumber = 0;
         }
+        if (pursuerC.getState() == CXAgentState.WaitSearching || pursuerC.getState() == CXAgentState.Hold || pursuerC.getState() == CXAgentState.WaitBackup){
+            messageNumber ++ ;
+        }
+        if (messageNumber == EntityFactory.pursuerCounter )
+        {
+            engine.addEntity(entityFactory.createPursuer(new Vector3(0f,0f,0f), Color.BLUE));
+            messageNumber = 0;
+        }
+
 
         switch (pursuerC.getState()){
             case Free:{
@@ -147,9 +150,20 @@ public class PursuerSystem extends IteratingSystem {
                 }
                 else {
                     pursuerC = this.agentUtility.checkMessage(this.messageArrayList, pursuerC);
+                    // doesn't get task
+                    if (pursuerC.taskList.size() == 0 && pursuerC.pursuerPointPath.size() == 0) {
+                        this.agentUtility.randomMovement(stateC, pursuerC, pathFinder);
+
+                    }
+                    if(pursuerC.taskList.size() == 0 && pursuerC.pursuerPointPath.size()>0){
+                        followPath(pursuerC, stateC);
+                    }
+                    else {
+                        pursuerC.pursuerPointPath.clear();
+                    }
+                }
                     break;
                 }
-            }
             case Hold:{
                 this.printStateAndLocation("Hold",new CXPoint(stateC.position.x, stateC.position.z));
                 pursuerC = this.agentUtility.checkMessage(this.messageArrayList,pursuerC);
@@ -206,13 +220,12 @@ public class PursuerSystem extends IteratingSystem {
                 stateC.position = stateC.position.set((float)updateLocation.x,stateC.position.y,(float)updateLocation.y);
                 if (updateLocation == destination){
                     // Check the angle is correct
-                    if (task.movingTask.radius != -1.0 && stateC.angle != task.movingTask.radius){
-                        stateC.angle  = task.movingTask.radius;
-                        pursuerC.currentAngle = task.movingTask.radius;
+                    if (task.movingTask.radius != -1.0f && pursuerC.currentAngle != task.movingTask.radius){
+                        pursuerC.currentAngle = agentUtility.getNextScanPositionForMoving(pursuerC,task.movingTask.radius);
+                        System.out.println("Current angle " + pursuerC.currentAngle + " Target Angle " + task.movingTask.radius);
                     }
                     else {
                         pursuerC.taskList.removeFirst();
-
                         //System.out.println("Agent " + pursuerC.number + " is arrived Destination ");
                         if (!pursuerC.taskList.isEmpty()){
                             CXAgentTask newTask = (CXAgentTask) pursuerC.taskList.getFirst();
@@ -227,12 +240,13 @@ public class PursuerSystem extends IteratingSystem {
             }
             case Scanning:{
                 this.printStateAndLocation("Scanning",new CXPoint(stateC.position.x, stateC.position.z));
-                float value =  this.agentUtility.getTheNextScanPosition(pursuerC);
-                //System.out.println("Current Radius is " + stateC.angle + " TargetRadius is "+ value);
+                CXAgentTask task = (CXAgentTask) pursuerC.taskList.getFirst();
+                Float targetRadius = (Float) task.scanTask.scanScope.getFirst();
+                float value =  this.agentUtility.getTheNextScanPosition(pursuerC,targetRadius);
+                System.out.println("Current Radius is " + stateC.angle + " TargetRadius is "+ value);
                 stateC.angle = value;
                 pursuerC.currentAngle = value; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-                CXAgentTask task = (CXAgentTask) pursuerC.taskList.getFirst();
                 if (task.scanTask.scanScope.isEmpty()){
                     pursuerC.taskList.removeFirst();
                     if (pursuerC.taskList.isEmpty()){
@@ -268,8 +282,8 @@ public class PursuerSystem extends IteratingSystem {
     }
 
     private void printStateAndLocation(String state,CXPoint location){
-        CXPoint point = CXPoint.converToGraphCoordination(location);
-        //System.out.println("State: " + state +  ",Current Location " + point.x + " " +point.y);
+//        CXPoint point = CXPoint.converToGraphCoordination(location);
+//        System.out.println("State: " + state +  ",Current Location " + point.x + " " +point.y);
     }
 
     private void movePursuer(Entity entity, float deltaTime) {
@@ -287,8 +301,9 @@ public class PursuerSystem extends IteratingSystem {
 
     }
     private void followPath(PursuerComponent pC, StateComponent sC){
-        if(pC.pursuerPath!=null && pC.pursuerPath.size()>0){
-            Vector3 pos = pC.pursuerPath.remove(0);
+        if(pC.pursuerPointPath!=null && pC.pursuerPointPath.size()>0){
+            CXPoint target = pC.pursuerPointPath.remove(0);
+            Vector3 pos = new Vector3((float) target.x, 0, (float) target.y);
             pC.position = pos;
             sC.position = pos;
             sC.update();
@@ -316,11 +331,11 @@ public class PursuerSystem extends IteratingSystem {
             pursuerComponent.currentAngle += pursuerComponent.angularVelocity * pursuerComponent.direction.value() * deltaTime;
             if (pursuerComponent.currentAngle <= pursuerComponent.minAngle) {
                 pursuerComponent.waitTime = pursuerComponent.waitTimeMinAngle;
-                pursuerComponent.direction = pursuerComponent.direction.invert();
+                pursuerComponent.direction = pursuerComponent.direction.invert(); // Clock
             }
             else if (pursuerComponent.currentAngle >= pursuerComponent.maxAngle) {
                 pursuerComponent.waitTime = pursuerComponent.waitTimeMaxAngle;
-                pursuerComponent.direction = pursuerComponent.direction.invert();
+                pursuerComponent.direction = pursuerComponent.direction.invert(); // Moving direction
             }
         } else {
             pursuerComponent.waitTime = Math.max(pursuerComponent.waitTime - deltaTime, 0.0f);
@@ -367,8 +382,6 @@ public class PursuerSystem extends IteratingSystem {
                 p.get(0).worldX = pursuer.position.x;
                 p.get(0).worldZ = pursuer.position.z;
             }
-
-
             addAdditionalSteps(pursuer, p, start);*/
             pursuer.detectionTime = 0.0f;
         }

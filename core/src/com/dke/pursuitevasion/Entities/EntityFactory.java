@@ -21,6 +21,8 @@ import com.dke.pursuitevasion.Entities.Components.agents.EvaderComponent;
 import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
 import com.dke.pursuitevasion.WallInfo;
 
+import java.util.HashMap;
+
 import static com.badlogic.gdx.graphics.GL20.GL_TRIANGLES;
 
 /**
@@ -28,7 +30,7 @@ import static com.badlogic.gdx.graphics.GL20.GL_TRIANGLES;
  */
 public class EntityFactory {
 
-    static int pursuerCounter = 0;
+    static public int pursuerCounter = 0;
 
     static EntityFactory instance;
 

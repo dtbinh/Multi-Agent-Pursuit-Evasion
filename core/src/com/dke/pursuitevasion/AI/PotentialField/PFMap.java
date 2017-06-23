@@ -26,7 +26,6 @@ public class PFMap {
     private int[][] obstacleMap;
     private int[][] heatMap;
     private Engine engine;
-    //private Entity evader;
     int bestValue;
     private Triplet coords;
     private EvaderComponent evader;
@@ -41,9 +40,14 @@ public class PFMap {
         this.pathFinder = new PathFinder(map);
     }
 
+    public PFMap() {}
+
+    public void updateEvader(EvaderComponent evader) {
+        this.evader = evader;
+    }
+
     public Vector3 getNextMove() {
 
-        //EvaderComponent evaderComponent = Mappers.agentMapper.get(evader);
         Vector3 v3 = evader.position;
         Vector2 v2 = coordsToArray(v3);
 
@@ -57,6 +61,10 @@ public class PFMap {
         return v3;
     }
 
+    private void updateEntities() {
+        this.entities = engine.getEntitiesFor(Family.all(StateComponent.class).get());
+    }
+
     public void updateMap(){
 
         heatMap = obstacleMap; // reset the heat map upon every iteration
@@ -65,6 +73,7 @@ public class PFMap {
         ArrayList<Vector2> pursuerPositions = new ArrayList<Vector2>();
         Vector3 tempVector = new Vector3();
 
+        updateEntities();
         for (Entity e : entities) {
             if (Mappers.pursuerMapper.has(e)) {
                 PursuerComponent pursuerComponent = Mappers.pursuerMapper.get(e);
@@ -76,7 +85,7 @@ public class PFMap {
         for (int i = 0; i < 100; i++) {
             for (int j = 0; j < 100; j++) {
                 if (pursuerPositions.contains(new Vector2((float)i, (float)j)))
-                    generatePotentialField(i,j,8);
+                    generatePotentialField(i,j,10);
             }
         }
     }
@@ -218,9 +227,6 @@ public class PFMap {
 
     private Triplet findBestMove(int x, int y) {
 
-        /*int currentValue = heatMap[x][y];
-        //System.out.println("Current value = " + currentValue);
-        int bestValue = currentValue;*/
         bestValue = 999; // this ensures the evaders move even when no pursuers have been detected
         coords = new Triplet(x,y);
         boolean dangerDetected = false;
@@ -233,7 +239,7 @@ public class PFMap {
             if (heatMap[x-1][y] < bestValue){
                 bestValue = heatMap[x-1][y];
                 coords.setAll(x-1,y,bestValue);
-                if (bestValue > 0 && bestValue < 1000)
+                if (heatMap[x-1][y] > 0 && heatMap[x-1][y] < 1000)
                     dangerDetected = true;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -244,7 +250,7 @@ public class PFMap {
             if (heatMap[x-1][y+1] < bestValue){
                 bestValue = heatMap[x-1][y+1];
                 coords.setAll(x-1,y+1,bestValue);
-                if (bestValue > 0 && bestValue < 1000)
+                if (heatMap[x-1][y+1] > 0 && heatMap[x-1][y+1] < 1000)
                     dangerDetected = true;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -255,7 +261,7 @@ public class PFMap {
             if (heatMap[x][y+1] < bestValue){
                 bestValue = heatMap[x][y+1];
                 coords.setAll(x,y+1,bestValue);
-                if (bestValue > 0 && bestValue < 1000)
+                if (heatMap[x][y+1] > 0 && heatMap[x][y+1] < 1000)
                     dangerDetected = true;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -266,7 +272,7 @@ public class PFMap {
             if (heatMap[x+1][y+1] < bestValue){
                 bestValue = heatMap[x+1][y+1];
                 coords.setAll(x+1,y+1,bestValue);
-                if (bestValue > 0 && bestValue < 1000)
+                if (heatMap[x+1][y+1] > 0 && heatMap[x+1][y+1] < 1000)
                     dangerDetected = true;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -277,7 +283,7 @@ public class PFMap {
             if (heatMap[x+1][y] < bestValue){
                 bestValue = heatMap[x+1][y];
                 coords.setAll(x+1,y,bestValue);
-                if (bestValue > 0 && bestValue < 1000)
+                if (heatMap[x+1][y] > 0 && heatMap[x+1][y] < 1000)
                     dangerDetected = true;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -288,7 +294,7 @@ public class PFMap {
             if (heatMap[x+1][y-1] < bestValue){
                 bestValue = heatMap[x+1][y-1];
                 coords.setAll(x+1,y-1,bestValue);
-                if (bestValue > 0 && bestValue < 1000)
+                if (heatMap[x+1][y-1] > 0 && heatMap[x+1][y-1] < 1000)
                     dangerDetected = true;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -299,7 +305,7 @@ public class PFMap {
             if (heatMap[x][y-1] < bestValue){
                 bestValue = heatMap[x][y-1];
                 coords.setAll(x,y-1,bestValue);
-                if (bestValue > 0 && bestValue < 1000)
+                if (heatMap[x][y-1] > 0 && heatMap[x][y-1] < 1000)
                     dangerDetected = true;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -310,7 +316,7 @@ public class PFMap {
             if (heatMap[x-1][y-1] < bestValue){
                 bestValue = heatMap[x-1][y-1];
                 coords.setAll(x-1,y-1,bestValue);
-                if (bestValue > 0 && bestValue < 1000)
+                if (heatMap[x-1][y-1] > 0 && heatMap[x-1][y-1] < 1000)
                     dangerDetected = true;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
