@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ShortArray;
 import com.dke.pursuitevasion.*;
+import com.dke.pursuitevasion.UI.FileChooser;
 import com.dke.pursuitevasion.UI.FileSaver;
 import sun.management.Agent;
 
@@ -25,9 +26,9 @@ public class MapEditorController {
     private Mode mode = Mode.DO_NOTHING;
 
     private ArrayList<ModelInstance> instancesSpheres;
-    private ArrayList<ModelInstance> instances;
+    public ArrayList<ModelInstance> instances;
     private ArrayList<Vector3> instanceVectors;
-    private ArrayList<WallInfo> wallInfo;
+    public ArrayList<WallInfo> wallInfo;
     private ArrayList<AgentInfo> agentsInfo;
     private ArrayList<EvaderInfo> evaderInfo;
     public ArrayList<EdgeVectors> edges;
@@ -177,6 +178,10 @@ public class MapEditorController {
         return polygonMesh;
     }
 
+    public void setPolygonMesh(Mesh polygonMesh) {
+        this.polygonMesh = polygonMesh;
+    }
+
     public ArrayList<ModelInstance> getInstances() {
         return instances;
     }
@@ -222,46 +227,86 @@ public class MapEditorController {
         instanceVectors.add(intersection);
     }
 
-    public void addAgent(int screenX, int screenY, PerspectiveCamera camera, boolean isCCTV) {
-        Ray pickRay = camera.getPickRay(screenX, screenY);
-        Vector3 intersection = new Vector3();
-        Intersector.intersectRayPlane(pickRay, new Plane(new Vector3(0f, 1f, 0f), 0f), intersection);
+    public void addAgent(int screenX, int screenY, PerspectiveCamera camera, boolean isCCTV, Vector3 postion) {
+        if(postion==null){
+            Ray pickRay = camera.getPickRay(screenX, screenY);
+            Vector3 intersection = new Vector3();
+            Intersector.intersectRayPlane(pickRay, new Plane(new Vector3(0f, 1f, 0f), 0f), intersection);
+            System.out.println(intersection);
 
 
-        setAgentInfo(intersection, isCCTV);
+            setAgentInfo(intersection, isCCTV);
 
-        if(isCCTV){
-            Model cctvModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.BLACK)),
-                    VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
-            if(!nearNeighbor(intersection)) {
-                ModelInstance cctvInstance = new ModelInstance(cctvModel, intersection);
-                instances.add(cctvInstance);
+            if(isCCTV){
+                Model cctvModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.BLACK)),
+                        VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+                if(!nearNeighbor(intersection)) {
+                    ModelInstance cctvInstance = new ModelInstance(cctvModel, intersection);
+                    instances.add(cctvInstance);
+                }
+            }else{
+                Model agentModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.BLUE)),
+                        VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+                if(!nearNeighbor(intersection)) {
+                    ModelInstance agentInstance = new ModelInstance(agentModel, intersection);
+                    instances.add(agentInstance);
+                }
             }
         }else{
-            Model agentModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.BLUE)),
-                    VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
-            if(!nearNeighbor(intersection)) {
-                ModelInstance agentInstance = new ModelInstance(agentModel, intersection);
-                instances.add(agentInstance);
+
+            setAgentInfo(postion, isCCTV);
+
+            if(isCCTV){
+                Model cctvModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.BLACK)),
+                        VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+                if(!nearNeighbor(postion)) {
+                    ModelInstance cctvInstance = new ModelInstance(cctvModel, postion);
+                    instances.add(cctvInstance);
+                }
+            }else{
+                Model agentModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.BLUE)),
+                        VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+                if(!nearNeighbor(postion)) {
+                    ModelInstance agentInstance = new ModelInstance(agentModel, postion);
+                    instances.add(agentInstance);
+                }
             }
         }
+
     }
 
-    public void addEvader(int screenX,int screenY,PerspectiveCamera camera){
-        Ray pickRay = camera.getPickRay(screenX, screenY);
-        Vector3 intersection = new Vector3();
-        Intersector.intersectRayPlane(pickRay, new Plane(new Vector3(0f, 1f, 0f), 0f), intersection);
+    public void addEvader(int screenX,int screenY,PerspectiveCamera camera, Vector3 position){
+        if(position==null){
+            Ray pickRay = camera.getPickRay(screenX, screenY);
+            Vector3 intersection = new Vector3();
+            Intersector.intersectRayPlane(pickRay, new Plane(new Vector3(0f, 1f, 0f), 0f), intersection);
 
 
-        setEvaderInfo(intersection);
+            setEvaderInfo(intersection);
 
-        Model evaderModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.RED)),
-                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+            Model evaderModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.RED)),
+                    VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
 
-        if(!nearNeighbor(intersection)) {
-            ModelInstance evaderInstance = new ModelInstance(evaderModel, intersection);
-            instances.add(evaderInstance);
+            if(!nearNeighbor(intersection)) {
+                ModelInstance evaderInstance = new ModelInstance(evaderModel, intersection);
+                instances.add(evaderInstance);
+            }
+        }else{
+            setEvaderInfo(position);
+
+            Model evaderModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.RED)),
+                    VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+
+            if(!nearNeighbor(position)) {
+                ModelInstance evaderInstance = new ModelInstance(evaderModel, position);
+                instances.add(evaderInstance);
+            }
         }
+
+    }
+
+    public void removeEvader(int screenX, int screenY, PerspectiveCamera camera){
+        instances.get(0);
     }
 
     public void addWall(Vector3 click, Vector3 clickDrag){
@@ -342,6 +387,14 @@ public class MapEditorController {
         };
         files.setDirectory(Gdx.files.local("maps/"));
         files.show(stage);
+    }
+
+    public void loadFile(){
+        
+    }
+
+    public AbstractList<AgentInfo> getAgentInfo(){
+        return agentsInfo;
     }
 
     public void setWallInfo(float Length, float Height, float Angle, Vector3 Position, Vector3 Start, Vector3 End){

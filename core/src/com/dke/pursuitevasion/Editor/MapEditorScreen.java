@@ -2,13 +2,11 @@ package com.dke.pursuitevasion.Editor;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
@@ -17,11 +15,12 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.dke.pursuitevasion.*;
 import com.dke.pursuitevasion.Menu.MenuScreen;
 import com.dke.pursuitevasion.Menu.NewSimulationWindow;
-import com.dke.pursuitevasion.PursuitEvasion;
 import com.dke.pursuitevasion.Simulator.SimulatorScreen;
-import com.dke.pursuitevasion.TrackingCameraController;
+import com.dke.pursuitevasion.UI.FileChooser;
+import com.google.gson.Gson;
 
 
 /**
@@ -51,6 +50,8 @@ public class MapEditorScreen implements Screen, InputProcessor {
     private FileHandle file;
 
     boolean isBuilt;
+
+    private ModelBuilder modelBuilder;
 
     String vertexShader = "attribute vec4 a_position;    \n" +
             "attribute vec4 a_color;\n" +
@@ -123,9 +124,10 @@ public class MapEditorScreen implements Screen, InputProcessor {
         Label objectsText = new Label("---Place objects and agents---", skin);
         Label exportText = new Label("---Export for simulation---", skin);
 
-        TextButton addOuterVertexButton = new TextButton("Add Outer Vertex", skin);
-        TextButton makePolygonButton = new TextButton("Apply Triangulation", skin);
-        TextButton exportMapButton = new TextButton("Export Map", skin);
+        final TextButton addOuterVertexButton = new TextButton("Add Outer Vertex", skin);
+        TextButton loadMapButton = new TextButton("Load Map", skin);
+        final TextButton makePolygonButton = new TextButton("Apply Triangulation", skin);
+        final TextButton exportMapButton = new TextButton("Export Map", skin);
         TextButton wallEditorButton = new TextButton("Add Walls", skin);
         TextButton addPursuerButton = new TextButton("Add Pursuer", skin);
         TextButton addEvaderButton = new TextButton("Add Evader", skin);
@@ -158,6 +160,17 @@ public class MapEditorScreen implements Screen, InputProcessor {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 controller.saveFile(stage, skin);
+            }
+        });
+
+        loadMapButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                loadFile();
+                isBuilt=true;
+                addOuterVertexButton.setDisabled(true);
+                makePolygonButton.setDisabled(true);
+                controller.setMode(Mode.DO_NOTHING);
             }
         });
 
@@ -214,6 +227,8 @@ public class MapEditorScreen implements Screen, InputProcessor {
         });
 
 
+
+
         // Add buttons
         table.add(mapBuilderText);
         table.row();
@@ -234,6 +249,8 @@ public class MapEditorScreen implements Screen, InputProcessor {
         table.add(exportText);
         table.row();
         table.add(exportMapButton).width(150);
+        table.row();
+        table.add(loadMapButton).width(150);
         table.row();
         table.add(simulatorButton).width(150);
         table.row();
@@ -300,7 +317,43 @@ public class MapEditorScreen implements Screen, InputProcessor {
         stage.act(delta);
         stage.draw();
     }
+    public void loadFile() {
+        FileChooser files = new FileChooser("Select Course File", skin) {
+            @Override
+            protected void result(Object object) {
+                if (object.equals("OK")) {
+                    file = getFile();
+                    System.out.println(file.read(56));
 
+                    Gson gson = new Gson();
+                    PolyMap map = gson.fromJson(file.readString(), PolyMap.class);
+                    //Add mesh
+                    controller.setPolygonMesh(map.getPolygonMesh());
+                    controller.meshRenderable = true;
+                    //Add walls
+                    WallInfo[] wallInfo = map.getwI();
+                    for (int i=0; i<map.getwI().length;i++){
+                        controller.addWall(wallInfo[i].start, wallInfo[i].end);
+                        controller.addWallToArray();
+                    }
+                    AgentInfo[] agentInfo = map.getaI();
+                    for (int i=0; i<map.getaI().length;i++){
+                        //controller.setAgentInfo(agentInfo[i].position,false);
+
+                        controller.addAgent(0,0,camera,false, agentInfo[i].position);
+                        System.out.print(controller.getAgentInfo().get(i).position);
+                    }
+                    EvaderInfo[] evaderInfo = map.geteI();
+                    for (int i=0; i<map.geteI().length;i++){
+                        controller.addEvader(0,0,camera,evaderInfo[i].position);
+                    }
+
+                }
+            }
+        };
+        files.setDirectory(Gdx.files.local("maps/"));
+        files.show(stage);
+    }
     @Override
     public void resize(int width, int height) {
 
@@ -377,15 +430,18 @@ public class MapEditorScreen implements Screen, InputProcessor {
                     wallVec = null;
                     break;
                 case PURSUER_EDITOR:
-                    controller.addAgent(screenX,screenY,camera,false);
+                    controller.addAgent(screenX,screenY,camera,false,null);
                     leftPressed = false;
                     break;
                 case CCTV_EDITOR:
-                    controller.addAgent(screenX,screenY,camera,true);
+                    controller.addAgent(screenX,screenY,camera,true,null);
                     leftPressed = false;
                     break;
                 case EVADER_EDITOR:
-                    controller.addEvader(screenX,screenY,camera);
+                    controller.addEvader(screenX,screenY,camera,null);
+                    leftPressed = false;
+                    break;
+                case DO_NOTHING:
                     leftPressed = false;
                     break;
             }
