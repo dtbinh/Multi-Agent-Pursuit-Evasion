@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.dke.pursuitevasion.AI.CustomPoint;
 import com.dke.pursuitevasion.AI.PathFinder;
-import com.dke.pursuitevasion.CellDecompose.Graph.CXPoint;
 import com.dke.pursuitevasion.Entities.Components.StateComponent;
 import com.dke.pursuitevasion.Entities.Components.agents.EvaderComponent;
 import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
@@ -26,11 +25,12 @@ public class PFMap {
     private int[][] obstacleMap;
     private int[][] heatMap;
     private Engine engine;
-    int bestValue;
+    private int bestValue;
     private Triplet coords;
     private EvaderComponent evader;
     private PathFinder pathFinder;
     private ImmutableArray<Entity> entities;
+    private boolean firstTime = true;
 
     public PFMap(int[][] o, Engine e, PolyMap map, EvaderComponent evader){
         this.obstacleMap = o;
@@ -56,20 +56,14 @@ public class PFMap {
         return new Vector3(arrayToCoords(new Vector2(triplet.getX(),triplet.getY())));
     }
 
-    private Vector3 cxPointToVector(CXPoint cxPoint) {
-        Vector3 v3 = new Vector3((float)cxPoint.x, 0, (float)cxPoint.y);
-        return v3;
-    }
-
     private void updateEntities() {
         this.entities = engine.getEntitiesFor(Family.all(StateComponent.class).get());
     }
 
     public void updateMap(){
 
-        heatMap = obstacleMap; // reset the heat map upon every iteration
+        heatMap = obstacleMap;
 
-        // find positions of pursuers first, then convert them to array coordinates
         ArrayList<Vector2> pursuerPositions = new ArrayList<Vector2>();
         Vector3 tempVector = new Vector3();
 
@@ -78,14 +72,14 @@ public class PFMap {
             if (Mappers.pursuerMapper.has(e)) {
                 PursuerComponent pursuerComponent = Mappers.pursuerMapper.get(e);
                 tempVector = pursuerComponent.position;
+                pursuerPositions.add(coordsToArray(tempVector));
             }
-            pursuerPositions.add(coordsToArray(tempVector));
         }
 
         for (int i = 0; i < 100; i++) {
             for (int j = 0; j < 100; j++) {
                 if (pursuerPositions.contains(new Vector2((float)i, (float)j)))
-                    generatePotentialField(i,j,10);
+                    generatePotentialField(i,j,17); // *** adjust the size of the potential field here ***
             }
         }
     }
@@ -113,8 +107,8 @@ public class PFMap {
     private void generatePotentialField(int x, int y, int startValue){
 
         for (int i = 0; i < startValue; i++) {
-            generateColumn(i,x,y,startValue); // going left
-            generateColumn(-i,x,y,startValue); // going right
+            generateColumn(i,x,y,startValue);
+            generateColumn(-i,x,y,startValue);
         }
 
     }
@@ -145,7 +139,7 @@ public class PFMap {
                     if (heatMap[x-1][y] < bestValue){
                         bestValue = heatMap[x-1][y];
                         coords.setAll(x-1,y,bestValue);
-                        //System.out.println("TOP");
+                        evader.pfDirection = PFDirection.TOP;
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
                 }
@@ -155,7 +149,7 @@ public class PFMap {
                     if (heatMap[x-1][y+1] < bestValue){
                         bestValue = heatMap[x-1][y+1];
                         coords.setAll(x-1,y+1,bestValue);
-                        //System.out.println("TOP RIGHT");
+                        evader.pfDirection = PFDirection.TOP_RIGHT;
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
                 }
@@ -165,7 +159,7 @@ public class PFMap {
                     if (heatMap[x][y+1] < bestValue){
                         bestValue = heatMap[x][y+1];
                         coords.setAll(x,y+1,bestValue);
-                        //System.out.println("RIGHT");
+                        evader.pfDirection = PFDirection.RIGHT;
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
                 }
@@ -175,7 +169,7 @@ public class PFMap {
                     if (heatMap[x+1][y+1] < bestValue){
                         bestValue = heatMap[x+1][y+1];
                         coords.setAll(x+1,y+1,bestValue);
-                        //System.out.println("BOTTOM RIGHT");
+                        evader.pfDirection = PFDirection.BOTTOM_RIGHT;
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
                 }
@@ -185,7 +179,7 @@ public class PFMap {
                     if (heatMap[x+1][y] < bestValue){
                         bestValue = heatMap[x+1][y];
                         coords.setAll(x+1,y,bestValue);
-                        //System.out.println("BOTTOM");
+                        evader.pfDirection = PFDirection.DOWN;
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
                 }
@@ -195,7 +189,7 @@ public class PFMap {
                     if (heatMap[x+1][y-1] < bestValue){
                         bestValue = heatMap[x+1][y-1];
                         coords.setAll(x+1,y-1,bestValue);
-                        //System.out.println("BOTTOM LEFT");
+                        evader.pfDirection = PFDirection.BOTTOM_LEFT;
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
                 }
@@ -205,7 +199,7 @@ public class PFMap {
                     if (heatMap[x][y-1] < bestValue){
                         bestValue = heatMap[x][y-1];
                         coords.setAll(x,y-1,bestValue);
-                        //System.out.println("LEFT");
+                        evader.pfDirection = PFDirection.LEFT;
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
                 }
@@ -215,7 +209,7 @@ public class PFMap {
                     if (heatMap[x-1][y-1] < bestValue){
                         bestValue = heatMap[x-1][y-1];
                         coords.setAll(x-1,y-1,bestValue);
-                        //System.out.println("TOP LEFT");
+                        evader.pfDirection = PFDirection.TOP_LEFT;
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
                 }
@@ -227,103 +221,133 @@ public class PFMap {
 
     private Triplet findBestMove(int x, int y) {
 
-        bestValue = 999; // this ensures the evaders move even when no pursuers have been detected
+        bestValue = 999;
         coords = new Triplet(x,y);
+
+        if (firstTime) {
+        regularCheck(x,y);
+        firstTime = false;
+        } else
+            explore(x,y);
+
+        return coords;
+    }
+
+    private void explore(int x, int y) {
+        if (evader.pfDirection == PFDirection.TOP && heatMap[x-1][y] == 0) {
+            coords.setAll(x-1,y,0);
+        } else if (evader.pfDirection == PFDirection.TOP_RIGHT && heatMap[x-1][y+1] == 0) {
+            coords.setAll(x-1,y+1,0);
+        } else if (evader.pfDirection == PFDirection.RIGHT && heatMap[x][y+1] == 0) {
+            coords.setAll(x,y+1,0);
+        } else if (evader.pfDirection == PFDirection.BOTTOM_RIGHT && heatMap[x+1][y+1] == 0) {
+            coords.setAll(x+1,y+1,0);
+        } else if (evader.pfDirection == PFDirection.DOWN && heatMap[x+1][y] == 0) {
+            coords.setAll(x+1,y,0);
+        } else if (evader.pfDirection == PFDirection.BOTTOM_LEFT && heatMap[x+1][y-1] == 0) {
+            coords.setAll(x+1,y-1,0);
+        } else if (evader.pfDirection == PFDirection.LEFT && heatMap[x][y-1] == 0) {
+            coords.setAll(x,y-1,0);
+        } else if (evader.pfDirection == PFDirection.TOP_LEFT && heatMap[x-1][y-1] == 0) {
+            coords.setAll(x-1,y-1,0);
+        } else regularCheck(x,y);
+    }
+
+    private void regularCheck(int x, int y) {
+
+        int firstCheck = (int)(Math.ceil((7*Math.random())));
+        switchCase(firstCheck,x,y);
         boolean dangerDetected = false;
 
-        int firstCheck = (int)(7*Math.random());
-        switchCase(firstCheck,x,y);
-
-        // check top
         try {
             if (heatMap[x-1][y] < bestValue){
                 bestValue = heatMap[x-1][y];
                 coords.setAll(x-1,y,bestValue);
                 if (heatMap[x-1][y] > 0 && heatMap[x-1][y] < 1000)
                     dangerDetected = true;
+                evader.pfDirection = PFDirection.TOP;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
         }
 
-        // check top right
         try {
             if (heatMap[x-1][y+1] < bestValue){
                 bestValue = heatMap[x-1][y+1];
                 coords.setAll(x-1,y+1,bestValue);
                 if (heatMap[x-1][y+1] > 0 && heatMap[x-1][y+1] < 1000)
                     dangerDetected = true;
+                evader.pfDirection = PFDirection.TOP_RIGHT;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
         }
 
-        // check right
         try {
             if (heatMap[x][y+1] < bestValue){
                 bestValue = heatMap[x][y+1];
                 coords.setAll(x,y+1,bestValue);
                 if (heatMap[x][y+1] > 0 && heatMap[x][y+1] < 1000)
                     dangerDetected = true;
+                evader.pfDirection = PFDirection.RIGHT;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
         }
 
-        // check bottom right
         try {
             if (heatMap[x+1][y+1] < bestValue){
                 bestValue = heatMap[x+1][y+1];
                 coords.setAll(x+1,y+1,bestValue);
                 if (heatMap[x+1][y+1] > 0 && heatMap[x+1][y+1] < 1000)
                     dangerDetected = true;
+                evader.pfDirection = PFDirection.BOTTOM_RIGHT;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
         }
 
-        // check bottom
         try {
             if (heatMap[x+1][y] < bestValue){
                 bestValue = heatMap[x+1][y];
                 coords.setAll(x+1,y,bestValue);
                 if (heatMap[x+1][y] > 0 && heatMap[x+1][y] < 1000)
                     dangerDetected = true;
+                evader.pfDirection = PFDirection.DOWN;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
         }
 
-        // check bottom left
         try {
             if (heatMap[x+1][y-1] < bestValue){
                 bestValue = heatMap[x+1][y-1];
                 coords.setAll(x+1,y-1,bestValue);
                 if (heatMap[x+1][y-1] > 0 && heatMap[x+1][y-1] < 1000)
                     dangerDetected = true;
+                evader.pfDirection = PFDirection.BOTTOM_LEFT;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
         }
 
-        // check left
         try {
             if (heatMap[x][y-1] < bestValue){
                 bestValue = heatMap[x][y-1];
                 coords.setAll(x,y-1,bestValue);
                 if (heatMap[x][y-1] > 0 && heatMap[x][y-1] < 1000)
                     dangerDetected = true;
+                evader.pfDirection = PFDirection.LEFT;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
         }
 
-        // check top left
         try {
             if (heatMap[x-1][y-1] < bestValue){
                 bestValue = heatMap[x-1][y-1];
                 coords.setAll(x-1,y-1,bestValue);
                 if (heatMap[x-1][y-1] > 0 && heatMap[x-1][y-1] < 1000)
                     dangerDetected = true;
+                evader.pfDirection = PFDirection.TOP_LEFT;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
         }
 
         if (dangerDetected)
             System.out.println("Danger detected");
-        return coords;
     }
 }
