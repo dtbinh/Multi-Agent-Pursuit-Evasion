@@ -32,7 +32,7 @@ public class CellDecompositionAlgorithm  {
     // Initialisation
     public CellDecompositionAlgorithm(){
 
-    };
+    }
 
     public CellDecompositionAlgorithm(CXGraph polygon,CXGraph obstacles){
         this.polygon = polygon;
@@ -251,7 +251,7 @@ public class CellDecompositionAlgorithm  {
                 CXPoint newPoint = new CXPoint(intersectedX,intersectedY);
                 infoModel.extendedVertices = newPoint;
                 infoModel.edgeNumber = point;
-                infoModel.isUp = (intersectedY - extendVertices.location.y) > 0 ? true:false;
+                infoModel.isUp = (intersectedY - extendVertices.location.y) > 0;
 
                 // 2.1 if intersected location is vertices(A). Then all we needed is add newEdge(A,B)
 
@@ -781,7 +781,7 @@ public class CellDecompositionAlgorithm  {
                 }
             }
         }
-        return (count == list1.size())?true:false;
+        return count == list1.size();
     }
 
     private CXGraph buildTheNewGraph(CXGraph decomposedGraph,ArrayList newVerticesArrayList){

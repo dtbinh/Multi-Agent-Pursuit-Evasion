@@ -9,7 +9,7 @@ public enum Direction
 
     private int value;
 
-    private Direction(int value)
+    Direction(int value)
     {
         this.value = value;
     }
@@ -26,4 +26,4 @@ public enum Direction
     {
         return value;
     }
-};
+}

@@ -117,9 +117,6 @@ public class VisionSystem extends IteratingSystem implements EntityListener, Deb
         ObserverComponent observer = observerMapper.get(entity);
         ObservableComponent observable = observableMapper.get(target);
 
-        //System.out.println("Observer position: " + observer.position );
-        //System.out.println("Observable position: " + observable.position);
-
         for (Entity wallEntity : walls) {
             if (wallMapper.get(wallEntity).innerWall) {
                 // It is an inner wall
@@ -165,10 +162,7 @@ public class VisionSystem extends IteratingSystem implements EntityListener, Deb
 
         angleDifference = Math.min(angleDifference, 360.0f - angleDifference);
 
-        if (angleDifference > observer.fovAngle)
-            return false;
-
-        return true;
+        return !(angleDifference > observer.fovAngle);
     }
 
 
@@ -207,8 +201,8 @@ public class VisionSystem extends IteratingSystem implements EntityListener, Deb
                 modelBatch.render(triangleInstance);
             } else {
                 MeshPartBuilder builder = modelBuilder.part("circle", 1, 3, new Material());
-                builder.setColor(Color.GREEN);
-                float radius = observer.distance * 0.5f;
+                builder.setColor(Color.PINK);
+                float radius = observer.distance;
                 Vector3 center = new Vector3(observer.position.x, 0, observer.position.y);
                 builder.circle(radius, 180, center, new Vector3(0,1,0));
                 Model circleModel = modelBuilder.end();

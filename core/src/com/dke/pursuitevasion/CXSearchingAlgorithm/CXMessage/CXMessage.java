@@ -10,5 +10,5 @@ public class CXMessage {
     public int receiver = -1;
     public CXMessageType messageType;
     public CXAgentTask messageContent;
-    public CXMessage(){};
+    public CXMessage(){}
 }

@@ -15,5 +15,5 @@ public class CXExtendInfoModel {
     public Boolean isUp;           // Extend direction
     public int extendedVerticesNumber;
 
-    public CXExtendInfoModel(){};
+    public CXExtendInfoModel(){}
 }
