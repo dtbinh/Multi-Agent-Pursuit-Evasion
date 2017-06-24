@@ -42,7 +42,7 @@ public class PathFinder implements Screen {
     Vector3 intersection3;
     float[] vertices;
     short[] indices;
-    public AStarPathFinder pF;
+    public static AStarPathFinder pF;
     Engine engine;
     EntityFactory entityFactory;
     ArrayList<CustomPoint> CP;
@@ -168,7 +168,7 @@ public class PathFinder implements Screen {
         }
         return path;
     }
-    public CustomPoint approximatePosition(float X, float Y){
+    public static CustomPoint approximatePosition(float X, float Y){
         int xIndex = 1;
         int yIndex = 1;
         int newXIndex = 0;
