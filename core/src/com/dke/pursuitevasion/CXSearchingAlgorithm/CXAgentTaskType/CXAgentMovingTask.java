@@ -8,7 +8,8 @@ import com.dke.pursuitevasion.CellDecompose.Graph.CXPoint;
 public class CXAgentMovingTask {
     public CXPoint movingDestination;
     public float radius = -1.0f;
-    public CXAgentMovingTask(){};
+    public CXAgentMovingTask(){}
+
     public CXAgentMovingTask(CXPoint movingDestination){
         this.movingDestination = movingDestination;
     }

@@ -13,5 +13,5 @@ public enum CXAgentState {
     Scanning,
     WaitBackup,
     WaitSearching,
-    FinishGame;
+    FinishGame
 }

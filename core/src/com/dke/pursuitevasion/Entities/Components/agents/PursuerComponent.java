@@ -3,12 +3,14 @@ package com.dke.pursuitevasion.Entities.Components.agents;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.dke.pursuitevasion.AI.Node;
 import com.dke.pursuitevasion.CXSearchingAlgorithm.CXAgentState;
 import com.dke.pursuitevasion.CellDecompose.Graph.CXPoint;
 import com.dke.pursuitevasion.Entities.Direction;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by Nicola Gheza on 23/05/2017.
@@ -37,6 +39,7 @@ public class PursuerComponent implements Component {
     public LinkedList taskList = new LinkedList();
     public int number;
     public int currentSearchArea;
+    public List<Node> freeStateRoutine;
 
     public void setState(CXAgentState state){
         //System.out.println("ComponentOperationHandlerge State from "+ this.state +  " to "+ state);
@@ -45,6 +48,5 @@ public class PursuerComponent implements Component {
     public CXAgentState getState(){
         return this.state;
     }
-
 
 }

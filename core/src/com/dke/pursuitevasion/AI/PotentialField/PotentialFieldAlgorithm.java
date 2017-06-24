@@ -19,10 +19,10 @@ public class PotentialFieldAlgorithm {
     private boolean[][] bMap;
     private int[][] obstacleMap;
     private boolean first;
-    EvaderComponent evader;
+    private EvaderComponent evader;
     private Vector3 nextMove;
-    PolyMap map;
-    PFMap pfMap;
+    private PolyMap map;
+    private PFMap pfMap;
 
     public PotentialFieldAlgorithm(Engine e, boolean[][] b, PolyMap map){
         this.engine = e;
@@ -66,17 +66,6 @@ public class PotentialFieldAlgorithm {
         this.nextMove = v;
     }
 
-    public Vector3 computeNextVector() {
-
-        PFMap pfMap = new PFMap(obstacleMap, engine, map, evader);
-        pfMap.updateMap();
-
-        Vector3 v = pfMap.getNextMove();
-        this.nextMove = v;
-
-        return v;
-    }
-
     private CXPoint vectorToCXPoint(Vector3 v3) {
         CXPoint cxPoint = new CXPoint(v3.x,v3.z);
         return cxPoint;
@@ -90,7 +79,6 @@ public class PotentialFieldAlgorithm {
 
         CXAgentUtility cxAgentUtility = new CXAgentUtility();
         ArrayList<CXPoint> cxPoints = cxAgentUtility.discretizePath(currentPos, nextPos);
-
         return cxPoints;
     }
 }

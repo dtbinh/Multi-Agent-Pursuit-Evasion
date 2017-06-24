@@ -42,10 +42,10 @@ public class FileSaver extends Dialog {
     public void setFile(FileHandle file) {
         if (this.file != file) {
             if (this.file != null) {
-                Label label = (Label) this.findActor(this.file.name());
+                Label label = this.findActor(this.file.name());
                 label.setColor(Color.WHITE);
             }
-            Label label = (Label) this.findActor(file.name());
+            Label label = this.findActor(file.name());
             label.setColor(Color.RED);
             this.file = file;
             fileName = file.toString();

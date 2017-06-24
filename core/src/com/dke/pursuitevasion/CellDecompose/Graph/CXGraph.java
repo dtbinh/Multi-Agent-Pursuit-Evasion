@@ -63,10 +63,7 @@ public class CXGraph<E> implements Serializable{
         return true;
     }
     public boolean adjacency(CXGraphNode x, CXGraphNode y) {
-        if(edgeValueArray[x.nodeNumber][y.nodeNumber] == 0){
-            return false;
-        }
-        return true;
+        return edgeValueArray[x.nodeNumber][y.nodeNumber] != 0;
     }
 
     public CXGraphNode add_vertex(CXGraphNode x) {

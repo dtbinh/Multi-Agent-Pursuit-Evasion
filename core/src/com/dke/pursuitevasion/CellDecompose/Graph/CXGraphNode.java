@@ -9,7 +9,8 @@ public class CXGraphNode implements Serializable {
     public int nodeNumber;
     public CXPoint location;
 
-    public CXGraphNode(){};
+    public CXGraphNode(){}
+
     public CXGraphNode(CXPoint location,int nodeNumber){
         this.location = location;
         this.nodeNumber = nodeNumber;

@@ -11,5 +11,5 @@ public class CXExtendedModel {
 
     public CXGraphNode orignialVertices;
     public ArrayList extendedInfor;   // Saving CXExtendInfoModel
-    public CXExtendedModel(){};
+    public CXExtendedModel(){}
 }

@@ -22,7 +22,7 @@ public class CXDecomposedGraphNode extends CXGraphNode {
                 countNumber ++;
             }
         }
-        return countNumber == 2? true:false;
+        return countNumber == 2;
     }
 
     // Haven't test

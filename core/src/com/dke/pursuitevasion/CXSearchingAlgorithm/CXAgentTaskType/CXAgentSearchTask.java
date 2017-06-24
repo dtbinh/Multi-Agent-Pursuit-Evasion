@@ -9,7 +9,8 @@ import org.omg.CORBA.PUBLIC_MEMBER;
 public class CXAgentSearchTask {
     public CXDecomposedGraphNode searchArea;
 
-    public CXAgentSearchTask(){};
+    public CXAgentSearchTask(){}
+
     public CXAgentSearchTask(CXDecomposedGraphNode searchArea){
         this.searchArea = searchArea;
     }
