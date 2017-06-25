@@ -36,9 +36,8 @@ public class CoordExplor {
     public boolean runOnce = false;
     public HashMap<Cell, Boolean> unexploredFrontier = new HashMap<Cell, Boolean>();
     Vector3[] pursuerPos;
-    float mViewDistance;
     PathFinder pathFinder;
-    double stepSize = 5;
+    double stepSize = 10;
     int pursCount;
 
 
@@ -63,12 +62,14 @@ public class CoordExplor {
             }
         }
 
+
         computeOpenness();
         ModelBuilder modelBuilder = new ModelBuilder();
         box = modelBuilder.createBox(0.05f, 0.02f, 0.05f,new Material(ColorAttribute.createDiffuse(Color.RED)),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
         expBox = modelBuilder.createBox(0.05f, 0.02f, 0.05f,new Material(ColorAttribute.createDiffuse(Color.GREEN)),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+
     }
 
     public void restart(){
@@ -84,64 +85,84 @@ public class CoordExplor {
 
     }
 
-    public void updateGrid(PursuerComponent pursuerComponent, ObserverComponent observerComponent){
-        if(pursuerComponent.updatePosition && pursuerComponent.position!=null) {
+    public void updateGrid(PursuerComponent pursuerComponent, ObserverComponent observerComponent) {
+        //System.out.println(pursuerComponent.number);
+        if (pursuerComponent.updatePosition && pursuerComponent.position != null) {
             pursuerPos[pursuerComponent.number] = pursuerComponent.position;
         }
-        if(!pursuerComponent.updatePosition && pursuerComponent.position.dst(pursuerPos[pursuerComponent.number])<0.15f){
+        //if approaching a wall, get new task
+        if(pursuerComponent.updatePosition && pursuerComponent.targetCell!= null && !pursuerComponent.targetCell.frontier){
+            //System.out.println("Target explored before reaching");
+            //assignTask(pursuerComponent);
+        }
+
+        if (!pursuerComponent.updatePosition && pursuerComponent.position.dst(pursuerPos[pursuerComponent.number]) < 0.15f) {
             pursuerComponent.updatePosition = true;
         }
-        if(!pursuerComponent.updatePosition){
-            if(pursuerComponent.targetCell!= null && !pursuerComponent.targetCell.frontier){
-                requestNewFrontier(pursuerComponent);
+        if (!pursuerComponent.updatePosition) {
+            if (pursuerComponent.targetCell != null && !pursuerComponent.targetCell.frontier) {
+                assignTask(pursuerComponent);
             }
         }
+
         //nodes.clear();
         pursuerComponent.frontierCells.clear();
         CustomPoint pursuerPosition = discretiser.getNodeFromWorldCoor(pursuerComponent.position.x, pursuerComponent.position.z);
-        if(pursuerPosition == null){
-            pursuerPosition = PathFinder.approximatePosition(pursuerComponent.position.x, pursuerComponent.position.z);
+        if (pursuerPosition == null) {
+            pursuerPosition = pathFinder.approximatePosition(pursuerComponent.position.x, pursuerComponent.position.z);
         }
         int pursuerNodeX = pursuerPosition.x;
         int pursuerNodeY = pursuerPosition.y;
-        int viewNode = (int) (Math.ceil(observerComponent.distance/discretiser.gap)/2);
-        viewNode*=1.5;
+        int viewNode = (int) (Math.ceil(observerComponent.distance*1.5f / discretiser.gap));
 
         //add new explored nodes to explored
-        for(int i=-0; i < mWidth; i++){
-            for(int j = 0; j < mWidth; j++){
-                if(i>1 && i<discretiser.width-1 && j>1 && j<discretiser.width-1) {
-                    Cell cell = cellGrid[i][j];
-                    cell.cost = 0;
-                    boolean contains = false;
-                    int pursuerIndex = -1;
-                    for(int k = 0; k<cell.visibleToPursuers.size(); k++){
-                        if(!isVisible(cell.position, pursuerComponent, observerComponent, i, j) && pursuerComponent.number == cell.visibleToPursuers.get(k)){
-                            pursuerIndex  = k;
-                            contains = true;
-                            break;
-                        }
+        for (int i = 0; i < mWidth; i++) {
+            for (int j = 0; j < mWidth; j++) {
+                Cell cell = cellGrid[i][j];
+                cell.cost = 0;
+                boolean contains = false;
+                //REMOVE all visible pursuers from the cell
+                int pursuerIndex = -1;
+                for (int k = 0; k < cell.visibleToPursuers.size(); k++) {
+                    if (pursuerComponent.number == cell.visibleToPursuers.get(k) && !isVisible(cell.position, pursuerComponent, observerComponent, i, j)) {
+                        pursuerIndex = k;
+                        contains = true;
+                        break;
                     }
-                    if(contains){
-                        cell.visibleToPursuers.remove(pursuerIndex);
-                        cell.visibleCounter--;
-                    }
+                }
+                if (contains) {
+                    cell.visibleToPursuers.remove(pursuerIndex);
+                    cell.visibleCounter--;
+                }
 
-                    //check if a cell is explored
-                    if (!cell.explored && isVisible(cell.position, pursuerComponent, observerComponent, i, j)) {
-                        cell.explored = true;
-                        ModelInstance mBox = new ModelInstance(box, cell.position);
-                        nodes.add(mBox);
+                //check if a cell is explored
+                if (!cell.explored && isVisible(cell.position, pursuerComponent, observerComponent, i, j)) {
+                    cell.explored = true;
+                    ModelInstance m = new ModelInstance(box, cell.position);
+                    nodes.add(m);
+                }
+
+                //utility is not changing so we only have to compute it once
+                if (!runOnce) {
+                    if (cell.distanceToClosestWall < observerComponent.distance) {
+                        cell.utility = 1 - cell.distanceToClosestWall / observerComponent.distance;
+                    } else {
+                        cell.utility = 0;
                     }
                 }
             }
         }
+        runOnce = true;
+        if(runOnce){
+            //utilityToString();
+        }
+
         //searching local within pursuer vision
-        for(int i=-viewNode; i < viewNode+1; i++) {
-            for (int j = -viewNode; j < viewNode + 2; j++) {
-                //make sure your are still searching within of the map
-                if (i + pursuerNodeX > 0 && i + pursuerNodeX < discretiser.width && j + pursuerNodeY > 0 && j + pursuerNodeY < discretiser.width) {
-                    Cell cell = cellGrid[i+pursuerNodeX][j+pursuerNodeY];
+        for (int i = -viewNode; i < viewNode; i++) {
+            for (int j = -viewNode; j < viewNode; j++) {
+                //make sure youre are still searching within of the map
+                if (i + pursuerNodeX > 0 && i + pursuerNodeX < discretiser.width - 1 && j + pursuerNodeY > 0 && j + pursuerNodeY < discretiser.width - 1) {
+                    Cell cell = cellGrid[i + pursuerNodeX][j + pursuerNodeY];
                     //compute new frontier cells
                     if (cell.explored == true) {
                         boolean trigger = false;
@@ -149,39 +170,33 @@ public class CoordExplor {
                         for (int k = -1; k < 2; k++) {
                             for (int l = -1; l < 2; l++) {
                                 //within bounds of map
-                                if (cell.x + k < discretiser.width && cell.x > 1 && cell.y + l < discretiser.width && cell.y + l > 1) {
+                                if (cell.x+k < discretiser.width && cell.x+k >0 && cell.y+l < discretiser.width && cell.y+l > 0) {
                                     //cell is unexplored and inside map
                                     if ((k != 0 || l != 0) && !cellGrid[cell.x + k][cell.y + l].explored && !cellGrid[cell.x + k][cell.y + l].ignore) {
-                                        if(!discretiser.lineIntersectWall(cell.position, pursuerComponent.position)) {
+                                        //if(isVisible(cell.position, pursuerComponent, observerComponent, cell.x,cell.y)){
+                                            //if (!discretiser.lineIntersectWall(cell.position, pursuerComponent.position)) {
                                             cell.frontier = true;
                                             if (!unexploredFrontier.containsKey(cell)) {
                                                 unexploredFrontier.put(cell, true);
                                             }
                                             trigger = true;
                                             break outerloop;
-                                        }
+                                        //}
                                     }
                                 }
                             }
                         }
                         //KEEPING track of frontier cells
-                        if(!trigger){
-                            if(unexploredFrontier.containsKey(cell)){
+                        if (!trigger) {
+                            if (unexploredFrontier.containsKey(cell)) {
                                 unexploredFrontier.remove(cell);
                             }
                             cell.frontier = false;
                         }
                     }
 
-                    if (cell.frontier) {
+                    if (cell.frontier && isVisible(cell.position, pursuerComponent, observerComponent, cell.x,cell.y)) {
                         pursuerComponent.frontierCells.add(cell);
-                        //ModelInstance mBox = new ModelInstance(expBox, cell.position);
-                        //nodes.add(mBox);
-
-                        /*if (!cell.visibleToPursuers.containsKey(pursuerComponent.number)) {
-                            cell.visibleToPursuers.put(pursuerComponent.number, true);
-                            cell.visibleCounter++;
-                        }*/
                         boolean contains = false;
                         for (int k = 0; k < cell.visibleToPursuers.size(); k++) {
                             if (pursuerComponent.number == cell.visibleToPursuers.get(k)) {
@@ -206,28 +221,21 @@ public class CoordExplor {
                         if (pursuerComponent.number != cell.visibleToPursuers.get(0)) {
                             pursuerComponent.costs[i + pursuerNodeX][j + pursuerNodeY] /= cell.visibleCounter;
                         }
-
-                        //utility is not changing so we only have to compute it once
-                        if (!runOnce) {
-                            float viewDistance = observerComponent.distance * 0.75f;
-                            mViewDistance = observerComponent.distance;
-                            if (cell.distanceToClosestWall < viewDistance) {
-                                cell.utility = 1 - cell.distanceToClosestWall / viewDistance;
-                            } else {
-                                cell.utility = 0;
-                            }
-                            runOnce = true;
-                        }
                     }
                 }
             }
         }
+        /*for (Cell key : unexploredFrontier.keySet()) {
+            Vector3 position = new Vector3(key.position);
+            ModelInstance m = new ModelInstance(expBox, position);
+            nodes.add(m);
+        }*/
     }
 
     public boolean isVisible(Vector3 point, PursuerComponent pursuerComponent, ObserverComponent observerComponent, int x, int y){
         //check if a node is visible
         float distance = point.dst(pursuerComponent.position);
-        if(distance < observerComponent.distance/2 && discretiser.nodeGrid[x][y]) {
+        if(discretiser.nodeGrid[x][y] && distance < observerComponent.distance) {
             if(!discretiser.lineIntersectWall(point, pursuerComponent.position)) {
                 return true;
             }
@@ -256,7 +264,7 @@ public class CoordExplor {
 
     public void assignTask(PursuerComponent pursuerComponent){
         float maxScore = -Float.MAX_VALUE;
-        float beta = 1;
+        float beta = 1.5f;
         Cell bestCell = new Cell(0,0);
         if(pursuerComponent.frontierCells.size()>0) {
             for (int i = 0; i < pursuerComponent.frontierCells.size(); i++) {
@@ -264,8 +272,12 @@ public class CoordExplor {
                 int x = pursuerComponent.frontierCells.get(i).x;
                 int y = pursuerComponent.frontierCells.get(i).y;
                 float cost = (float) pursuerComponent.costs[x][y];
+                System.out.println(cost);
                 cost *= pursuerComponent.frontierCells.get(i).openness;
-                float score = (float) (pursuerComponent.frontierCells.get(i).utility + beta * cost);
+                System.out.println(cost);
+                //System.out.println(pursuerComponent.frontierCells.get(i).utility+"   "+cost);
+                float score = (float) (beta*pursuerComponent.frontierCells.get(i).utility + cost);
+
                 if (score > maxScore) {
                     maxScore = score;
                     bestCell = pursuerComponent.frontierCells.get(i);
@@ -277,10 +289,20 @@ public class CoordExplor {
             }
             CXPoint start = new CXPoint(pursuerComponent.position.x, pursuerComponent.position.z);
             if(bestCell != null && bestCell.x!=0 && bestCell.y!=0) {
+                pursuerComponent.targetCell  = bestCell;
                 CXPoint end = new CXPoint(bestCell.position.x, bestCell.position.z);
-                pursuerComponent.pursuerPointPath = discretizePath(start, end);
+                if(!discretiser.lineIntersectWall(pursuerComponent.position, bestCell.position)){
+                    pursuerComponent.pursuerPointPath = discretizePath(start, end);
+                }else{
+                    Vector3 vStart = new Vector3((float) start.x, 0,(float) start.y);
+                    Vector3 vEnd = new Vector3((float) end.x, 0,(float) end.y);
+                    pursuerComponent.pursuerPointPath = addAdditionalSteps(pathFinder.findPath(vStart, vEnd, null));
+                }
             }
+            ModelInstance m = new ModelInstance(expBox, bestCell.position);
+            nodes.add(m);
         }else{
+            System.out.println("REQUEST NEW");
             bestCell = requestNewFrontier(pursuerComponent);
             CXPoint start = new CXPoint(pursuerComponent.position.x, pursuerComponent.position.z);
             if(bestCell != null && bestCell.x!=0 && bestCell.y!=0) {
@@ -294,6 +316,8 @@ public class CoordExplor {
                     pursuerComponent.pursuerPointPath = addAdditionalSteps(pathFinder.findPath(vStart, vEnd, null));
                 }
             }
+            ModelInstance m = new ModelInstance(expBox, bestCell.position);
+            nodes.add(m);
         }
     }
 
@@ -316,8 +340,6 @@ public class CoordExplor {
         }
         if(bestCell!=null) {
             pursuerPos[pursuerComponent.number] = bestCell.position;
-            ModelInstance mBox = new ModelInstance(expBox, bestCell.position);
-            nodes.add(mBox);
         }
         pursuerComponent.updatePosition = false;
         pursuerComponent.targetCell = bestCell;
@@ -329,7 +351,7 @@ public class CoordExplor {
         double distX = end.x - start.x;
         double distY = end.y - start.y;
         double distance = Math.sqrt((distX*distX)+(distY*distY));
-        double steps = distance/gap;
+        double steps = distance/pathFinder.gapSize;
 
         for(int i=0;i<steps*stepSize;i++){
             double scale = i/(steps*stepSize);
@@ -346,20 +368,6 @@ public class CoordExplor {
         return path;
     }
 
-    /* public void utilityToString(){
-        for(int i=0; i<cellGrid.length; i++){
-            for(int j=0; j<cellGrid.length; j++){
-                if(cellGrid[j][i].utility!=-1){
-                    System.out.print((int) Math.floor(cellGrid[j][i].utility* 10)+" ");
-                }
-                else {
-                    System.out.print("  ");
-                }
-            }
-            System.out.println();
-        }
-    }*/
-
     public void costToString(int viewNode, int k, int l, PursuerComponent pursuerComponent){
         for(int i=-viewNode; i < viewNode+1; i++) {
             for (int j = -viewNode; j < viewNode + 2; j++) {
@@ -373,9 +381,28 @@ public class CoordExplor {
         }
     }
 
+   public void utilityToString(){
+        for(int i=0; i<cellGrid.length; i++){
+            for(int j=0; j<cellGrid.length; j++){
+                if(!cellGrid[j][i].ignore && cellGrid[j][i].utility!=-1 ){
+                    System.out.print(Math.floor(cellGrid[j][i].utility* 10)+" ");
+                }
+                else {
+                    System.out.print("  ");
+                }
+            }
+            System.out.println();
+        }
+       System.out.println();
+       System.out.println();
+       System.out.println();
+    }
+
     public ArrayList<CXPoint> addAdditionalSteps(List<Node> p){
         ArrayList<CXPoint> pointPath= new ArrayList<CXPoint>();
-        float diagStepSize= (float) Math.floor(1.4*stepSize);
+        //Have to increate stepsize for pathfinder for it to be similar speed, no idea why
+        float diagStepSize= (float) Math.floor(2*stepSize);
+        int PFStepsize = (int) (stepSize*1.5);
         if(p.size()>1) {
             for (int i = 0; i < p.size() - 1; i++) {
                 Vector3 start = new Vector3(p.get(i).worldX, p.get(i).worldY, p.get(i).worldZ);
@@ -396,8 +423,8 @@ public class CoordExplor {
                         pointPath.add(position);
                     }
                 }else {
-                    for (float j = 1; j < stepSize; j++) {
-                        double scale = j / stepSize;
+                    for (float j = 1; j < PFStepsize; j++) {
+                        double scale = j / PFStepsize;
                         BigDecimal sc = BigDecimal.valueOf(scale);
                         BigDecimal xX = BigDecimal.valueOf(adjX);
                         BigDecimal zZ = BigDecimal.valueOf(adjZ);

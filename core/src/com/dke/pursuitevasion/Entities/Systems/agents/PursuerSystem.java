@@ -6,8 +6,13 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.VertexAttributes;
+import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -75,6 +80,8 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
     int pursCount, restartCounter=0;
     PolyMap mMap;
     CoordExplor coordExplorer;
+    ArrayList<ModelInstance> nodes =  new ArrayList<ModelInstance>();
+
 
 
     public PursuerSystem(VisionSystem visionSystem, CXGraph graph, PolyMap map, int pursuerCount) {
@@ -87,8 +94,22 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
 
         mMap = map;
         pursCount = pursuerCount;
-        coordExplorer = new CoordExplor(map, 0.1f, discWidth, pursuerCount, pathFinder);
+        coordExplorer = new CoordExplor(map, 0.2f, discWidth, pursuerCount, pathFinder);
 
+        ModelBuilder modelBuilder = new ModelBuilder();
+        Model box = modelBuilder.createBox(0.05f, 0.02f, 0.05f,new Material(ColorAttribute.createDiffuse(Color.RED)),
+                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+        boolean[][] nodeGrid = pathFinder.getNodeGrid();
+        for(int i=0;i<pathFinder.getNodeGrid().length;i++){
+            for(int j=0;j<pathFinder.getNodeGrid().length;j++){
+                if(nodeGrid[i][j]) {
+                    Vector3 pos = PathFinder.positionFromIndex(i, j, pathFinder.pF);
+                    pos.y+=0.1f;
+                    ModelInstance mBox = new ModelInstance(box, pos);
+                    nodes.add(mBox);
+                }
+            }
+        }
     }
 
     @Override
@@ -115,7 +136,7 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
         PursuerComponent pursuerComponent = Mappers.pursuerMapper.get(entity);
         ObserverComponent observerComponent = Mappers.observerMapper.get(entity);
         StateComponent stateComponent = Mappers.stateMapper.get(entity);
-        if(terribleSolution ||(coordExplorer.unexploredFrontier.size()==0 && coordExplorer.runOnce)){
+        if(completeUpdate && (terribleSolution ||(coordExplorer.unexploredFrontier.size()==0 && coordExplorer.runOnce))){
             pursuerComponent.updatePosition = true;
             pursuerComponent.pursuerPointPath.clear();
             if(restartCounter==0){
@@ -128,7 +149,7 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
                 terribleSolution = true;
                 coordExplorer.runOnce = true;
             }else{
-                System.out.println("RESTARTING");
+                //System.out.println("RESTARTING");
                 coordExplorer.runOnce = false;
                 restartCounter = 0;
                 terribleSolution = false;
@@ -155,7 +176,6 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
                         coordExplorer.updateGrid(pursuerComponent, observerComponent);
                         coordUpdateCounter = 0;
                     }
-                    //follow path
                     followPathCoordExplo(pursuerComponent, stateComponent);
                 }
             }

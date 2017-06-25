@@ -31,7 +31,7 @@ public class PathFinder implements Screen {
     TrackingCameraController trackingCameraController;
     InputMultiplexer inputMux;
     Environment environment;
-    static float gapSize;
+    public static float gapSize;
     public static int width;
     static int height;
     PolyMap map;
@@ -151,7 +151,6 @@ public class PathFinder implements Screen {
             }
         }catch (Exception e){
         }
-        //System.out.println(sIndex+"  "+eIndex);
         path = pF.findPath(sIndex, eIndex);
         if(apxStart){
             Node newStart = new Node(0,0,0,0,0,0);
@@ -179,10 +178,10 @@ public class PathFinder implements Screen {
                 float offset = gapSize / 2;
                 float x = toWorldCoorX(j) + offset;
                 float y = toWorldCoorY(k) + offset;
-                float corner1 = x + gapSize / 2;
-                float corner2 = x - gapSize / 2;
-                float corner3 = y + gapSize / 2;
-                float corner4 = y - gapSize / 2;
+                float corner1 = x + gapSize / 2+0.01f;
+                float corner2 = x - gapSize / 2-0.01f;
+                float corner3 = y + gapSize / 2+0.01f;
+                float corner4 = y - gapSize / 2-0.01f;
 
                 if(X < corner1 && X > corner2 && Y < corner3 && Y > corner4){
                     xIndex = j;
@@ -396,12 +395,12 @@ public class PathFinder implements Screen {
                 float offset = gapSize/2;
                 float x = toWorldCoorX(j)+offset;
                 float y = toWorldCoorY(k)+offset;
-                float corner1 = x+gapSize/2;
-                float corner2 = x-gapSize/2;
-                float corner3 = y+gapSize/2;
-                float corner4 = y-gapSize/2;
+                float corner1 = x+gapSize/2+0.01f;
+                float corner2 = x-gapSize/2-0.01f;
+                float corner3 = y+gapSize/2+0.01f;
+                float corner4 = y-gapSize/2-0.01f;
 
-                if(X < corner1 && X > corner2 && Y < corner3 && Y > corner4){
+                if(X <= corner1 && X >= corner2 && Y <= corner3 && Y >= corner4){
                     if(nodeGrid[j][k]) {
                         return new CustomPoint(j, k);
                     }
