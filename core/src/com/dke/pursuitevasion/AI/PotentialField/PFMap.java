@@ -30,7 +30,6 @@ public class PFMap {
     private EvaderComponent evader;
     private PathFinder pathFinder;
     private ImmutableArray<Entity> entities;
-    private boolean firstTime = true;
 
     public PFMap(int[][] o, Engine e, PolyMap map, EvaderComponent evader){
         this.obstacleMap = o;
@@ -79,7 +78,7 @@ public class PFMap {
         for (int i = 0; i < 100; i++) {
             for (int j = 0; j < 100; j++) {
                 if (pursuerPositions.contains(new Vector2((float)i, (float)j)))
-                    generatePotentialField(i,j,17); // *** adjust the size of the potential field here ***
+                    generatePotentialField(i,j,35); // *** adjust the size of the potential field here ***
             }
         }
     }
@@ -224,11 +223,20 @@ public class PFMap {
         bestValue = 999;
         coords = new Triplet(x,y);
 
-        if (firstTime) {
+        if (evader.first) {
         regularCheck(x,y);
-        firstTime = false;
-        } else
+        evader.first = false;
+        evader.previousPosition = coords;
+        } else if (evader.previousPosition.getX() == coords.getX() && evader.previousPosition.getY() == coords.getY()) {
+            System.out.println("***************************************************** BOT WAS STUCK *****************************************************");
             explore(x,y);
+            evader.evaderPath = null;
+            evader.position = arrayToCoords(new Vector2(coords.getX(),coords.getY()));
+        } else {
+            explore(x, y);
+        }
+
+        evader.previousPosition = new Triplet(x,y);
 
         return coords;
     }

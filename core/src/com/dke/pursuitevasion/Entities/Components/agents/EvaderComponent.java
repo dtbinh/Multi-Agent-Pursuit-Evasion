@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.dke.pursuitevasion.AI.PotentialField.PFDirection;
+import com.dke.pursuitevasion.AI.PotentialField.Triplet;
 import com.dke.pursuitevasion.CellDecompose.Graph.CXPoint;
 import com.dke.pursuitevasion.Entities.Direction;
 
@@ -16,6 +17,8 @@ public class EvaderComponent implements Component {
     public float radius;
     public Vector3 position;
     public PFDirection pfDirection;
+    public Triplet previousPosition;
+    public boolean first = true;
     public boolean captured = false;
     public ArrayList<CXPoint> evaderPath;
     public boolean alerted = false;
