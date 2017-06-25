@@ -30,11 +30,14 @@ public class PFMap {
     private EvaderComponent evader;
     private PathFinder pathFinder;
     private ImmutableArray<Entity> entities;
+    private int startValue = 35;
+    private int updateCounter = 0;
 
     public PFMap(int[][] o, Engine e, PolyMap map, EvaderComponent evader){
         this.obstacleMap = o;
         this.engine = e;
         this.evader = evader;
+        this.heatMap = new int[100][100];
         this.entities = engine.getEntitiesFor(Family.all(StateComponent.class).get());
         this.pathFinder = new PathFinder(map);
     }
@@ -61,7 +64,11 @@ public class PFMap {
 
     public void updateMap(){
 
-        heatMap = obstacleMap;
+        for (int a = 0; a < obstacleMap.length; a++) {
+            for (int b = 0; b < obstacleMap[a].length; b++) {
+                heatMap[b][a] = obstacleMap[b][a];
+            }
+        }
 
         ArrayList<Vector2> pursuerPositions = new ArrayList<Vector2>();
         Vector3 tempVector = new Vector3();
@@ -75,12 +82,21 @@ public class PFMap {
             }
         }
 
+        int counter = 1;
         for (int i = 0; i < 100; i++) {
             for (int j = 0; j < 100; j++) {
-                if (pursuerPositions.contains(new Vector2((float)i, (float)j)))
-                    generatePotentialField(i,j,35); // *** adjust the size of the potential field here ***
+                if (pursuerPositions.contains(new Vector2((float)i, (float)j))) {
+                    generatePotentialField(i,j,startValue);
+                    System.out.println("Generating " + counter + " potential field");
+                    counter++;
+                }
             }
         }
+
+        if (updateCounter % 10 == 0)
+            printArray();
+
+        updateCounter++;
     }
 
     private Vector2 coordsToArray(Vector3 vector3){
@@ -357,5 +373,16 @@ public class PFMap {
 
         if (dangerDetected)
             System.out.println("Danger detected");
+    }
+
+    private void printArray() {
+
+        for (int i = 0; i < heatMap.length; i++) {
+            for (int j = 0; j < heatMap[0].length; j++) {
+                System.out.print(heatMap[i][j] + "  ");
+            }
+            System.out.println();
+        }
+
     }
 }
