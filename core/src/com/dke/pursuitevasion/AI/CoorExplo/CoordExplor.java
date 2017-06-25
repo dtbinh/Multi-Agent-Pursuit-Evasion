@@ -37,7 +37,7 @@ public class CoordExplor {
     public HashMap<Cell, Boolean> unexploredFrontier = new HashMap<Cell, Boolean>();
     Vector3[] pursuerPos;
     PathFinder pathFinder;
-    double stepSize = 10;
+    double stepSize = 5;
     int pursCount;
 
 
@@ -96,14 +96,16 @@ public class CoordExplor {
             //assignTask(pursuerComponent);
         }
 
-        if (!pursuerComponent.updatePosition && pursuerComponent.position.dst(pursuerPos[pursuerComponent.number]) < 0.15f) {
-            pursuerComponent.updatePosition = true;
-        }
         if (!pursuerComponent.updatePosition) {
             if (pursuerComponent.targetCell != null && !pursuerComponent.targetCell.frontier) {
                 assignTask(pursuerComponent);
             }
         }
+
+        if (!pursuerComponent.updatePosition && pursuerComponent.position.dst(pursuerPos[pursuerComponent.number]) < 0.05f) {
+            pursuerComponent.updatePosition = true;
+        }
+
 
         //nodes.clear();
         pursuerComponent.frontierCells.clear();
@@ -146,6 +148,9 @@ public class CoordExplor {
                 if (!runOnce) {
                     if (cell.distanceToClosestWall < observerComponent.distance) {
                         cell.utility = 1 - cell.distanceToClosestWall / observerComponent.distance;
+                        if(cell.utility>0.3){
+                            cell.utility = 1-cell.utility;
+                        }
                     } else {
                         cell.utility = 0;
                     }
@@ -264,7 +269,7 @@ public class CoordExplor {
 
     public void assignTask(PursuerComponent pursuerComponent){
         float maxScore = -Float.MAX_VALUE;
-        float beta = 1.5f;
+        float beta = 1f;
         Cell bestCell = new Cell(0,0);
         if(pursuerComponent.frontierCells.size()>0) {
             for (int i = 0; i < pursuerComponent.frontierCells.size(); i++) {
@@ -272,10 +277,7 @@ public class CoordExplor {
                 int x = pursuerComponent.frontierCells.get(i).x;
                 int y = pursuerComponent.frontierCells.get(i).y;
                 float cost = (float) pursuerComponent.costs[x][y];
-                System.out.println(cost);
                 cost *= pursuerComponent.frontierCells.get(i).openness;
-                System.out.println(cost);
-                //System.out.println(pursuerComponent.frontierCells.get(i).utility+"   "+cost);
                 float score = (float) (beta*pursuerComponent.frontierCells.get(i).utility + cost);
 
                 if (score > maxScore) {
@@ -302,7 +304,7 @@ public class CoordExplor {
             ModelInstance m = new ModelInstance(expBox, bestCell.position);
             nodes.add(m);
         }else{
-            System.out.println("REQUEST NEW");
+            //System.out.println("REQUEST NEW");
             bestCell = requestNewFrontier(pursuerComponent);
             CXPoint start = new CXPoint(pursuerComponent.position.x, pursuerComponent.position.z);
             if(bestCell != null && bestCell.x!=0 && bestCell.y!=0) {
@@ -393,7 +395,6 @@ public class CoordExplor {
             }
             System.out.println();
         }
-       System.out.println();
        System.out.println();
        System.out.println();
     }
