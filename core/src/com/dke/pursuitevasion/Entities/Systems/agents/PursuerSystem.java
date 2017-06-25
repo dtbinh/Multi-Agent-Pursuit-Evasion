@@ -6,9 +6,17 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.VertexAttributes;
+import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.dke.pursuitevasion.AI.CoorExplo.CoordExplor;
 import com.dke.pursuitevasion.AI.Node;
 import com.dke.pursuitevasion.AI.PathFinder;
 import com.dke.pursuitevasion.CXSearchingAlgorithm.CXAgentState;
@@ -23,6 +31,7 @@ import com.dke.pursuitevasion.Entities.Components.StateComponent;
 import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
 import com.dke.pursuitevasion.Entities.EntityFactory;
 import com.dke.pursuitevasion.Entities.Mappers;
+import com.dke.pursuitevasion.Entities.Systems.DebugRenderer;
 import com.dke.pursuitevasion.Entities.Systems.VisionSystem;
 import com.dke.pursuitevasion.PolyMap;
 
@@ -35,7 +44,7 @@ import java.util.List;
 /**
  * Created by Nicola Gheza on 23/05/2017.
  */
-public class PursuerSystem extends IteratingSystem {
+public class PursuerSystem extends IteratingSystem implements DebugRenderer {
     private static final float DETECTION_TIME = 0.0f;
 
     private ImmutableArray<Entity> evaders;
@@ -64,23 +73,54 @@ public class PursuerSystem extends IteratingSystem {
     private int messageNumber;
     private Engine engine;
 
-    public PursuerSystem(VisionSystem visionSystem, CXGraph graph, PolyMap map) {
+    boolean completeUpdate = false;
+    boolean terribleSolution = false;
+    private int pursuerIndex=-1, coordUpdateCounter = 0;
+    int discWidth = 100;
+    int pursCount, restartCounter=0;
+    PolyMap mMap;
+    CoordExplor coordExplorer;
+    ArrayList<ModelInstance> nodes =  new ArrayList<ModelInstance>();
+
+
+
+    public PursuerSystem(VisionSystem visionSystem, CXGraph graph, PolyMap map, int pursuerCount) {
         super(Family.all(PursuerComponent.class).get());
 
         this.visionSystem = visionSystem;
         this.graph = graph;
         pathFinder = new PathFinder(map);
         entityFactory = new EntityFactory();
+
+        mMap = map;
+        pursCount = pursuerCount;
+        coordExplorer = new CoordExplor(map, 0.2f, discWidth, pursuerCount, pathFinder);
+
+        ModelBuilder modelBuilder = new ModelBuilder();
+        Model box = modelBuilder.createBox(0.05f, 0.02f, 0.05f,new Material(ColorAttribute.createDiffuse(Color.RED)),
+                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+        boolean[][] nodeGrid = pathFinder.getNodeGrid();
+        for(int i=0;i<pathFinder.getNodeGrid().length;i++){
+            for(int j=0;j<pathFinder.getNodeGrid().length;j++){
+                if(nodeGrid[i][j]) {
+                    Vector3 pos = PathFinder.positionFromIndex(i, j, pathFinder.pF);
+                    pos.y+=0.1f;
+                    ModelInstance mBox = new ModelInstance(box, pos);
+                    nodes.add(mBox);
+                }
+            }
+        }
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        if (!runOnce) {
+        /*if (!runOnce) {
             assignInitialTask(entity);
         } else {
             updateTask(entity);
-        }
-        //movePursuer(entity, deltaTime);
+        }*/
+
+        assignTaskorMove(entity);
         updateObserver(entity);
         updateDetection(entity, deltaTime);
     }
@@ -90,6 +130,65 @@ public class PursuerSystem extends IteratingSystem {
         super.addedToEngine(engine);
         if (!runOnce) this.engine = engine;
         evaders = engine.getEntitiesFor(Family.all(EvaderComponent.class).get());
+    }
+
+    public void assignTaskorMove(Entity entity){
+        PursuerComponent pursuerComponent = Mappers.pursuerMapper.get(entity);
+        ObserverComponent observerComponent = Mappers.observerMapper.get(entity);
+        StateComponent stateComponent = Mappers.stateMapper.get(entity);
+        if(completeUpdate && (terribleSolution ||(coordExplorer.unexploredFrontier.size()==0 && coordExplorer.runOnce))){
+            pursuerComponent.updatePosition = true;
+            pursuerComponent.pursuerPointPath.clear();
+            if(restartCounter==0){
+                coordExplorer.nodes.clear();
+                coordExplorer.restart();
+            }
+            restartCounter++;
+            coordExplorer.updateGrid(pursuerComponent, observerComponent);
+            if(restartCounter<pursCount+1) {
+                terribleSolution = true;
+                coordExplorer.runOnce = true;
+            }else{
+                //System.out.println("RESTARTING");
+                coordExplorer.runOnce = false;
+                restartCounter = 0;
+                terribleSolution = false;
+            }
+            completeUpdate = true;
+        } else {
+            coordUpdateCounter++;
+            if (!completeUpdate && pursuerIndex == pursuerComponent.number) {
+                completeUpdate = true;
+            }
+            //Update grid for every pursuer before assigning any moves
+            if (!completeUpdate) {
+                pursuerComponent.costs = new double[discWidth][discWidth];
+                pursuerIndex = 0;
+                coordExplorer.updateGrid(pursuerComponent, observerComponent);
+            } else {
+                //if there is no path, assign task
+                if (pursuerComponent.pursuerPointPath.size() == 0) {
+                    coordExplorer.assignTask(pursuerComponent);
+                } else {
+                    //update once every 10 calls for performance issues
+                    if (coordUpdateCounter > 10) {
+                        //need to update unexplored frontier cells
+                        coordExplorer.updateGrid(pursuerComponent, observerComponent);
+                        coordUpdateCounter = 0;
+                    }
+                    followPathCoordExplo(pursuerComponent, stateComponent);
+                }
+            }
+        }
+    }
+
+    private void followPathCoordExplo(PursuerComponent pC, StateComponent sC){
+        if(pC.pursuerPointPath!=null && pC.pursuerPointPath.size()>0){
+            CXPoint pos = pC.pursuerPointPath.remove(0);
+            pC.position = new Vector3((float) pos.x, 0, (float) pos.y);
+            sC.position = new Vector3((float) pos.x, 0, (float) pos.y);
+            sC.update();
+        }
     }
 
     private void assignInitialTask(Entity entity){
@@ -436,4 +535,12 @@ public class PursuerSystem extends IteratingSystem {
     }
 
 
+    @Override
+    public void render(ModelBatch modelBatch) {
+        if(coordExplorer.nodes.size()>0){
+            for(int i=0;i<coordExplorer.nodes.size();i++){
+                modelBatch.render(coordExplorer.nodes.get(i));
+            }
+        }
+    }
 }

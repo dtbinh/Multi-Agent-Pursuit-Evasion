@@ -3,6 +3,7 @@ package com.dke.pursuitevasion.Entities.Components.agents;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.dke.pursuitevasion.AI.CoorExplo.Cell;
 import com.dke.pursuitevasion.AI.Node;
 import com.dke.pursuitevasion.CXSearchingAlgorithm.CXAgentState;
 import com.dke.pursuitevasion.CellDecompose.Graph.CXPoint;
@@ -40,6 +41,10 @@ public class PursuerComponent implements Component {
     public int number;
     public int currentSearchArea;
     public List<Node> freeStateRoutine;
+    public ArrayList<Cell> frontierCells = new ArrayList<Cell>();
+    public double[][] costs;
+    public boolean updatePosition = true;
+    public Cell targetCell;
 
     public void setState(CXAgentState state){
         //System.out.println("ComponentOperationHandlerge State from "+ this.state +  " to "+ state);
