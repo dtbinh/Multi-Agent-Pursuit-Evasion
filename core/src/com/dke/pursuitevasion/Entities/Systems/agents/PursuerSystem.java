@@ -92,10 +92,12 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
     private double startTime, finishTime;
     private int evaderCounter;
     private String stats = "";
+    private int heatSize;
 
-    public PursuerSystem(VisionSystem visionSystem, CXGraph graph, PolyMap map, int pursuerCount, String AI) {
+    public PursuerSystem(VisionSystem visionSystem, CXGraph graph, PolyMap map, int pursuerCount, String AI, int heatSize) {
         super(Family.all(PursuerComponent.class).get());
 
+        this.heatSize = heatSize;
         this.visionSystem = visionSystem;
         this.graph = graph;
         pathFinder = new PathFinder(map, mapSize, gapSize);
@@ -513,6 +515,7 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
     public void printStats() {
         System.out.println("************************************* BENCHMARKS *************************************");
         System.out.println("\nNumber of pursuers: " + pursCount);
+        System.out.println("\nPotential field radius: " + heatSize);
         System.out.println(stats);
     }
 
