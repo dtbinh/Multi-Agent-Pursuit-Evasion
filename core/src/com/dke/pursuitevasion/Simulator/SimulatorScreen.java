@@ -39,6 +39,7 @@ public class SimulatorScreen implements Screen, InputProcessor{
     private Engine engine; // move to controller
     private EntityFactory entityFactory; // move to controller
     private int heatSize;
+    CXGraph graph;
 
     ArrayList<ModelInstance> nodes =  new ArrayList<ModelInstance>();
     ModelBatch modelBatch = new ModelBatch();
@@ -116,8 +117,10 @@ public class SimulatorScreen implements Screen, InputProcessor{
             obstacle.add_edge(node1,node2,1);
         }
 
-        CellDecompositionAlgorithm cellDecomposeAlgorithm = new CellDecompositionAlgorithm(polygon,obstacle);
-        CXGraph graph =  cellDecomposeAlgorithm.decomposeGraph();
+        if(AI.equals("GRAPHSEARCHER")) {
+            CellDecompositionAlgorithm cellDecomposeAlgorithm = new CellDecompositionAlgorithm(polygon, obstacle);
+            graph = cellDecomposeAlgorithm.decomposeGraph();
+        }
 
         engine = new Engine();
 
