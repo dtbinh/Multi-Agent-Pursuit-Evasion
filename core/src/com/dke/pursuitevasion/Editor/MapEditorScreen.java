@@ -235,9 +235,9 @@ public class MapEditorScreen implements Screen, InputProcessor {
         concaveButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (!controller.delauneyTri){
-                    controller.delauneyTri = true;
-                    switchMode();
+                if (controller.delauneyTri){
+                    controller.delauneyTri = false;
+                    createUI();
                 }
             }
         });
@@ -245,9 +245,9 @@ public class MapEditorScreen implements Screen, InputProcessor {
         convexButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if(controller.delauneyTri){
-                    controller.delauneyTri = false;
-                    switchMode();
+                if(!controller.delauneyTri){
+                    controller.delauneyTri = true;
+                    createUI();
                 }
             }
         });
@@ -278,8 +278,6 @@ public class MapEditorScreen implements Screen, InputProcessor {
         table.add(loadMapButton).width(150);
         table.row();
         table.add(simulatorButton).width(150);
-        table.row();
-        table.add(backButton).width(150);
         if(controller.delauneyTri){
             table.row();
             table.add(concaveButton).width(150);
@@ -287,6 +285,8 @@ public class MapEditorScreen implements Screen, InputProcessor {
             table.row();
             table.add(convexButton).width(150);
         }
+        table.row();
+        table.add(backButton).width(150);
 
         windowDesign.add(table);
 
@@ -311,12 +311,15 @@ public class MapEditorScreen implements Screen, InputProcessor {
     public void switchMode(){
         if(controller.delauneyTri){
             controller.delauneyTri = false;
-            stage = new Stage();
+            //stage = new Stage();
             createUI();
+            System.out.println("1");
         }else{
             controller.delauneyTri = true;
-            stage = new Stage();
+            //stage = new Stage();
             createUI();
+            System.out.println("2");
+
         }
     }
 
