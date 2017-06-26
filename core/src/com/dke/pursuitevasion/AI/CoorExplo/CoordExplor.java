@@ -37,7 +37,7 @@ public class CoordExplor {
     public HashMap<Cell, Boolean> unexploredFrontier = new HashMap<Cell, Boolean>();
     Vector3[] pursuerPos;
     PathFinder pathFinder;
-    double stepSize = 5;
+    double stepSize = 6;
     int pursCount;
 
 
