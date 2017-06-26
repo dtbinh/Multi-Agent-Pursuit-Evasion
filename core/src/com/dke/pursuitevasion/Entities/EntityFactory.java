@@ -21,8 +21,6 @@ import com.dke.pursuitevasion.Entities.Components.agents.EvaderComponent;
 import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
 import com.dke.pursuitevasion.WallInfo;
 
-import java.util.HashMap;
-
 import static com.badlogic.gdx.graphics.GL20.GL_TRIANGLES;
 
 /**
@@ -168,8 +166,8 @@ public class EntityFactory {
         // Adding ObserverComponent for VisionSystem
         ObserverComponent observerComponent = new ObserverComponent();
         observerComponent.position = new Vector2(transformComponent.position.x, transformComponent.position.y);
-        observerComponent.fovAngle = 45f;
-        observerComponent.distance = 1f;
+        observerComponent.fovAngle = 0f;
+        observerComponent.distance = 0f;
         entity.add(observerComponent);
 
         //Create a sphere collider component

@@ -76,7 +76,7 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
     boolean completeUpdate = false;
     boolean terribleSolution = false;
     private int pursuerIndex=-1, coordUpdateCounter = 0;
-    int discWidth = 100;
+    int discWidth = 130;
     int pursCount, restartCounter=0;
     PolyMap mMap;
     CoordExplor coordExplorer;
