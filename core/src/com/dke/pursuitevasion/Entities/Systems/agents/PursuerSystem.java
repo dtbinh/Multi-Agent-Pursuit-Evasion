@@ -107,7 +107,7 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
         sightDist = SightDist;
         mMap = map;
         pursCount = pursuerCount;
-        coordExplorer = new CoordExplor(map, 0.2f, discWidth, pursuerCount, pathFinder);
+        coordExplorer = new CoordExplor(map, 0.2f, discWidth, pursuerCount, pathFinder, true);
 
 
         ModelBuilder modelBuilder = new ModelBuilder();

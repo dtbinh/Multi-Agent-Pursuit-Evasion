@@ -37,7 +37,7 @@ public class CoordExplor {
     public HashMap<Cell, Boolean> unexploredFrontier = new HashMap<Cell, Boolean>();
     Vector3[] pursuerPos;
     PathFinder pathFinder;
-    double stepSize = 6;
+    double stepSize = 12;
     int pursCount;
 
     private Color exploredColor = new Color(93f/255,215f/255,251f/255,0.5f);
@@ -45,7 +45,7 @@ public class CoordExplor {
 
 
 
-    public CoordExplor(PolyMap Map, float Gap, int Width, int pursuerCount, PathFinder pathFinder){
+    public CoordExplor(PolyMap Map, float Gap, int Width, int pursuerCount, PathFinder pathFinder, boolean centralCom){
         gap = Gap;
         mWidth = Width;
         cellGrid = new Cell[Width][Width];
@@ -66,12 +66,11 @@ public class CoordExplor {
             }
         }
 
-
         computeOpenness();
         ModelBuilder modelBuilder = new ModelBuilder();
         box = modelBuilder.createBox(0.05f, 0.02f, 0.05f,new Material(ColorAttribute.createDiffuse(exploredColor)),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
-        expBox = modelBuilder.createBox(0.05f, 0.02f, 0.05f,new Material(ColorAttribute.createDiffuse(otherColor)),
+        expBox = modelBuilder.createBox(0.05f, 0.02f, 0.05f,new Material(ColorAttribute.createDiffuse(Color.RED)),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
 
     }
@@ -93,13 +92,10 @@ public class CoordExplor {
         if (pursuerComponent.updatePosition && pursuerComponent.position != null) {
             pursuerPos[pursuerComponent.number] = pursuerComponent.position;
         }
-        //if approaching a wall, get new task
-        if(pursuerComponent.updatePosition && pursuerComponent.targetCell!= null && !pursuerComponent.targetCell.frontier){
-            //assignTask(pursuerComponent);
-        }
 
         if (!pursuerComponent.updatePosition) {
             if (pursuerComponent.targetCell != null && !pursuerComponent.targetCell.frontier) {
+                pursuerComponent.frontierCells.clear();
                 assignTask(pursuerComponent);
             }
         }
@@ -150,7 +146,7 @@ public class CoordExplor {
                 if (!runOnce) {
                     if (cell.distanceToClosestWall < observerComponent.distance) {
                         cell.utility = 1 - cell.distanceToClosestWall / observerComponent.distance;
-                        if(cell.utility>0.3){
+                        if(cell.utility>0.5){
                             cell.utility = 1-cell.utility;
                         }
                     } else {
@@ -180,15 +176,12 @@ public class CoordExplor {
                                 if (cell.x+k < discretiser.width && cell.x+k >0 && cell.y+l < discretiser.width && cell.y+l > 0) {
                                     //cell is unexplored and inside map
                                     if ((k != 0 || l != 0) && !cellGrid[cell.x + k][cell.y + l].explored && !cellGrid[cell.x + k][cell.y + l].ignore) {
-                                        //if(isVisible(cell.position, pursuerComponent, observerComponent, cell.x,cell.y)){
-                                            //if (!discretiser.lineIntersectWall(cell.position, pursuerComponent.position)) {
                                             cell.frontier = true;
                                             if (!unexploredFrontier.containsKey(cell)) {
                                                 unexploredFrontier.put(cell, true);
                                             }
                                             trigger = true;
                                             break outerloop;
-                                        //}
                                     }
                                 }
                             }

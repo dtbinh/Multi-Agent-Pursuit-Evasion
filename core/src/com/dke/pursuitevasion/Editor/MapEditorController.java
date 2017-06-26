@@ -38,8 +38,8 @@ public class MapEditorController {
     public ArrayList<EvaderInfo> evaderInfo;
     public ArrayList<EdgeVectors> edges;
 
-    private float[] vertList = new float[0];
-    private short[] mIndices;
+    public float[] vertList = new float[0];
+    public short[] mIndices;
     private int vertListSize;
     public Texture texture;
     public PolyMap localMap;
@@ -208,7 +208,7 @@ public class MapEditorController {
     private boolean nearNeighbor(Vector3 vec) {
         for (int i=0; i<instanceVectors.size(); i++) {
             Vector3 v = instanceVectors.get(i);
-            float tolerance = 0.35f;
+            float tolerance = 0.2f;
             if (vec.x<v.x+tolerance && vec.x>v.x-tolerance && vec.z<v.z+tolerance && vec.z>v.z-tolerance)
                 return true;
         }
@@ -324,6 +324,7 @@ public class MapEditorController {
             Ray pickRay = camera.getPickRay(screenX, screenY);
             Vector3 intersection = new Vector3();
             Intersector.intersectRayTriangles(pickRay,vertList, mIndices, 5, intersection);
+            System.out.println(intersection+"  ++");
             if(isCCTV){
                 Model cctvModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.BLACK)),
                         VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
@@ -332,7 +333,7 @@ public class MapEditorController {
                     agentInstances.add(cctvInstance);
                 }
             }else{
-                if(intersection.x!=0 && intersection.z!=0 && intersection.y!=0) {
+                if(intersection.x!=0 && intersection.z!=0) {
                     Model agentModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(agentColor)),
                             VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
                     if (!nearNeighbor(intersection)) {
@@ -370,16 +371,16 @@ public class MapEditorController {
             Ray pickRay = camera.getPickRay(screenX, screenY);
             Vector3 intersection = new Vector3();
             Intersector.intersectRayTriangles(pickRay,vertList, mIndices, 5, intersection);
+            if(intersection.x!=0 && intersection.z!=0) {
+                Model evaderModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(evaderColor)),
+                        VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
 
-            Model evaderModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(evaderColor)),
-                    VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
-
-            if(!nearNeighbor(intersection)) {
-                setEvaderInfo(intersection);
-                ModelInstance evaderInstance = new ModelInstance(evaderModel, intersection);
-                //instances.add(evaderInstance);
-                evaderInstances.add(evaderInstance);
-                instanceVectors.add(intersection);
+                if (!nearNeighbor(intersection)) {
+                    setEvaderInfo(intersection);
+                    ModelInstance evaderInstance = new ModelInstance(evaderModel, intersection);
+                    evaderInstances.add(evaderInstance);
+                    instanceVectors.add(intersection);
+                }
             }
         }else{
             Model evaderModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(evaderColor)),
