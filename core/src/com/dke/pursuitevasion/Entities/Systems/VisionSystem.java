@@ -118,6 +118,22 @@ public class VisionSystem extends IteratingSystem implements EntityListener, Deb
         ObservableComponent observable = observableMapper.get(target);
 
         for (Entity wallEntity : walls) {
+            if (!wallMapper.get(wallEntity).innerWall){
+                Vector2 p1 = observer.position;
+                Vector2 p2 = observable.position;
+                EdgeVectors eV = wallMapper.get(wallEntity).eV;
+                Vector2 p3 = new Vector2(eV.Vector1.x, eV.Vector1.z);
+                Vector2 p4 = new Vector2(eV.Vector2.x, eV.Vector2.z);
+
+                Vector2 intersection = new Vector2();
+
+                if (!Intersector.intersectSegments(p1, p2, p3, p4,intersection)) {
+                    addToVision(entity, target);
+                } else {
+                    if (vision.containsKey(entity) && vision.get(entity).contains(target))
+                        removeFromVision(entity, target);
+                }
+            }
             if (wallMapper.get(wallEntity).innerWall) {
                 // It is an inner wall
                 Vector2 p1 = observer.position;

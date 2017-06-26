@@ -42,6 +42,7 @@ public class CoordExplor {
 
 
     public CoordExplor(PolyMap Map, float Gap, int Width, int pursuerCount, PathFinder pathFinder){
+        System.out.println("# of pursuers  " +pursuerCount);
         gap = Gap;
         mWidth = Width;
         cellGrid = new Cell[Width][Width];
@@ -88,6 +89,7 @@ public class CoordExplor {
     public void updateGrid(PursuerComponent pursuerComponent, ObserverComponent observerComponent) {
         //System.out.println(pursuerComponent.number);
         if (pursuerComponent.updatePosition && pursuerComponent.position != null) {
+            System.out.println(pursuerComponent.number);
             pursuerPos[pursuerComponent.number] = pursuerComponent.position;
         }
         //if approaching a wall, get new task
@@ -318,7 +320,7 @@ public class CoordExplor {
                     pursuerComponent.pursuerPointPath = addAdditionalSteps(pathFinder.findPath(vStart, vEnd, null));
                 }
             }
-            if(bestCell.position!=null) {
+            if(bestCell!=null && bestCell.position!=null) {
                 ModelInstance m = new ModelInstance(expBox, bestCell.position);
                 nodes.add(m);
             }
@@ -327,6 +329,7 @@ public class CoordExplor {
 
     public Cell requestNewFrontier(PursuerComponent pursuerComponent){
         Cell bestCell = null;
+        System.out.println();
         float maxDistFromPursuers = -1*Float.MAX_VALUE;
         for (Cell key : unexploredFrontier.keySet()) {
             float minCellDistToPursuer = Float.MAX_VALUE;
