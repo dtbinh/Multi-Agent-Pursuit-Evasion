@@ -55,6 +55,9 @@ public class MapEditorController {
     public boolean meshRenderable, meshRendered, delauneyTri = true;
     ModelInstance mWall, mWallPerm;
 
+    private Color evaderColor = Color.BLACK;
+    private Color agentColor = Color.WHITE;
+
     public MapEditorController() {
         instances= new ArrayList<ModelInstance>();
         instancesSpheres= new ArrayList<ModelInstance>();
@@ -106,7 +109,7 @@ public class MapEditorController {
         polygonMesh = new Mesh(true, 4, 6, new VertexAttribute(VertexAttributes.Usage.Position, 3, "a_position"));
         polygonMesh.setVertices(new float[]{1f, 1f, 0f, 1f, -1f, 0f, -1f, -1f, 0f, -1f, 1f, 0f,});
         polygonMesh.setIndices(new short[] {0, 1, 2, 2, 3, 0,});
-        Material material = new Material(ColorAttribute.createDiffuse(Color.RED));
+        Material material = new Material(ColorAttribute.createDiffuse(agentColor));
         modelBuilder.begin();
         modelBuilder.part("Temp", polygonMesh, GL20.GL_TRIANGLES, material);
         Model tmp_model = modelBuilder.end();
@@ -249,7 +252,7 @@ public class MapEditorController {
                     instances.add(cctvInstance);
                 }
             }else{
-                Model agentModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.BLUE)),
+                Model agentModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(agentColor)),
                         VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
                 if(!nearNeighbor(intersection)) {
                     ModelInstance agentInstance = new ModelInstance(agentModel, intersection);
@@ -268,7 +271,7 @@ public class MapEditorController {
                     instances.add(cctvInstance);
                 }
             }else{
-                Model agentModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.BLUE)),
+                Model agentModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(agentColor)),
                         VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
                 if(!nearNeighbor(postion)) {
                     ModelInstance agentInstance = new ModelInstance(agentModel, postion);
@@ -288,7 +291,7 @@ public class MapEditorController {
 
             setEvaderInfo(intersection);
 
-            Model evaderModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.RED)),
+            Model evaderModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(evaderColor)),
                     VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
 
             if(!nearNeighbor(intersection)) {
@@ -298,7 +301,7 @@ public class MapEditorController {
         }else{
             setEvaderInfo(position);
 
-            Model evaderModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.RED)),
+            Model evaderModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(evaderColor)),
                     VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
 
             if(!nearNeighbor(position)) {
