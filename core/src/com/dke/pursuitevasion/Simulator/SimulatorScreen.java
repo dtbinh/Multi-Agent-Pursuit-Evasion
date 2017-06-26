@@ -161,6 +161,7 @@ public class SimulatorScreen implements Screen, InputProcessor{
         for (int i=0; i<map.geteI().length; i++) {
             engine.addEntity(entityFactory.createEvader(map.geteI()[i].position, evaderColor));
         }
+        EntityFactory.pursuerCounter = 0;
 
         ModelBuilder modelBuilder = new ModelBuilder();
         Model box = modelBuilder.createBox(0.05f, 0.02f, 0.05f,new Material(ColorAttribute.createDiffuse(evaderColor)),

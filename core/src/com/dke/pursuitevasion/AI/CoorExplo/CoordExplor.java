@@ -42,7 +42,6 @@ public class CoordExplor {
 
 
     public CoordExplor(PolyMap Map, float Gap, int Width, int pursuerCount, PathFinder pathFinder){
-        System.out.println("# of pursuers  " +pursuerCount);
         gap = Gap;
         mWidth = Width;
         cellGrid = new Cell[Width][Width];
