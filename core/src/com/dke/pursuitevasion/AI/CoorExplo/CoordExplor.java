@@ -90,14 +90,11 @@ public class CoordExplor {
     }
 
     public void updateGrid(PursuerComponent pursuerComponent, ObserverComponent observerComponent) {
-        //System.out.println(pursuerComponent.number);
         if (pursuerComponent.updatePosition && pursuerComponent.position != null) {
-            System.out.println(pursuerComponent.number);
             pursuerPos[pursuerComponent.number] = pursuerComponent.position;
         }
         //if approaching a wall, get new task
         if(pursuerComponent.updatePosition && pursuerComponent.targetCell!= null && !pursuerComponent.targetCell.frontier){
-            //System.out.println("Target explored before reaching");
             //assignTask(pursuerComponent);
         }
 
@@ -309,7 +306,6 @@ public class CoordExplor {
             ModelInstance m = new ModelInstance(expBox, bestCell.position);
             nodes.add(m);
         }else{
-            //System.out.println("REQUEST NEW");
             bestCell = requestNewFrontier(pursuerComponent);
             CXPoint start = new CXPoint(pursuerComponent.position.x, pursuerComponent.position.z);
             if(bestCell != null && bestCell.x!=0 && bestCell.y!=0) {
@@ -332,7 +328,6 @@ public class CoordExplor {
 
     public Cell requestNewFrontier(PursuerComponent pursuerComponent){
         Cell bestCell = null;
-        System.out.println();
         float maxDistFromPursuers = -1*Float.MAX_VALUE;
         for (Cell key : unexploredFrontier.keySet()) {
             float minCellDistToPursuer = Float.MAX_VALUE;

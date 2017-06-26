@@ -207,7 +207,7 @@ public class MapEditorController {
     private boolean nearNeighbor(Vector3 vec) {
         for (int i=0; i<instanceVectors.size(); i++) {
             Vector3 v = instanceVectors.get(i);
-            float tolerance = 0.5f;
+            float tolerance = 0.35f;
             if (vec.x<v.x+tolerance && vec.x>v.x-tolerance && vec.z<v.z+tolerance && vec.z>v.z-tolerance)
                 return true;
         }
@@ -316,56 +316,48 @@ public class MapEditorController {
 
         ModelInstance vPosInst = new ModelInstance(vertexPos, intersection);
         instancesSpheres.add(vPosInst);
-        instanceVectors.add(intersection);
     }
 
     public void addAgent(int screenX, int screenY, PerspectiveCamera camera, boolean isCCTV, Vector3 postion) {
         if(postion==null){
             Ray pickRay = camera.getPickRay(screenX, screenY);
             Vector3 intersection = new Vector3();
-            Intersector.intersectRayPlane(pickRay, new Plane(new Vector3(0f, 1f, 0f), 0f), intersection);
-
-
-            setAgentInfo(intersection, isCCTV);
-
+            Intersector.intersectRayTriangles(pickRay,vertList, mIndices, 5, intersection);
             if(isCCTV){
                 Model cctvModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.BLACK)),
                         VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
                 if(!nearNeighbor(intersection)) {
                     ModelInstance cctvInstance = new ModelInstance(cctvModel, intersection);
-                    //instances.add(cctvInstance);
                     agentInstances.add(cctvInstance);
                 }
             }else{
-                Model agentModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(agentColor)),
-                        VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
-                if(!nearNeighbor(intersection)) {
-                    ModelInstance agentInstance = new ModelInstance(agentModel, intersection);
-                    //instances.add(agentInstance);
-                    agentInstances.add(agentInstance);
+                if(intersection.x!=0 && intersection.z!=0 && intersection.y!=0) {
+                    Model agentModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(agentColor)),
+                            VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+                    if (!nearNeighbor(intersection)) {
+                        setAgentInfo(intersection, isCCTV);
+                        ModelInstance agentInstance = new ModelInstance(agentModel, intersection);
+                        agentInstances.add(agentInstance);
+                        instanceVectors.add(intersection.cpy());
+                    }
                 }
             }
         }else{
-
-            setAgentInfo(postion, isCCTV);
-
             if(isCCTV){
                 Model cctvModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.BLACK)),
                         VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
                 if(!nearNeighbor(postion)) {
                     ModelInstance cctvInstance = new ModelInstance(cctvModel, postion);
-                    //instances.add(cctvInstance);
                     agentInstances.add(cctvInstance);
-
                 }
             }else{
                 Model agentModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(agentColor)),
                         VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
                 if(!nearNeighbor(postion)) {
+                    setAgentInfo(postion, isCCTV);
                     ModelInstance agentInstance = new ModelInstance(agentModel, postion);
-                    //instances.add(agentInstance);
                     agentInstances.add(agentInstance);
-
+                    instanceVectors.add(postion);
                 }
             }
         }
@@ -376,37 +368,38 @@ public class MapEditorController {
         if(position==null){
             Ray pickRay = camera.getPickRay(screenX, screenY);
             Vector3 intersection = new Vector3();
-            Intersector.intersectRayPlane(pickRay, new Plane(new Vector3(0f, 1f, 0f), 0f), intersection);
-
-
-
-            setEvaderInfo(intersection);
+            Intersector.intersectRayTriangles(pickRay,vertList, mIndices, 5, intersection);
 
             Model evaderModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(evaderColor)),
                     VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
 
             if(!nearNeighbor(intersection)) {
+                setEvaderInfo(intersection);
                 ModelInstance evaderInstance = new ModelInstance(evaderModel, intersection);
                 //instances.add(evaderInstance);
                 evaderInstances.add(evaderInstance);
+                instanceVectors.add(intersection);
             }
         }else{
-            setEvaderInfo(position);
-
             Model evaderModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(evaderColor)),
                     VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
 
             if(!nearNeighbor(position)) {
+                setEvaderInfo(position);
+
                 ModelInstance evaderInstance = new ModelInstance(evaderModel, position);
                 //instances.add(evaderInstance);
                 evaderInstances.add(evaderInstance);
+                instanceVectors.add(position);
             }
         }
 
     }
 
-
     public void addWall(Vector3 click, Vector3 clickDrag){
+        //first vec not close to a wall
+        //second vec not close to a wall
+        //line does not intersect
         currentVector = click.cpy();
         nextVector = clickDrag.cpy();
         Vector3 cClick = click.cpy();
