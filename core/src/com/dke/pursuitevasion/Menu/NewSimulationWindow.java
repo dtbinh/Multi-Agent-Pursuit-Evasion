@@ -56,6 +56,9 @@ public class NewSimulationWindow extends Window {
         aiGroup.setMinCheckCount(0);
         aiGroup.setUncheckLast(true);
 
+        final Label heatSizeInfo = new Label("Set PF size",skin);
+        final TextField heatSize = new TextField("19",skin);
+
         TextButton startButton = new TextButton("Start", skin);
 
         startButton.addListener(new ChangeListener() {
@@ -63,7 +66,7 @@ public class NewSimulationWindow extends Window {
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println(aiGroup.getChecked().getName());
                 if(file!= null) {
-                    game.setScreen(new SimulatorScreen(game, file, null, aiGroup.getChecked().getName()));
+                    game.setScreen(new SimulatorScreen(game, file, null, aiGroup.getChecked().getName(), Integer.parseInt(heatSize.getText())));
                     remove();
                 }
             }
@@ -82,11 +85,15 @@ public class NewSimulationWindow extends Window {
 
         table.add(selectMapButton).width(150);
         table.row();
-        table.add(startButton).width(150);
-        table.row();
         table.add(graphCheckBox).width(150);
         table.row();
         table.add(coordinateExplorer).width(150);
+        table.row();
+        table.add(heatSizeInfo);
+        table.row();
+        table.add(heatSize);
+        table.row();
+        table.add(startButton).width(150);
         table.row();
         table.add(backButton).width(150);
         table.row();
