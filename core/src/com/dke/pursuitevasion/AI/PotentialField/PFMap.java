@@ -227,7 +227,7 @@ public class PFMap {
         evader.first = false;
         evader.previousPosition = coords;
         } else if (evader.previousPosition.getX() == coords.getX() && evader.previousPosition.getY() == coords.getY()) {
-            System.out.println("***************************************************** BOT WAS STUCK *****************************************************");
+            //System.out.println("BOT WAS STUCK");
             explore(x,y);
             evader.evaderPath = null;
             evader.position = arrayToCoords(new Vector2(coords.getX(),coords.getY()));

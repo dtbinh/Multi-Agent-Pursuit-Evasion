@@ -83,8 +83,15 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
     CoordExplor coordExplorer;
     ArrayList<ModelInstance> nodes =  new ArrayList<ModelInstance>();
 
+    private Color agentColor = new Color(156,229,251,0);
+    private Color evaderColor = new Color(0,0,0,0);
+
     public int mapSize = 250;
     public float gapSize = 0.1f;
+
+    private double startTime, finishTime;
+    private int evaderCounter;
+    private String stats = "";
 
     public PursuerSystem(VisionSystem visionSystem, CXGraph graph, PolyMap map, int pursuerCount, String AI) {
         super(Family.all(PursuerComponent.class).get());
@@ -98,8 +105,9 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
         pursCount = pursuerCount;
         coordExplorer = new CoordExplor(map, 0.2f, discWidth, pursuerCount, pathFinder);
 
+
         ModelBuilder modelBuilder = new ModelBuilder();
-        Model box = modelBuilder.createBox(0.05f, 0.02f, 0.05f,new Material(ColorAttribute.createDiffuse(Color.RED)),
+        Model box = modelBuilder.createBox(0.05f, 0.02f, 0.05f,new Material(ColorAttribute.createDiffuse(evaderColor)),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
         boolean[][] nodeGrid = pathFinder.getNodeGrid();
         for(int i=0;i<pathFinder.getNodeGrid().length;i++){
@@ -114,6 +122,7 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
         }
 
         this.AI = AI;
+        startTime = System.currentTimeMillis();
     }
 
     @Override
@@ -241,7 +250,7 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
         }
         if (messageNumber == EntityFactory.pursuerCounter )
         {
-            engine.addEntity(entityFactory.createPursuer(new Vector3(0f,0f,0f), Color.BLUE));
+            engine.addEntity(entityFactory.createPursuer(new Vector3(0f,0f,0f), agentColor));
             messageNumber = 0;
         }
 
@@ -480,6 +489,14 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
 
         if (pursuer.detectionTime > DETECTION_TIME) {
             System.out.println("INTRUDER DETECTED");
+
+            evaderCounter++;
+            finishTime = System.currentTimeMillis();
+
+            //System.out.println("Captured " + evaderCounter + " in " + (finishTime-startTime) + " ms");
+            stats += "\nCaptured " + evaderCounter + " in " + (finishTime-startTime) + " ms";
+            printStats();
+
             /*Vector3 start = new Vector3(pursuer.position.x, 0, pursuer.position.z);
             Vector3 end = new Vector3(pursuer.targetPosition.x, 0, pursuer.targetPosition.y);
             p = pathFinder.findPath(start, end, null);
@@ -491,6 +508,12 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
             addAdditionalSteps(pursuer, p, start);*/
             pursuer.detectionTime = 0.0f;
         }
+    }
+
+    public void printStats() {
+        System.out.println("************************************* BENCHMARKS *************************************");
+        System.out.println("\nNumber of pursuers: " + pursCount);
+        System.out.println(stats);
     }
 
     public static ArrayList<Vector3> addAdditionalSteps(PursuerComponent pC, List<Node> p, Vector3 Start){

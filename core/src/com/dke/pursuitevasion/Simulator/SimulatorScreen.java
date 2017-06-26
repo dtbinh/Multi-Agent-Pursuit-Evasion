@@ -41,6 +41,9 @@ public class SimulatorScreen implements Screen, InputProcessor{
     private int heatSize;
     CXGraph graph;
 
+    private Color agentColor = new Color(156,229,251,0);
+    private Color evaderColor = new Color(0,0,0,0);
+
     ArrayList<ModelInstance> nodes =  new ArrayList<ModelInstance>();
     ModelBatch modelBatch = new ModelBatch();
 
@@ -145,22 +148,24 @@ public class SimulatorScreen implements Screen, InputProcessor{
         engine.addSystem(new CCTvSystem(visionSystem, map));
         engine.addSystem(new PursuerSystem(visionSystem, graph, map, map.getaI().length,AI));
 
+
+
         for (int i=0; i<map.getaI().length; i++) {
             if(map.getaI()[i].isCCTV){
                 engine.addEntity(entityFactory.createCCTv(map.getaI()[i].position));
             } else {
-                engine.addEntity(entityFactory.createPursuer(map.getaI()[i].position, Color.BLUE));
+                engine.addEntity(entityFactory.createPursuer(map.getaI()[i].position, agentColor));
             }
         }
 
         for (int i=0; i<map.geteI().length; i++) {
-            engine.addEntity(entityFactory.createEvader(map.geteI()[i].position, Color.RED));
+            engine.addEntity(entityFactory.createEvader(map.geteI()[i].position, evaderColor));
         }
 
         ModelBuilder modelBuilder = new ModelBuilder();
-        Model box = modelBuilder.createBox(0.05f, 0.02f, 0.05f,new Material(ColorAttribute.createDiffuse(Color.RED)),
+        Model box = modelBuilder.createBox(0.05f, 0.02f, 0.05f,new Material(ColorAttribute.createDiffuse(evaderColor)),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
-        Model bbox = modelBuilder.createBox(0.08f, 0.2f, 0.08f,new Material(ColorAttribute.createDiffuse(Color.BLUE)),
+        Model bbox = modelBuilder.createBox(0.08f, 0.2f, 0.08f,new Material(ColorAttribute.createDiffuse(agentColor)),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
 
         /*PathFinder pf = new PathFinder(map);
