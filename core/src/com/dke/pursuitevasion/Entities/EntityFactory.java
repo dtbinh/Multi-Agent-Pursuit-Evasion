@@ -195,7 +195,7 @@ public class EntityFactory {
     public Entity createTerrain(Mesh mesh, EdgeVectors[] edgeVectors) {
         Entity entity = new Entity();
 
-        FileHandle img = Gdx.files.internal("blueprint-pattern.jpg");
+        FileHandle img = Gdx.files.internal("blueprint-1.jpg");
         Texture texture = new Texture(img, Pixmap.Format.RGB565, false);
         texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         texture.setFilter(Texture.TextureFilter.Linear,
