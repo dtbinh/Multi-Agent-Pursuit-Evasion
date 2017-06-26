@@ -52,7 +52,7 @@ public class MapEditorController {
     private ModelBuilder modelBuilder;
     private Mesh polygonMesh;
     private ModelInstance polygonModel;
-    public boolean meshRenderable, meshRendered;
+    public boolean meshRenderable, meshRendered, delauneyTri = true;
     ModelInstance mWall, mWallPerm;
 
     public MapEditorController() {
@@ -129,11 +129,15 @@ public class MapEditorController {
             newVertList[i] = temp.get(i);
         }
 
-        //EarClippingTriangulator triangulator = new EarClippingTriangulator();
-        //ShortArray meshIndices = triangulator.computeTriangles(newVertList);
+        ShortArray meshIndices;
+        if(!delauneyTri) {
+            EarClippingTriangulator triangulator = new EarClippingTriangulator();
+            meshIndices = triangulator.computeTriangles(newVertList);
+        }else{
+            DelaunayTriangulator triangulator = new DelaunayTriangulator();
+            meshIndices = triangulator.computeTriangles(newVertList, false);
+        }
 
-        DelaunayTriangulator triangulator = new DelaunayTriangulator();
-        ShortArray meshIndices = triangulator.computeTriangles(newVertList, false);
 
         int intArray[] = new int[meshIndices.size];
         for(int i = 0; i < meshIndices.size; i++)
