@@ -30,16 +30,18 @@ public class PFMap {
     private EvaderComponent evader;
     private PathFinder pathFinder;
     private ImmutableArray<Entity> entities;
-    private int startValue = 10;
+    private int startValue = 35;
     private int updateCounter = 0;
+    public int mapSize = 250;
+    public float gapSize = 0.1f;
 
     public PFMap(int[][] o, Engine e, PolyMap map, EvaderComponent evader){
         this.obstacleMap = o;
         this.engine = e;
         this.evader = evader;
-        this.heatMap = new int[100][100];
+        this.heatMap = new int[mapSize][mapSize];
         this.entities = engine.getEntitiesFor(Family.all(StateComponent.class).get());
-        this.pathFinder = new PathFinder(map);
+        this.pathFinder = new PathFinder(map, mapSize, gapSize);
     }
 
     public PFMap() {}
@@ -83,18 +85,19 @@ public class PFMap {
         }
 
         int counter = 1;
-        for (int i = 0; i < 100; i++) {
-            for (int j = 0; j < 100; j++) {
+        for (int i = 0; i < mapSize; i++) {
+            for (int j = 0; j < mapSize; j++) {
                 if (pursuerPositions.contains(new Vector2((float)i, (float)j))) {
                     generatePotentialField(i,j,startValue);
-                    System.out.println("Generating " + counter + " potential field");
                     counter++;
                 }
             }
         }
 
-        if (updateCounter % 10 == 0)
-            printArray();
+        //System.out.println("Generating " + counter + " potential field(s)");
+
+        /*if (updateCounter % 10 == 0)
+            printArray();*/
 
         updateCounter++;
     }
@@ -148,89 +151,67 @@ public class PFMap {
 
     private void switchCase(int firstCheck, int x, int y) {
 
-        switch (firstCheck) {
-            case 0:
-                try {
-                    if (heatMap[x-1][y] < bestValue){
-                        bestValue = heatMap[x-1][y];
-                        coords.setAll(x-1,y,bestValue);
-                        evader.pfDirection = PFDirection.TOP;
-                    }
-                } catch (ArrayIndexOutOfBoundsException e) {
-                }
-                break;
-            case 1:
-                try {
-                    if (heatMap[x-1][y+1] < bestValue){
-                        bestValue = heatMap[x-1][y+1];
-                        coords.setAll(x-1,y+1,bestValue);
-                        evader.pfDirection = PFDirection.TOP_RIGHT;
-                    }
-                } catch (ArrayIndexOutOfBoundsException e) {
-                }
-                break;
-            case 2:
-                try {
-                    if (heatMap[x][y+1] < bestValue){
-                        bestValue = heatMap[x][y+1];
-                        coords.setAll(x,y+1,bestValue);
-                        evader.pfDirection = PFDirection.RIGHT;
-                    }
-                } catch (ArrayIndexOutOfBoundsException e) {
-                }
-                break;
-            case 3:
-                try {
-                    if (heatMap[x+1][y+1] < bestValue){
-                        bestValue = heatMap[x+1][y+1];
-                        coords.setAll(x+1,y+1,bestValue);
-                        evader.pfDirection = PFDirection.BOTTOM_RIGHT;
-                    }
-                } catch (ArrayIndexOutOfBoundsException e) {
-                }
-                break;
-            case 4:
-                try {
-                    if (heatMap[x+1][y] < bestValue){
-                        bestValue = heatMap[x+1][y];
-                        coords.setAll(x+1,y,bestValue);
-                        evader.pfDirection = PFDirection.DOWN;
-                    }
-                } catch (ArrayIndexOutOfBoundsException e) {
-                }
-                break;
-            case 5:
-                try {
-                    if (heatMap[x+1][y-1] < bestValue){
-                        bestValue = heatMap[x+1][y-1];
-                        coords.setAll(x+1,y-1,bestValue);
-                        evader.pfDirection = PFDirection.BOTTOM_LEFT;
-                    }
-                } catch (ArrayIndexOutOfBoundsException e) {
-                }
-                break;
-            case 6:
-                try {
-                    if (heatMap[x][y-1] < bestValue){
-                        bestValue = heatMap[x][y-1];
-                        coords.setAll(x,y-1,bestValue);
-                        evader.pfDirection = PFDirection.LEFT;
-                    }
-                } catch (ArrayIndexOutOfBoundsException e) {
-                }
-                break;
-            case 7:
-                try {
-                    if (heatMap[x-1][y-1] < bestValue){
-                        bestValue = heatMap[x-1][y-1];
-                        coords.setAll(x-1,y-1,bestValue);
-                        evader.pfDirection = PFDirection.TOP_LEFT;
-                    }
-                } catch (ArrayIndexOutOfBoundsException e) {
-                }
-                break;
-            default:
-                System.out.println("ERROR");
+        try {
+            switch (firstCheck) {
+                case 0:
+                        if (heatMap[x-1][y] < bestValue){
+                            bestValue = heatMap[x-1][y];
+                            coords.setAll(x-1,y,bestValue);
+                            evader.pfDirection = PFDirection.TOP;
+                        }
+                    break;
+                case 1:
+                        if (heatMap[x-1][y+1] < bestValue){
+                            bestValue = heatMap[x-1][y+1];
+                            coords.setAll(x-1,y+1,bestValue);
+                            evader.pfDirection = PFDirection.TOP_RIGHT;
+                        }
+                    break;
+                case 2:
+                        if (heatMap[x][y+1] < bestValue){
+                            bestValue = heatMap[x][y+1];
+                            coords.setAll(x,y+1,bestValue);
+                            evader.pfDirection = PFDirection.RIGHT;
+                        }
+                    break;
+                case 3:
+                        if (heatMap[x+1][y+1] < bestValue){
+                            bestValue = heatMap[x+1][y+1];
+                            coords.setAll(x+1,y+1,bestValue);
+                            evader.pfDirection = PFDirection.BOTTOM_RIGHT;
+                        }
+                    break;
+                case 4:
+                        if (heatMap[x+1][y] < bestValue){
+                            bestValue = heatMap[x+1][y];
+                            coords.setAll(x+1,y,bestValue);
+                            evader.pfDirection = PFDirection.DOWN;
+                        }
+                    break;
+                case 5:
+                        if (heatMap[x+1][y-1] < bestValue){
+                            bestValue = heatMap[x+1][y-1];
+                            coords.setAll(x+1,y-1,bestValue);
+                            evader.pfDirection = PFDirection.BOTTOM_LEFT;
+                        }
+                    break;
+                case 6:
+                        if (heatMap[x][y-1] < bestValue){
+                            bestValue = heatMap[x][y-1];
+                            coords.setAll(x,y-1,bestValue);
+                            evader.pfDirection = PFDirection.LEFT;
+                        }
+                    break;
+                case 7:
+                        if (heatMap[x-1][y-1] < bestValue){
+                            bestValue = heatMap[x-1][y-1];
+                            coords.setAll(x-1,y-1,bestValue);
+                            evader.pfDirection = PFDirection.TOP_LEFT;
+                        }
+                    break;
+                default:
+                    System.out.println("ERROR");
+            }} catch (ArrayIndexOutOfBoundsException e) {
         }
     }
 
@@ -258,23 +239,94 @@ public class PFMap {
     }
 
     private void explore(int x, int y) {
-        if (evader.pfDirection == PFDirection.TOP && heatMap[x-1][y] == 0) {
-            coords.setAll(x-1,y,0);
-        } else if (evader.pfDirection == PFDirection.TOP_RIGHT && heatMap[x-1][y+1] == 0) {
-            coords.setAll(x-1,y+1,0);
-        } else if (evader.pfDirection == PFDirection.RIGHT && heatMap[x][y+1] == 0) {
-            coords.setAll(x,y+1,0);
-        } else if (evader.pfDirection == PFDirection.BOTTOM_RIGHT && heatMap[x+1][y+1] == 0) {
-            coords.setAll(x+1,y+1,0);
-        } else if (evader.pfDirection == PFDirection.DOWN && heatMap[x+1][y] == 0) {
-            coords.setAll(x+1,y,0);
-        } else if (evader.pfDirection == PFDirection.BOTTOM_LEFT && heatMap[x+1][y-1] == 0) {
-            coords.setAll(x+1,y-1,0);
-        } else if (evader.pfDirection == PFDirection.LEFT && heatMap[x][y-1] == 0) {
-            coords.setAll(x,y-1,0);
-        } else if (evader.pfDirection == PFDirection.TOP_LEFT && heatMap[x-1][y-1] == 0) {
-            coords.setAll(x-1,y-1,0);
-        } else regularCheck(x,y);
+
+        boolean set = false;
+        if (closeToWall(x,y))
+            regularCheck(x,y);
+        else {
+            try {
+                if (evader.pfDirection == PFDirection.TOP && heatMap[x - 1][y] == 0) {
+                    coords.setAll(x-1,y,0);
+                    set = true;
+                }
+                } catch (ArrayIndexOutOfBoundsException e) {}
+            try {
+                if (evader.pfDirection == PFDirection.TOP_RIGHT && heatMap[x-1][y+1] == 0) {
+                    coords.setAll(x-1,y+1,0);
+                    set = true;
+            }
+                } catch (ArrayIndexOutOfBoundsException e) {}
+            try {if (evader.pfDirection == PFDirection.RIGHT && heatMap[x][y+1] == 0) {
+                    coords.setAll(x,y+1,0);
+                    set = true;
+            }
+                } catch (ArrayIndexOutOfBoundsException e) {}
+            try {if (evader.pfDirection == PFDirection.BOTTOM_RIGHT && heatMap[x+1][y+1] == 0) {
+                    coords.setAll(x+1,y+1,0);
+                    set = true;
+            }
+                } catch (ArrayIndexOutOfBoundsException e) {}
+            try {if (evader.pfDirection == PFDirection.DOWN && heatMap[x+1][y] == 0) {
+                    coords.setAll(x+1,y,0);
+                    set = true;
+            }
+                } catch (ArrayIndexOutOfBoundsException e) {}
+            try {if (evader.pfDirection == PFDirection.BOTTOM_LEFT && heatMap[x+1][y-1] == 0) {
+                    coords.setAll(x+1,y-1,0);
+                    set = true;
+            }
+                } catch (ArrayIndexOutOfBoundsException e) {}
+            try {if (evader.pfDirection == PFDirection.LEFT && heatMap[x][y-1] == 0) {
+                    coords.setAll(x,y-1,0);
+                    set = true;
+            }
+                } catch (ArrayIndexOutOfBoundsException e) {}
+            try {if (evader.pfDirection == PFDirection.TOP_LEFT && heatMap[x-1][y-1] == 0) {
+                    coords.setAll(x-1,y-1,0);
+                    set = true;
+            }
+                } catch (ArrayIndexOutOfBoundsException e) {}
+            if (!set)
+                regularCheck(x,y);
+        }
+    }
+
+    private boolean closeToWall(int x, int y) {
+
+        try {
+            if (heatMap[x-1][y] == 1000)
+                return true;
+        } catch (ArrayIndexOutOfBoundsException e) {}
+        try {
+            if (heatMap[x-1][y+1] == 1000)
+                return true;
+        } catch (ArrayIndexOutOfBoundsException e) {}
+        try {
+            if (heatMap[x][y+1] == 1000)
+                return true;
+        } catch (ArrayIndexOutOfBoundsException e) {}
+        try {
+            if (heatMap[x+1][y+1] == 1000)
+                return true;
+        } catch (ArrayIndexOutOfBoundsException e) {}
+        try {
+            if (heatMap[x+1][y] == 1000)
+                return true;
+        } catch (ArrayIndexOutOfBoundsException e) {}
+        try {
+            if (heatMap[x+1][y-1] == 1000)
+                return true;
+        } catch (ArrayIndexOutOfBoundsException e) {}
+        try {
+            if (heatMap[x][y-1] == 1000)
+                return true;
+        } catch (ArrayIndexOutOfBoundsException e) {}
+        try {
+            if (heatMap[x-1][y-1] == 1000)
+                return true;
+        } catch (ArrayIndexOutOfBoundsException e) {}
+
+        return false;
     }
 
     private void regularCheck(int x, int y) {

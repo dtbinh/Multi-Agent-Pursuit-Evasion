@@ -36,11 +36,14 @@ public class EvaderSystem extends IteratingSystem {
     private Engine engine;
     private PotentialFieldAlgorithm potentialFieldAlgorithm;
 
+    public int mapSize = 250;
+    public float gapSize = 0.1f;
+
     public EvaderSystem(VisionSystem visionSystem, PolyMap map, Engine engine) {
         super(Family.all(EvaderComponent.class).get());
         this.engine = engine;
         this.visionSystem = visionSystem;
-        pathFinder = new PathFinder(map);
+        pathFinder = new PathFinder(map, mapSize, gapSize);
         this.potentialFieldAlgorithm = new PotentialFieldAlgorithm(engine,pathFinder.getNodeGrid(),map);
     }
 

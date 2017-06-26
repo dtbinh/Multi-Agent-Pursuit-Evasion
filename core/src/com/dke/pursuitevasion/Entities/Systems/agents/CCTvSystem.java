@@ -35,6 +35,9 @@ public class CCTvSystem extends IteratingSystem {
 
     private PathFinder pathFinder;
 
+    public int mapSize = 250;
+    public float gapSize = 0.1f;
+
     public CCTvSystem(VisionSystem visionSystem, PolyMap map) {
         super(Family.all(
                 CCTvComponent.class,
@@ -42,7 +45,7 @@ public class CCTvSystem extends IteratingSystem {
         ).get());
 
         this.visionSystem = visionSystem;
-        this.pathFinder = new PathFinder(map);
+        this.pathFinder = new PathFinder(map, mapSize, gapSize);
     }
 
     @Override

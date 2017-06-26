@@ -23,6 +23,7 @@ public class PotentialFieldAlgorithm {
     private Vector3 nextMove;
     private PolyMap map;
     private PFMap pfMap;
+    public int mapSize = 250;
 
     public PotentialFieldAlgorithm(Engine e, boolean[][] b, PolyMap map){
         this.engine = e;
@@ -34,10 +35,10 @@ public class PotentialFieldAlgorithm {
     }
 
     public void generateObstacleMap(){
-        int[][] map = new int[100][100];
+        int[][] map = new int[mapSize][mapSize];
 
-        for (int i = 0; i < 100; i++) {
-            for (int j = 0; j < 100; j++) {
+        for (int i = 0; i < mapSize; i++) {
+            for (int j = 0; j < mapSize; j++) {
                 if (bMap[i][j] == false)
                     map[i][j] = 1000; // make sure this value is greater than the greatest value within any potential field
             }

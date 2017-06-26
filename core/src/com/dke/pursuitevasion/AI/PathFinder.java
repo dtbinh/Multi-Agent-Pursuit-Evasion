@@ -48,8 +48,8 @@ public class PathFinder implements Screen {
     ArrayList<CustomPoint> CP;
 
     public void create(){
-        gapSize = 0.1f;
-        width = 100;
+        //gapSize = 0.1f;
+        //width = 100;
         height = width;
 
         cam = new PerspectiveCamera(60f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -87,7 +87,9 @@ public class PathFinder implements Screen {
         return new Vector3(worldX, 0, worldZ);
     }
 
-    public PathFinder(PolyMap Map){
+    public PathFinder(PolyMap Map, int width, float gapSize){
+        this.width = width;
+        this.gapSize = gapSize;
         map = Map;
         mesh = map.getPolygonMesh();
         indices = new short[mesh.getMaxIndices()];

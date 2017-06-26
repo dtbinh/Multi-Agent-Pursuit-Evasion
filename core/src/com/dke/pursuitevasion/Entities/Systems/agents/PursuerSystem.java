@@ -82,14 +82,15 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
     CoordExplor coordExplorer;
     ArrayList<ModelInstance> nodes =  new ArrayList<ModelInstance>();
 
-
+    public int mapSize = 250;
+    public float gapSize = 0.1f;
 
     public PursuerSystem(VisionSystem visionSystem, CXGraph graph, PolyMap map, int pursuerCount) {
         super(Family.all(PursuerComponent.class).get());
 
         this.visionSystem = visionSystem;
         this.graph = graph;
-        pathFinder = new PathFinder(map);
+        pathFinder = new PathFinder(map, mapSize, gapSize);
         entityFactory = new EntityFactory();
 
         mMap = map;
