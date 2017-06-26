@@ -322,6 +322,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
                 if (object.equals("OK")) {
                     file = getFile();
                     System.out.println(file.read(56));
+                    controller = new MapEditorController();
 
                     Gson gson = new Gson();
                     PolyMap map = gson.fromJson(file.readString(), PolyMap.class);
