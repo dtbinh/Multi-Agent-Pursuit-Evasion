@@ -245,8 +245,10 @@ public class EntityFactory {
         transformComponent.autoTransformUpdate = false;
         entity.add(transformComponent);
 
+        Color wallColor = new Color(156,229,251,0);
+
         ModelBuilder modelBuilder = new ModelBuilder();
-        Model wall = modelBuilder.createBox(wallInfo.length-0.05f,wallInfo.height,0.08f,new Material(ColorAttribute.createDiffuse(Color.WHITE)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+        Model wall = modelBuilder.createBox(wallInfo.length-0.05f,wallInfo.height,0.08f,new Material(ColorAttribute.createDiffuse(wallColor)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
         ModelInstance wallInstance = new ModelInstance(wall);
         wallInstance.transform = transformComponent.transform;
 
