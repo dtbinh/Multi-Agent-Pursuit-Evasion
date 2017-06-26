@@ -137,6 +137,8 @@ public class MapEditorScreen implements Screen, InputProcessor {
         TextButton addCCTVButton = new TextButton("Add CCTV", skin);
         TextButton simulatorButton = new TextButton("Simulator", skin);
         TextButton backButton = new TextButton("Back", skin);
+        final TextButton concaveButton = new TextButton("Concave Mesh", skin);
+        TextButton convexButton = new TextButton("Convex Mesh", skin);
 
 
         Button radio = new Button();
@@ -224,13 +226,29 @@ public class MapEditorScreen implements Screen, InputProcessor {
         simulatorButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-
-                //NewSimulationWindow sim = new NewSimulationWindow(skin, game, simMenu);
-                //stage.addActor(sim);
                 if(controller.localMap!=null) {
                     game.setScreen(new SimulatorScreen(game, null, controller.localMap,"GRAPHSEARCHER",19));
                 }
 
+            }
+        });
+        concaveButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (!controller.delauneyTri){
+                    controller.delauneyTri = true;
+                    switchMode();
+                }
+            }
+        });
+
+        convexButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if(controller.delauneyTri){
+                    controller.delauneyTri = false;
+                    switchMode();
+                }
             }
         });
 
@@ -262,6 +280,14 @@ public class MapEditorScreen implements Screen, InputProcessor {
         table.add(simulatorButton).width(150);
         table.row();
         table.add(backButton).width(150);
+        if(controller.delauneyTri){
+            table.row();
+            table.add(concaveButton).width(150);
+        }else {
+            table.row();
+            table.add(convexButton).width(150);
+        }
+
         windowDesign.add(table);
 
 
@@ -280,6 +306,18 @@ public class MapEditorScreen implements Screen, InputProcessor {
 
         // Add windows
         stage.addActor(windowDesign);
+    }
+
+    public void switchMode(){
+        if(controller.delauneyTri){
+            controller.delauneyTri = false;
+            stage = new Stage();
+            createUI();
+        }else{
+            controller.delauneyTri = true;
+            stage = new Stage();
+            createUI();
+        }
     }
 
     @Override
@@ -324,6 +362,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
         stage.act(delta);
         stage.draw();
     }
+
     public void loadFile() {
         FileChooser files = new FileChooser("Select Course File", skin) {
             @Override
