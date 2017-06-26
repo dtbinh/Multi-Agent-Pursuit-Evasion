@@ -53,7 +53,11 @@ public class PolyMap {
         Gson gson = gsonBuilder.create();
 
         System.out.println(gson.toJson(this));
-        Gdx.files.local("maps/" + name).writeString(gson.toJson(this),false);
+        try {
+            Gdx.files.local("maps/" + name).writeString(gson.toJson(this),false);
+        }catch (Exception e){
+
+        }
     }
 
     public void setWalls(ArrayList<WallInfo> wallInfo){

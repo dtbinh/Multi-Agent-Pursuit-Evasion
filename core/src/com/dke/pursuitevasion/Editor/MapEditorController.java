@@ -71,7 +71,7 @@ public class MapEditorController {
     }
 
     private void initTexture(){
-        FileHandle img = Gdx.files.internal("wood.jpg");
+        FileHandle img = Gdx.files.internal("blueprint-1.jpg");
         texture = new Texture(img, Pixmap.Format.RGB565, false);
         texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         texture.setFilter(Texture.TextureFilter.Linear,
@@ -326,11 +326,12 @@ public class MapEditorController {
         float height = 0.06f;
         Vector3 midPoint = ((click.sub(clickDrag)).scl(0.5f)).add(clickDrag);
         midPoint.y +=height/2+0.01f;
+        Color wallColor = new Color(156,229,251,0);
 
-        Model wall = modelBuilder.createBox(distance, height, 0.08f,new Material(ColorAttribute.createDiffuse(Color.SCARLET)),
+        Model wall = modelBuilder.createBox(distance, height, 0.08f,new Material(ColorAttribute.createDiffuse(wallColor)),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
         mWall = new ModelInstance(wall, midPoint);
-        Model wallPerm = modelBuilder.createBox(distance, height, 0.08f,new Material(ColorAttribute.createDiffuse(Color.DARK_GRAY)),
+        Model wallPerm = modelBuilder.createBox(distance, height, 0.08f,new Material(ColorAttribute.createDiffuse(wallColor)),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
         mWallPerm = new ModelInstance(wallPerm, midPoint);
 

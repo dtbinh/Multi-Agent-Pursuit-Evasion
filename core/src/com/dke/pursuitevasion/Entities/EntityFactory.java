@@ -195,7 +195,7 @@ public class EntityFactory {
     public Entity createTerrain(Mesh mesh, EdgeVectors[] edgeVectors) {
         Entity entity = new Entity();
 
-        FileHandle img = Gdx.files.internal("wood.jpg");
+        FileHandle img = Gdx.files.internal("blueprint-pattern.jpg");
         Texture texture = new Texture(img, Pixmap.Format.RGB565, false);
         texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         texture.setFilter(Texture.TextureFilter.Linear,
@@ -246,7 +246,7 @@ public class EntityFactory {
         entity.add(transformComponent);
 
         ModelBuilder modelBuilder = new ModelBuilder();
-        Model wall = modelBuilder.createBox(wallInfo.length-0.05f,wallInfo.height,0.08f,new Material(ColorAttribute.createDiffuse(Color.BLACK)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+        Model wall = modelBuilder.createBox(wallInfo.length-0.05f,wallInfo.height,0.08f,new Material(ColorAttribute.createDiffuse(Color.WHITE)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
         ModelInstance wallInstance = new ModelInstance(wall);
         wallInstance.transform = transformComponent.transform;
 
