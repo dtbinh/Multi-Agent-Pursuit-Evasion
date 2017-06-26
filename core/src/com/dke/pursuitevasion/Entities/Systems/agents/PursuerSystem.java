@@ -86,6 +86,10 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
     public int mapSize = 250;
     public float gapSize = 0.1f;
 
+    private double startTime, finishTime;
+    private int evaderCounter;
+    private String stats = "";
+
     public PursuerSystem(VisionSystem visionSystem, CXGraph graph, PolyMap map, int pursuerCount, String AI) {
         super(Family.all(PursuerComponent.class).get());
 
@@ -114,6 +118,7 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
         }
 
         this.AI = AI;
+        startTime = System.currentTimeMillis();
     }
 
     @Override
@@ -480,6 +485,14 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
 
         if (pursuer.detectionTime > DETECTION_TIME) {
             System.out.println("INTRUDER DETECTED");
+
+            evaderCounter++;
+            finishTime = System.currentTimeMillis();
+
+            //System.out.println("Captured " + evaderCounter + " in " + (finishTime-startTime) + " ms");
+            stats += "\nCaptured " + evaderCounter + " in " + (finishTime-startTime) + " ms";
+            printStats();
+
             /*Vector3 start = new Vector3(pursuer.position.x, 0, pursuer.position.z);
             Vector3 end = new Vector3(pursuer.targetPosition.x, 0, pursuer.targetPosition.y);
             p = pathFinder.findPath(start, end, null);
@@ -491,6 +504,12 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
             addAdditionalSteps(pursuer, p, start);*/
             pursuer.detectionTime = 0.0f;
         }
+    }
+
+    public void printStats() {
+        System.out.println("************************************* BENCHMARKS *************************************");
+        System.out.println("\nNumber of pursuers: " + pursCount);
+        System.out.println(stats);
     }
 
     public static ArrayList<Vector3> addAdditionalSteps(PursuerComponent pC, List<Node> p, Vector3 Start){
