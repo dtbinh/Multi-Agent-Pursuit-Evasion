@@ -83,6 +83,9 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
     CoordExplor coordExplorer;
     ArrayList<ModelInstance> nodes =  new ArrayList<ModelInstance>();
 
+    private Color agentColor = new Color(156,229,251,0);
+    private Color evaderColor = new Color(0,0,0,0);
+
     public int mapSize = 250;
     public float gapSize = 0.1f;
 
@@ -98,8 +101,9 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
         pursCount = pursuerCount;
         coordExplorer = new CoordExplor(map, 0.2f, discWidth, pursuerCount, pathFinder);
 
+
         ModelBuilder modelBuilder = new ModelBuilder();
-        Model box = modelBuilder.createBox(0.05f, 0.02f, 0.05f,new Material(ColorAttribute.createDiffuse(Color.RED)),
+        Model box = modelBuilder.createBox(0.05f, 0.02f, 0.05f,new Material(ColorAttribute.createDiffuse(evaderColor)),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
         boolean[][] nodeGrid = pathFinder.getNodeGrid();
         for(int i=0;i<pathFinder.getNodeGrid().length;i++){
@@ -241,7 +245,7 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
         }
         if (messageNumber == EntityFactory.pursuerCounter )
         {
-            engine.addEntity(entityFactory.createPursuer(new Vector3(0f,0f,0f), Color.BLUE));
+            engine.addEntity(entityFactory.createPursuer(new Vector3(0f,0f,0f), agentColor));
             messageNumber = 0;
         }
 

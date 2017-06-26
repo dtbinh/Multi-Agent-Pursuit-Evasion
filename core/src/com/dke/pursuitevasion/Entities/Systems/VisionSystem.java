@@ -177,7 +177,7 @@ public class VisionSystem extends IteratingSystem implements EntityListener, Deb
             ObserverComponent observer = observerMapper.get(entity);
             if (observer.fovAngle < 360f) {
                 MeshPartBuilder builder = modelBuilder.part("triangle", 1, 3, new Material());
-                builder.setColor(Color.GREEN);
+                builder.setColor(Color.WHITE);
 
                 float halfFov = observer.fovAngle * 0.5f;
 
@@ -201,7 +201,7 @@ public class VisionSystem extends IteratingSystem implements EntityListener, Deb
                 modelBatch.render(triangleInstance);
             } else {
                 MeshPartBuilder builder = modelBuilder.part("circle", 1, 3, new Material());
-                builder.setColor(Color.PINK);
+                builder.setColor(Color.WHITE);
                 float radius = observer.distance;
                 Vector3 center = new Vector3(observer.position.x, 0, observer.position.y);
                 builder.circle(radius, 180, center, new Vector3(0,1,0));
