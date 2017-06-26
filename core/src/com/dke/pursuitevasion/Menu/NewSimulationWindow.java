@@ -3,10 +3,7 @@ package com.dke.pursuitevasion.Menu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.dke.pursuitevasion.PursuitEvasion;
 import com.dke.pursuitevasion.Simulator.SimulatorScreen;
@@ -49,13 +46,24 @@ public class NewSimulationWindow extends Window {
             }
         });
 
+        CheckBox graphCheckBox = new CheckBox("Graph Searcher", skin);
+        graphCheckBox.setName("GRAPHSEARCHER");
+        graphCheckBox.setChecked(true);
+        CheckBox coordinateExplorer = new CheckBox("Coordinate Explorer", skin);
+        coordinateExplorer.setName("COORDINATEEXPLORER");
+        final ButtonGroup aiGroup = new ButtonGroup(graphCheckBox, coordinateExplorer);
+        aiGroup.setMaxCheckCount(1);
+        aiGroup.setMinCheckCount(0);
+        aiGroup.setUncheckLast(true);
+
         TextButton startButton = new TextButton("Start", skin);
 
         startButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                System.out.println(aiGroup.getChecked().getName());
                 if(file!= null) {
-                    game.setScreen(new SimulatorScreen(game, file, null));
+                    game.setScreen(new SimulatorScreen(game, file, null, aiGroup.getChecked().getName()));
                     remove();
                 }
             }
@@ -75,6 +83,10 @@ public class NewSimulationWindow extends Window {
         table.add(selectMapButton).width(150);
         table.row();
         table.add(startButton).width(150);
+        table.row();
+        table.add(graphCheckBox).width(150);
+        table.row();
+        table.add(coordinateExplorer).width(150);
         table.row();
         table.add(backButton).width(150);
         table.row();

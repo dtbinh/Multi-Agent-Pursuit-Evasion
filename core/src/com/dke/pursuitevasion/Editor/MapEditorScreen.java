@@ -128,7 +128,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
         TextButton loadMapButton = new TextButton("Load Map", skin);
         final TextButton makePolygonButton = new TextButton("Apply Triangulation", skin);
         final TextButton exportMapButton = new TextButton("Export Map", skin);
-        TextButton wallEditorButton = new TextButton("Add Walls", skin);
+        final TextButton wallEditorButton = new TextButton("Add Walls", skin);
         TextButton addPursuerButton = new TextButton("Add Pursuer", skin);
         TextButton addEvaderButton = new TextButton("Add Evader", skin);
         TextButton addCCTVButton = new TextButton("Add CCTV", skin);
@@ -170,6 +170,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
                 isBuilt=true;
                 addOuterVertexButton.setDisabled(true);
                 makePolygonButton.setDisabled(true);
+                wallEditorButton.setDisabled(true);
                 controller.setMode(Mode.DO_NOTHING);
             }
         });
@@ -220,14 +221,11 @@ public class MapEditorScreen implements Screen, InputProcessor {
                 //NewSimulationWindow sim = new NewSimulationWindow(skin, game, simMenu);
                 //stage.addActor(sim);
                 if(controller.localMap!=null) {
-                    game.setScreen(new SimulatorScreen(game, null, controller.localMap));
+                    game.setScreen(new SimulatorScreen(game, null, controller.localMap,"GRAPHSEARCHER"));
                 }
 
             }
         });
-
-
-
 
         // Add buttons
         table.add(mapBuilderText);
@@ -327,8 +325,13 @@ public class MapEditorScreen implements Screen, InputProcessor {
 
                     Gson gson = new Gson();
                     PolyMap map = gson.fromJson(file.readString(), PolyMap.class);
+                    //Add EdgeVectors
+                    for (EdgeVectors eV: map.geteV()) {
+                        controller.edges.add(eV);
+                    }
                     //Add mesh
                     controller.setPolygonMesh(map.getPolygonMesh());
+
                     controller.meshRenderable = true;
                     //Add walls
                     WallInfo[] wallInfo = map.getwI();

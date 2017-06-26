@@ -389,10 +389,6 @@ public class MapEditorController {
         files.show(stage);
     }
 
-    public void loadFile(){
-        
-    }
-
     public AbstractList<AgentInfo> getAgentInfo(){
         return agentsInfo;
     }
