@@ -21,6 +21,9 @@ import com.dke.pursuitevasion.Menu.NewSimulationWindow;
 import com.dke.pursuitevasion.Simulator.SimulatorScreen;
 import com.dke.pursuitevasion.UI.FileChooser;
 import com.google.gson.Gson;
+import javafx.scene.control.RadioButton;
+
+import java.util.ArrayList;
 
 
 /**
@@ -136,6 +139,10 @@ public class MapEditorScreen implements Screen, InputProcessor {
         TextButton backButton = new TextButton("Back", skin);
 
 
+        Button radio = new Button();
+        Button radio2 = new Button();
+
+        ButtonGroup group = new ButtonGroup(radio,radio2);
 
 
         addOuterVertexButton.addListener(new ChangeListener() {
@@ -233,6 +240,8 @@ public class MapEditorScreen implements Screen, InputProcessor {
         table.add(addOuterVertexButton).width(150);
         table.row();
         table.add(makePolygonButton).width(150);
+        table.row();
+        //table.add(group);
         table.row();
         table.add(objectsText);
         table.row();
@@ -334,6 +343,8 @@ public class MapEditorScreen implements Screen, InputProcessor {
                     controller.setPolygonMesh(map.getPolygonMesh());
 
                     controller.meshRenderable = true;
+
+
                     //Add walls
                     WallInfo[] wallInfo = map.getwI();
                     for (int i=0; i<map.getwI().length;i++){
@@ -351,6 +362,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
                     for (int i=0; i<map.geteI().length;i++){
                         controller.addEvader(0,0,camera,evaderInfo[i].position);
                     }
+                    controller.setMode(Mode.DO_NOTHING);
 
                 }
             }

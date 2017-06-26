@@ -5,13 +5,12 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.dke.pursuitevasion.Editor.MapEditorScreen;
 import com.dke.pursuitevasion.PursuitEvasion;
@@ -28,6 +27,9 @@ public class MenuScreen implements Screen {
     private Stage stage;
     private Skin skin;
 
+    private Texture backgroundTexture = new Texture("blueprint-1.jpg");
+
+
     public MenuScreen(PursuitEvasion game) {
         this.game = game;
         batch = new SpriteBatch();
@@ -37,6 +39,7 @@ public class MenuScreen implements Screen {
     }
 
     private void initGUI() {
+
         Table table = new Table();
         table.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
@@ -108,8 +111,14 @@ public class MenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
+
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.begin();
+        backgroundTexture.setWrap(Texture.TextureWrap.Repeat,Texture.TextureWrap.Repeat);
+        TextureRegion textureRegion = new TextureRegion(backgroundTexture,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+        batch.draw(textureRegion,0,0);
+        batch.end();
         stage.act(delta);
         stage.draw();
     }
