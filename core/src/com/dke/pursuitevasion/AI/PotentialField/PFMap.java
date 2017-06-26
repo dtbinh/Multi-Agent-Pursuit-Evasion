@@ -30,18 +30,20 @@ public class PFMap {
     private EvaderComponent evader;
     private PathFinder pathFinder;
     private ImmutableArray<Entity> entities;
-    private int startValue = 35;
+    private int heatSize;
     private int updateCounter = 0;
     public int mapSize = 250;
     public float gapSize = 0.1f;
 
-    public PFMap(int[][] o, Engine e, PolyMap map, EvaderComponent evader){
+    public PFMap(int[][] o, Engine e, PolyMap map, EvaderComponent evader, int heatSize){
         this.obstacleMap = o;
         this.engine = e;
         this.evader = evader;
         this.heatMap = new int[mapSize][mapSize];
         this.entities = engine.getEntitiesFor(Family.all(StateComponent.class).get());
         this.pathFinder = new PathFinder(map, mapSize, gapSize);
+        this.heatSize = heatSize;
+        System.out.println("Heatsize = " + heatSize);
     }
 
     public PFMap() {}
@@ -88,7 +90,7 @@ public class PFMap {
         for (int i = 0; i < mapSize; i++) {
             for (int j = 0; j < mapSize; j++) {
                 if (pursuerPositions.contains(new Vector2((float)i, (float)j))) {
-                    generatePotentialField(i,j,startValue);
+                    generatePotentialField(i,j,heatSize);
                     counter++;
                 }
             }

@@ -1,7 +1,7 @@
 package com.dke.pursuitevasion.Simulator;
 
-import com.badlogic.gdx.*;
 import com.badlogic.ashley.core.Engine;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -11,14 +11,11 @@ import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.dke.pursuitevasion.*;
-import com.dke.pursuitevasion.AI.PathFinder;
 import com.dke.pursuitevasion.CellDecompose.Graph.CXGraph;
 import com.dke.pursuitevasion.CellDecompose.Graph.CXGraphNode;
 import com.dke.pursuitevasion.CellDecompose.Graph.CXPoint;
 import com.dke.pursuitevasion.CellDecompose.Graph.CellDecompositionAlgorithm;
+import com.dke.pursuitevasion.*;
 import com.dke.pursuitevasion.Entities.EntityFactory;
 import com.dke.pursuitevasion.Entities.Systems.GraphicsSystem;
 import com.dke.pursuitevasion.Entities.Systems.VisionSystem;
@@ -41,12 +38,15 @@ public class SimulatorScreen implements Screen, InputProcessor{
     private InputMultiplexer inputMultiplexer;
     private Engine engine; // move to controller
     private EntityFactory entityFactory; // move to controller
+    private int heatSize;
+    CXGraph graph;
 
     ArrayList<ModelInstance> nodes =  new ArrayList<ModelInstance>();
     ModelBatch modelBatch = new ModelBatch();
 
-    public SimulatorScreen(PursuitEvasion game, FileHandle mapFile, PolyMap Map, String AI) {
+    public SimulatorScreen(PursuitEvasion game, FileHandle mapFile, PolyMap Map, String AI, int heatSize) {
 
+        this.heatSize = heatSize;
         /* Load the course from a file */
         this.game = game;
         if(Map == null) {
@@ -117,8 +117,10 @@ public class SimulatorScreen implements Screen, InputProcessor{
             obstacle.add_edge(node1,node2,1);
         }
 
-        CellDecompositionAlgorithm cellDecomposeAlgorithm = new CellDecompositionAlgorithm(polygon,obstacle);
-        CXGraph graph =  cellDecomposeAlgorithm.decomposeGraph();
+        if(AI.equals("GRAPHSEARCHER")) {
+            CellDecompositionAlgorithm cellDecomposeAlgorithm = new CellDecompositionAlgorithm(polygon, obstacle);
+            graph = cellDecomposeAlgorithm.decomposeGraph();
+        }
 
         engine = new Engine();
 
@@ -139,7 +141,7 @@ public class SimulatorScreen implements Screen, InputProcessor{
         //engine.addSystem(new SimulationSystem());
         VisionSystem visionSystem = new VisionSystem();
         engine.addSystem(visionSystem);
-        engine.addSystem(new EvaderSystem(visionSystem, map, engine));
+        engine.addSystem(new EvaderSystem(visionSystem, map, engine, heatSize));
         engine.addSystem(new CCTvSystem(visionSystem, map));
         engine.addSystem(new PursuerSystem(visionSystem, graph, map, map.getaI().length,AI));
 

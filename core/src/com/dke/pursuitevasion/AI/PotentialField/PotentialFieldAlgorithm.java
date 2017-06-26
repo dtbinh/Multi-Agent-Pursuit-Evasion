@@ -24,8 +24,10 @@ public class PotentialFieldAlgorithm {
     private PolyMap map;
     private PFMap pfMap;
     public int mapSize = 250;
+    private int heatSize;
 
-    public PotentialFieldAlgorithm(Engine e, boolean[][] b, PolyMap map){
+    public PotentialFieldAlgorithm(Engine e, boolean[][] b, PolyMap map, int heatSize){
+        this.heatSize = heatSize;
         this.engine = e;
         this.bMap = b;
         this.map = map;
@@ -55,7 +57,7 @@ public class PotentialFieldAlgorithm {
     private void computePositionToMoveTo(){
 
         if (first) {
-            PFMap pfMap = new PFMap(obstacleMap, engine, map, evader);
+            PFMap pfMap = new PFMap(obstacleMap, engine, map, evader, heatSize);
             this.pfMap = pfMap;
             first = false;
         }

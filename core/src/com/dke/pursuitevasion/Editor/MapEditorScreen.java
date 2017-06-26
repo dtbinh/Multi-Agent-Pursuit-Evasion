@@ -221,7 +221,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
                 //NewSimulationWindow sim = new NewSimulationWindow(skin, game, simMenu);
                 //stage.addActor(sim);
                 if(controller.localMap!=null) {
-                    game.setScreen(new SimulatorScreen(game, null, controller.localMap,"GRAPHSEARCHER"));
+                    game.setScreen(new SimulatorScreen(game, null, controller.localMap,"GRAPHSEARCHER",19));
                 }
 
             }
