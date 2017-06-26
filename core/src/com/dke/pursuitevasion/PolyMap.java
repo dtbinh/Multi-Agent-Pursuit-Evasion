@@ -64,9 +64,6 @@ public class PolyMap {
         eV = edgeVectorsInfo.toArray(new EdgeVectors[edgeVectorsInfo.size()]);
     }
 
-
-
-
     public WallInfo[] getwI() {
         return wI;
     }

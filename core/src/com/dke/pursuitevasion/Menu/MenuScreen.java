@@ -62,24 +62,12 @@ public class MenuScreen implements Screen {
             }
         });
 
-        TextButton buttonExperimentor = new TextButton("Experimentor", skin);
-        //buttonStartSim.setPosition(550, 450);
-        //buttonStartSim.setSize(200, 50);
-        buttonExperimentor.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                newExperimentorWindow();
-            }
-        });
-
-
         table.add(project);
         table.row();
         table.add(buttonMapBuilder).size(200,50);
         table.row();
         table.add(buttonStartSim).size(200,50);
         table.row();
-        table.add(buttonExperimentor).size(200,50);
 
         //table.setOrigin(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/6);
 
@@ -94,12 +82,6 @@ public class MenuScreen implements Screen {
         newSimulationWindow = new NewSimulationWindow(skin, game, this);
         stage.addActor(newSimulationWindow);
         newSimulationWindow.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 1);
-    }
-
-    private void newExperimentorWindow(){
-        newExperimentorWindow = new NewExperimentorWindow(skin, game, this);
-        stage.addActor(newExperimentorWindow);
-        newExperimentorWindow.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 1);
     }
 
 

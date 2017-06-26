@@ -72,6 +72,7 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
     private boolean runOnce = false;
     private int messageNumber;
     private Engine engine;
+    private String AI;
 
     boolean completeUpdate = false;
     boolean terribleSolution = false;
@@ -85,7 +86,7 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
     public int mapSize = 250;
     public float gapSize = 0.1f;
 
-    public PursuerSystem(VisionSystem visionSystem, CXGraph graph, PolyMap map, int pursuerCount) {
+    public PursuerSystem(VisionSystem visionSystem, CXGraph graph, PolyMap map, int pursuerCount, String AI) {
         super(Family.all(PursuerComponent.class).get());
 
         this.visionSystem = visionSystem;
@@ -111,19 +112,24 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
                 }
             }
         }
+
+        this.AI = AI;
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        /*if (!runOnce) {
-            assignInitialTask(entity);
+        if (AI.equals("GRAPHSEARCHER")) {
+            if (!runOnce) {
+                assignInitialTask(entity);
+            } else {
+                updateTask(entity);
+            }
         } else {
-            updateTask(entity);
-        }*/
-
-        assignTaskorMove(entity);
+            assignTaskorMove(entity);
+        }
         updateObserver(entity);
         updateDetection(entity, deltaTime);
+
     }
 
     @Override
