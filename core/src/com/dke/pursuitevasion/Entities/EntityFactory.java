@@ -73,7 +73,7 @@ public class EntityFactory {
         return entity;
     }
 
-    public Entity createPursuer(Vector3 position, Color color) {
+    public Entity createPursuer(Vector3 position, Color color, float visionDist) {
         Entity entity = new Entity();
 
         StateComponent transformComponent = new StateComponent();
@@ -86,7 +86,7 @@ public class EntityFactory {
         ObserverComponent observerComponent = new ObserverComponent();
         observerComponent.position = new Vector2(transformComponent.position.x, transformComponent.position.y);
         observerComponent.fovAngle = 360f;
-        observerComponent.distance = 1.0f;
+        observerComponent.distance = visionDist;
         entity.add(observerComponent);
 
         // Adding ObserverComponent for VisionSystem

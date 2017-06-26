@@ -318,8 +318,10 @@ public class CoordExplor {
                     pursuerComponent.pursuerPointPath = addAdditionalSteps(pathFinder.findPath(vStart, vEnd, null));
                 }
             }
-            ModelInstance m = new ModelInstance(expBox, bestCell.position);
-            nodes.add(m);
+            if(bestCell.position!=null) {
+                ModelInstance m = new ModelInstance(expBox, bestCell.position);
+                nodes.add(m);
+            }
         }
     }
 

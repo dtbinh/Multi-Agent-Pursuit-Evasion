@@ -54,9 +54,10 @@ public class NewSimulationWindow extends Window {
 
         CheckBox graphCheckBox = new CheckBox("Graph Searcher", skin);
         graphCheckBox.setName("GRAPHSEARCHER");
-        graphCheckBox.setChecked(true);
+        //graphCheckBox.setChecked(true);
         CheckBox coordinateExplorer = new CheckBox("Coordinate Explorer", skin);
         coordinateExplorer.setName("COORDINATEEXPLORER");
+        coordinateExplorer.setChecked(true);
         final ButtonGroup aiGroup = new ButtonGroup(graphCheckBox, coordinateExplorer);
         aiGroup.setMaxCheckCount(1);
         aiGroup.setMinCheckCount(0);
@@ -64,6 +65,10 @@ public class NewSimulationWindow extends Window {
 
         final Label heatSizeInfo = new Label("Set PF size",skin);
         final TextField heatSize = new TextField("19",skin);
+        heatSize.setAlignment(1);
+        final Label pursVision = new Label("Set Vision", skin);
+        final TextField pursDist = new TextField("1",skin);
+        pursDist.setAlignment(1);
 
         TextButton startButton = new TextButton("Start", skin);
 
@@ -72,11 +77,11 @@ public class NewSimulationWindow extends Window {
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println(aiGroup.getChecked().getName());
                 if(file!= null) {
-                    game.setScreen(new SimulatorScreen(game, file, null, aiGroup.getChecked().getName(), Integer.parseInt(heatSize.getText())));
+                    game.setScreen(new SimulatorScreen(game, file, null, aiGroup.getChecked().getName(), Integer.parseInt(heatSize.getText()), Float.parseFloat(pursDist.getText())));
                     remove();
                 }
                 if(map!=null){
-                    game.setScreen(new SimulatorScreen(game, null, map, aiGroup.getChecked().getName(), Integer.parseInt(heatSize.getText())));
+                    game.setScreen(new SimulatorScreen(game, null, map, aiGroup.getChecked().getName(), Integer.parseInt(heatSize.getText()), Float.parseFloat(pursDist.getText())));
                     remove();
                 }
             }
@@ -94,22 +99,26 @@ public class NewSimulationWindow extends Window {
         //selectMapButton.setPosition(140,250);
 
         if(!fromSimScreen) {
-            table.add(selectMapButton).width(150);
+            table.add(selectMapButton).width(150).center().colspan(2).padBottom(3f);
             table.row();
         }
-        table.add(graphCheckBox).width(150);
-        table.row();
-        table.add(coordinateExplorer).width(150);
+
+        table.add(coordinateExplorer).width(150).padBottom(8f);
+        table.add(graphCheckBox).width(150).padBottom(8f);
         table.row();
         table.add(heatSizeInfo);
+        table.add(pursVision);
         table.row();
-        table.add(heatSize);
+        table.add(heatSize).padRight(3f);
+        table.add(pursDist).padLeft(3f);
         table.row();
-        table.add(startButton).width(150);
+        table.add(startButton).width(150).center().colspan(2).padTop(7f);
         table.row();
-        table.add(backButton).width(150);
+        table.add(backButton).width(150).center().colspan(2).padTop(4f);
         table.row();
+        table.center();
         add(table);
+
     }
 
     private void showFileChooser() {

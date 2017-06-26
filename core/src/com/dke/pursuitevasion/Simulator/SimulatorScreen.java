@@ -47,7 +47,7 @@ public class SimulatorScreen implements Screen, InputProcessor{
     ArrayList<ModelInstance> nodes =  new ArrayList<ModelInstance>();
     ModelBatch modelBatch = new ModelBatch();
 
-    public SimulatorScreen(PursuitEvasion game, FileHandle mapFile, PolyMap Map, String AI, int heatSize) {
+    public SimulatorScreen(PursuitEvasion game, FileHandle mapFile, PolyMap Map, String AI, int heatSize, float visionSight) {
 
         this.heatSize = heatSize;
         /* Load the course from a file */
@@ -146,7 +146,7 @@ public class SimulatorScreen implements Screen, InputProcessor{
         engine.addSystem(visionSystem);
         engine.addSystem(new EvaderSystem(visionSystem, map, engine, heatSize));
         engine.addSystem(new CCTvSystem(visionSystem, map));
-        engine.addSystem(new PursuerSystem(visionSystem, graph, map, map.getaI().length,AI,heatSize));
+        engine.addSystem(new PursuerSystem(visionSystem, graph, map, map.getaI().length,AI,heatSize, visionSight));
 
 
 
@@ -154,7 +154,7 @@ public class SimulatorScreen implements Screen, InputProcessor{
             if(map.getaI()[i].isCCTV){
                 engine.addEntity(entityFactory.createCCTv(map.getaI()[i].position));
             } else {
-                engine.addEntity(entityFactory.createPursuer(map.getaI()[i].position, agentColor));
+                engine.addEntity(entityFactory.createPursuer(map.getaI()[i].position, agentColor, visionSight));
             }
         }
 

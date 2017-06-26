@@ -93,8 +93,9 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
     private int evaderCounter;
     private String stats = "";
     private int heatSize;
+    float sightDist;
 
-    public PursuerSystem(VisionSystem visionSystem, CXGraph graph, PolyMap map, int pursuerCount, String AI, int heatSize) {
+    public PursuerSystem(VisionSystem visionSystem, CXGraph graph, PolyMap map, int pursuerCount, String AI, int heatSize, float SightDist) {
         super(Family.all(PursuerComponent.class).get());
 
         this.heatSize = heatSize;
@@ -103,6 +104,7 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
         pathFinder = new PathFinder(map, mapSize, gapSize);
         entityFactory = new EntityFactory();
 
+        sightDist = SightDist;
         mMap = map;
         pursCount = pursuerCount;
         coordExplorer = new CoordExplor(map, 0.2f, discWidth, pursuerCount, pathFinder);
@@ -252,7 +254,7 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
         }
         if (messageNumber == EntityFactory.pursuerCounter )
         {
-            engine.addEntity(entityFactory.createPursuer(new Vector3(0f,0f,0f), agentColor));
+            engine.addEntity(entityFactory.createPursuer(new Vector3(0f,0f,0f), agentColor, sightDist));
             messageNumber = 0;
         }
 

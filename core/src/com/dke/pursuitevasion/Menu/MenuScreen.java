@@ -67,7 +67,7 @@ public class MenuScreen implements Screen {
 
         table.add(project);
         table.row();
-        table.add(buttonMapBuilder).size(200,50);
+        table.add(buttonMapBuilder).size(200,50).padBottom(10);
         table.row();
         table.add(buttonStartSim).size(200,50);
         table.row();
