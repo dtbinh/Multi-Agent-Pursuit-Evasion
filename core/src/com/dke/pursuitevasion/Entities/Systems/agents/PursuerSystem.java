@@ -83,8 +83,8 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
     CoordExplor coordExplorer;
     ArrayList<ModelInstance> nodes =  new ArrayList<ModelInstance>();
 
-    private Color agentColor = new Color(156,229,251,0);
-    private Color evaderColor = new Color(0,0,0,0);
+    private Color agentColor = Color.WHITE;
+    private Color evaderColor = Color.BLACK;
 
     public int mapSize = 250;
     public float gapSize = 0.1f;

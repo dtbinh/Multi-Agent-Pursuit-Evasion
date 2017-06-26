@@ -40,6 +40,10 @@ public class CoordExplor {
     double stepSize = 6;
     int pursCount;
 
+    private Color exploredColor = new Color(93f/255,215f/255,251f/255,0.5f);
+    private Color otherColor = new Color(40f/255,204f/255,249f/255,0.5f);
+
+
 
     public CoordExplor(PolyMap Map, float Gap, int Width, int pursuerCount, PathFinder pathFinder){
         gap = Gap;
@@ -65,9 +69,9 @@ public class CoordExplor {
 
         computeOpenness();
         ModelBuilder modelBuilder = new ModelBuilder();
-        box = modelBuilder.createBox(0.05f, 0.02f, 0.05f,new Material(ColorAttribute.createDiffuse(Color.RED)),
+        box = modelBuilder.createBox(0.05f, 0.02f, 0.05f,new Material(ColorAttribute.createDiffuse(exploredColor)),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
-        expBox = modelBuilder.createBox(0.05f, 0.02f, 0.05f,new Material(ColorAttribute.createDiffuse(Color.GREEN)),
+        expBox = modelBuilder.createBox(0.05f, 0.02f, 0.05f,new Material(ColorAttribute.createDiffuse(otherColor)),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
 
     }

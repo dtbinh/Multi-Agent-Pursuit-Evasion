@@ -41,6 +41,8 @@ public class VisionSystem extends IteratingSystem implements EntityListener, Deb
     private ImmutableArray<Entity> observables;
     private ImmutableArray<Entity> walls;
 
+    private Color visionColor = new Color(156f/255,229f/255,251f/255,0.00001f);
+
     public VisionSystem() {
         super(Family.all(ObserverComponent.class).get());
     }
@@ -193,7 +195,7 @@ public class VisionSystem extends IteratingSystem implements EntityListener, Deb
             ObserverComponent observer = observerMapper.get(entity);
             if (observer.fovAngle < 360f) {
                 MeshPartBuilder builder = modelBuilder.part("triangle", 1, 3, new Material());
-                builder.setColor(Color.WHITE);
+                builder.setColor(visionColor);
 
                 float halfFov = observer.fovAngle * 0.5f;
 
@@ -217,10 +219,10 @@ public class VisionSystem extends IteratingSystem implements EntityListener, Deb
                 modelBatch.render(triangleInstance);
             } else {
                 MeshPartBuilder builder = modelBuilder.part("circle", 1, 3, new Material());
-                builder.setColor(Color.WHITE);
+                builder.setColor(visionColor);
                 float radius = observer.distance;
                 Vector3 center = new Vector3(observer.position.x, 0, observer.position.y);
-                builder.circle(radius, 180, center, new Vector3(0,1,0));
+                builder.circle(radius, 1000, center, new Vector3(0,1,0));
                 Model circleModel = modelBuilder.end();
                 ModelInstance circleInstance = new ModelInstance(circleModel);
                 modelBatch.render(circleInstance);
