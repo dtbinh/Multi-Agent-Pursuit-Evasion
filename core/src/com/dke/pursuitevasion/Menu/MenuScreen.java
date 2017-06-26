@@ -82,7 +82,7 @@ public class MenuScreen implements Screen {
     }
 
     private void newSimWindow() {
-        newSimulationWindow = new NewSimulationWindow(skin, game, this);
+        newSimulationWindow = new NewSimulationWindow(skin, game, this, null);
         stage.addActor(newSimulationWindow);
         newSimulationWindow.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 1);
     }

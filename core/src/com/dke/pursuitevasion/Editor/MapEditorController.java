@@ -29,8 +29,8 @@ public class MapEditorController {
     public ArrayList<ModelInstance> instances;
     private ArrayList<Vector3> instanceVectors;
     public ArrayList<WallInfo> wallInfo;
-    private ArrayList<AgentInfo> agentsInfo;
-    private ArrayList<EvaderInfo> evaderInfo;
+    public ArrayList<AgentInfo> agentsInfo;
+    public ArrayList<EvaderInfo> evaderInfo;
     public ArrayList<EdgeVectors> edges;
 
     private float[] vertList = new float[0];

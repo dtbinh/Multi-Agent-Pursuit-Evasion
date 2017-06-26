@@ -5,6 +5,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.dke.pursuitevasion.PolyMap;
 import com.dke.pursuitevasion.PursuitEvasion;
 import com.dke.pursuitevasion.Simulator.SimulatorScreen;
 
@@ -17,16 +18,21 @@ public class NewSimulationWindow extends Window {
     private final MenuScreen menuScreen;
     private Skin skin;
     private FileHandle file;
-    private boolean mapSelected;
+    private boolean mapSelected, fromSimScreen;
+    PolyMap map;
 
-    public NewSimulationWindow(Skin skin, PursuitEvasion game, MenuScreen screen) {
+    public NewSimulationWindow(Skin skin, PursuitEvasion game, MenuScreen screen, PolyMap Map) {
         super("New Simulation", skin);
         this.game = game;
         this.setModal(false);
         this.skin = skin;
-        this.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        this.setSize(400, 325);
         this.menuScreen = screen;
         this.setMovable(false);
+        if(Map!=null){
+            map = Map;
+            fromSimScreen = true;
+        }
         initGUI();
     }
 
@@ -69,6 +75,10 @@ public class NewSimulationWindow extends Window {
                     game.setScreen(new SimulatorScreen(game, file, null, aiGroup.getChecked().getName(), Integer.parseInt(heatSize.getText())));
                     remove();
                 }
+                if(map!=null){
+                    game.setScreen(new SimulatorScreen(game, null, map, aiGroup.getChecked().getName(), Integer.parseInt(heatSize.getText())));
+                    remove();
+                }
             }
         });
         //selectMapButton.setPosition(140,150);
@@ -83,8 +93,10 @@ public class NewSimulationWindow extends Window {
         });
         //selectMapButton.setPosition(140,250);
 
-        table.add(selectMapButton).width(150);
-        table.row();
+        if(!fromSimScreen) {
+            table.add(selectMapButton).width(150);
+            table.row();
+        }
         table.add(graphCheckBox).width(150);
         table.row();
         table.add(coordinateExplorer).width(150);

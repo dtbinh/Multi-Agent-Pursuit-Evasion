@@ -226,8 +226,18 @@ public class MapEditorScreen implements Screen, InputProcessor {
         simulatorButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if(controller.localMap!=null) {
-                    game.setScreen(new SimulatorScreen(game, null, controller.localMap,"GRAPHSEARCHER",19));
+                if(isBuilt) {
+                    String fileName = "Map";
+                    PolyMap map = new PolyMap(fileName);
+                    map.setPolygonMesh(controller.getPolygonMesh());
+                    map.setWalls(controller.wallInfo);
+                    map.setEdgeVectors(controller.edges);
+                    map.setAgentsInfo(controller.agentsInfo);
+                    map.setEvaderInfo(controller.evaderInfo);
+                    newSimulationWindow = new NewSimulationWindow(skin, game, simMenu, map);
+                    stage.addActor(newSimulationWindow);
+                    newSimulationWindow.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 1);
+                    //game.setScreen(new SimulatorScreen(game, null, controller.localMap,"GRAPHSEARCHER",19));
                 }
 
             }
