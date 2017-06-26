@@ -137,6 +137,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
         TextButton addCCTVButton = new TextButton("Add CCTV", skin);
         TextButton simulatorButton = new TextButton("Simulator", skin);
         TextButton backButton = new TextButton("Back", skin);
+        TextButton removeButton = new TextButton("Remove Object", skin);
         final TextButton concaveButton = new TextButton("Concave Mesh", skin);
         TextButton convexButton = new TextButton("Convex Mesh", skin);
 
@@ -187,7 +188,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
         wallEditorButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if(isBuilt && (controller.getMode() == Mode.DO_NOTHING || controller.getMode() == Mode.EVADER_EDITOR || controller.getMode() == Mode.PURSUER_EDITOR || controller.getMode()==Mode.CCTV_EDITOR ))
+                if(isBuilt && (controller.getMode() == Mode.DO_NOTHING || controller.getMode() == Mode.EVADER_EDITOR || controller.getMode() == Mode.PURSUER_EDITOR || controller.getMode()==Mode.CCTV_EDITOR|| controller.getMode()==Mode.REMOVE_EDITOR ))
                     controller.setMode(Mode.WALL_EDITOR);
             }
         });
@@ -195,7 +196,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
        addPursuerButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (isBuilt && (controller.getMode() == Mode.DO_NOTHING || controller.getMode() == Mode.WALL_EDITOR || controller.getMode()==Mode.EVADER_EDITOR || controller.getMode()==Mode.CCTV_EDITOR))
+                if (isBuilt && (controller.getMode() == Mode.DO_NOTHING || controller.getMode() == Mode.WALL_EDITOR || controller.getMode()==Mode.EVADER_EDITOR || controller.getMode()==Mode.CCTV_EDITOR || controller.getMode()==Mode.REMOVE_EDITOR))
                     controller.setMode(Mode.PURSUER_EDITOR);
             }
         });
@@ -203,7 +204,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
         addEvaderButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (isBuilt && (controller.getMode() == Mode.DO_NOTHING || controller.getMode() == Mode.WALL_EDITOR || controller.getMode()==Mode.PURSUER_EDITOR || controller.getMode()==Mode.CCTV_EDITOR))
+                if (isBuilt && (controller.getMode() == Mode.DO_NOTHING || controller.getMode() == Mode.WALL_EDITOR || controller.getMode()==Mode.PURSUER_EDITOR || controller.getMode()==Mode.CCTV_EDITOR|| controller.getMode()==Mode.REMOVE_EDITOR))
                    controller.setMode(Mode.EVADER_EDITOR);
             }
         });
@@ -261,6 +262,14 @@ public class MapEditorScreen implements Screen, InputProcessor {
                 }
             }
         });
+        removeButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if(isBuilt){
+                    controller.setMode(Mode.REMOVE_EDITOR);
+                }
+            }
+        });
 
         // Add buttons
         table.add(mapBuilderText);
@@ -279,7 +288,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
         table.row();
         table.add(addEvaderButton).width(150);
         table.row();
-        table.add(addCCTVButton).width(150);
+        table.add(removeButton).width(150);
         table.row();
         table.add(exportText);
         table.row();
@@ -318,21 +327,6 @@ public class MapEditorScreen implements Screen, InputProcessor {
         stage.addActor(windowDesign);
     }
 
-    public void switchMode(){
-        if(controller.delauneyTri){
-            controller.delauneyTri = false;
-            //stage = new Stage();
-            createUI();
-            System.out.println("1");
-        }else{
-            controller.delauneyTri = true;
-            //stage = new Stage();
-            createUI();
-            System.out.println("2");
-
-        }
-    }
-
     @Override
     public void show() {
         Gdx.input.setInputProcessor(inputMultiplexer);
@@ -363,7 +357,13 @@ public class MapEditorScreen implements Screen, InputProcessor {
                 modelBatch.render(instance, environ);
             }
         }else{
-            for (ModelInstance instance : controller.getInstances()) {
+            for (ModelInstance instance : controller.agentInstances) {
+                modelBatch.render(instance, environ);
+            }
+            for (ModelInstance instance : controller.wallInstances) {
+                modelBatch.render(instance, environ);
+            }
+            for (ModelInstance instance : controller.evaderInstances) {
                 modelBatch.render(instance, environ);
             }
         }
@@ -494,6 +494,7 @@ public class MapEditorScreen implements Screen, InputProcessor {
                     break;
                 case WALL_EDITOR:
                     controller.addWallToArray();
+                    System.out.println("TOUCH UP ADD WALL");
                     leftPressed = false;
                     wallVec = null;
                     break;
@@ -512,6 +513,8 @@ public class MapEditorScreen implements Screen, InputProcessor {
                 case DO_NOTHING:
                     leftPressed = false;
                     break;
+                case REMOVE_EDITOR:
+                    controller.removeObject(screenX, screenY, camera);
             }
         }
         return false;

@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ShortArray;
 import com.dke.pursuitevasion.*;
 import com.dke.pursuitevasion.UI.FileChooser;
@@ -26,7 +27,10 @@ public class MapEditorController {
     private Mode mode = Mode.DO_NOTHING;
 
     private ArrayList<ModelInstance> instancesSpheres;
-    public ArrayList<ModelInstance> instances;
+    public ArrayList<ModelInstance> agentInstances;
+    public ArrayList<ModelInstance> evaderInstances;
+    public ArrayList<ModelInstance> wallInstances;
+    //public ArrayList<ModelInstance> instances;
     private ArrayList<Vector3> instanceVectors;
     public ArrayList<WallInfo> wallInfo;
     public ArrayList<AgentInfo> agentsInfo;
@@ -56,8 +60,11 @@ public class MapEditorController {
     ModelInstance mWall, mWallPerm;
 
     public MapEditorController() {
-        instances= new ArrayList<ModelInstance>();
+        //instances= new ArrayList<ModelInstance>();
         instancesSpheres= new ArrayList<ModelInstance>();
+        agentInstances = new ArrayList<ModelInstance>();
+        evaderInstances = new ArrayList<ModelInstance>();
+        wallInstances = new ArrayList<ModelInstance>();
         instanceVectors = new ArrayList<Vector3>();
         wallInfo = new ArrayList<WallInfo>();
         agentsInfo = new ArrayList<AgentInfo>();
@@ -186,9 +193,9 @@ public class MapEditorController {
         this.polygonMesh = polygonMesh;
     }
 
-    public ArrayList<ModelInstance> getInstances() {
-        return instances;
-    }
+    /*public ArrayList<ModelInstance> getInstances() {
+        //return instances;
+    }*/
 
     public ArrayList<Vector3> getInstanceVectors() {
         return instanceVectors;
@@ -202,6 +209,84 @@ public class MapEditorController {
                 return true;
         }
         return false;
+    }
+
+    public void removeObject(int screenX, int screenY, PerspectiveCamera camera){
+        Ray pickRay = camera.getPickRay(screenX, screenY);
+        Vector3 vec = new Vector3();
+        Intersector.intersectRayPlane(pickRay, new Plane(new Vector3(0f,1f,0f),0f), vec);
+        boolean bool = true;
+        if(bool) {
+            for (int i = 0; i < agentsInfo.size(); i++) {
+                Vector3 v = agentsInfo.get(i).position;
+                float tolerance = 0.1f;
+                if (vec.x < v.x + tolerance && vec.x > v.x - tolerance && vec.z < v.z + tolerance && vec.z > v.z - tolerance) {
+                    agentsInfo.remove(i);
+                    agentInstances.clear();
+                    ArrayList<Vector3> tmpCpy = new ArrayList<Vector3>();
+                    for(int k=0;k<agentsInfo.size();k++){
+                        tmpCpy.add(agentsInfo.get(k).position.cpy());
+                    }
+                    agentsInfo.clear();
+                    for (int j = 0; j < tmpCpy.size(); j++) {
+                        addAgent(0, 0, null, false, tmpCpy.get(j));
+                    }
+                    bool = false;
+                    break;
+                }
+
+            }
+        }
+
+        if(bool) {
+            for (int i = 0; i < evaderInfo.size(); i++) {
+                Vector3 v = evaderInfo.get(i).position;
+                float tolerance = 0.2f;
+                if (vec.x < v.x + tolerance && vec.x > v.x - tolerance && vec.z < v.z + tolerance && vec.z > v.z - tolerance) {
+                    evaderInfo.remove(i);
+                    evaderInstances.clear();
+                    ArrayList<Vector3> tmpCpy = new ArrayList<Vector3>();
+                    for(int k=0;k<evaderInfo.size();k++){
+                        tmpCpy.add(evaderInfo.get(k).position.cpy());
+                    }
+                    evaderInfo.clear();
+                    for (int j = 0; j < tmpCpy.size(); j++) {
+                        addEvader(0, 0, null, tmpCpy.get(j));
+                    }
+                    bool = false;
+                    break;
+                }
+            }
+        }
+
+        if(bool) {
+            for (int i = 0; i < wallInfo.size(); i++) {
+                float tolerance = 0.15f;
+                Vector2 point = new Vector2(vec.x, vec.z);
+                Vector2 lineStart = new Vector2(wallInfo.get(i).start.x, wallInfo.get(i).start.z);
+                Vector2 lineEnd = new Vector2(wallInfo.get(i).end.x, wallInfo.get(i).end.z);
+                float dist = Intersector.distanceSegmentPoint(lineStart, lineEnd, point);
+                if (dist < tolerance) {
+                    wallInfo.remove(i);
+
+                    ArrayList<Vector3> tmpCpy = new ArrayList<Vector3>();
+
+                    for (int k = 0; k < wallInfo.size(); k++) {
+                        tmpCpy.add(wallInfo.get(k).start.cpy());
+                        tmpCpy.add(wallInfo.get(k).end.cpy());
+                    }
+                    wallInfo.clear();
+                    wallInstances.clear();
+
+                    for (int j = 0; j < tmpCpy.size() / 2; j++) {
+                        addWall(tmpCpy.get(j * 2).cpy(), tmpCpy.get(j * 2 + 1).cpy());
+                        addWallToArray();
+                    }
+                    break;
+                }
+            }
+        }
+
     }
 
     public void addOuterVertex(int screenX, int screenY, PerspectiveCamera camera) {
@@ -236,7 +321,6 @@ public class MapEditorController {
             Ray pickRay = camera.getPickRay(screenX, screenY);
             Vector3 intersection = new Vector3();
             Intersector.intersectRayPlane(pickRay, new Plane(new Vector3(0f, 1f, 0f), 0f), intersection);
-            System.out.println(intersection);
 
 
             setAgentInfo(intersection, isCCTV);
@@ -246,14 +330,16 @@ public class MapEditorController {
                         VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
                 if(!nearNeighbor(intersection)) {
                     ModelInstance cctvInstance = new ModelInstance(cctvModel, intersection);
-                    instances.add(cctvInstance);
+                    //instances.add(cctvInstance);
+                    agentInstances.add(cctvInstance);
                 }
             }else{
                 Model agentModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.BLUE)),
                         VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
                 if(!nearNeighbor(intersection)) {
                     ModelInstance agentInstance = new ModelInstance(agentModel, intersection);
-                    instances.add(agentInstance);
+                    //instances.add(agentInstance);
+                    agentInstances.add(agentInstance);
                 }
             }
         }else{
@@ -265,14 +351,18 @@ public class MapEditorController {
                         VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
                 if(!nearNeighbor(postion)) {
                     ModelInstance cctvInstance = new ModelInstance(cctvModel, postion);
-                    instances.add(cctvInstance);
+                    //instances.add(cctvInstance);
+                    agentInstances.add(cctvInstance);
+
                 }
             }else{
                 Model agentModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.BLUE)),
                         VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
                 if(!nearNeighbor(postion)) {
                     ModelInstance agentInstance = new ModelInstance(agentModel, postion);
-                    instances.add(agentInstance);
+                    //instances.add(agentInstance);
+                    agentInstances.add(agentInstance);
+
                 }
             }
         }
@@ -286,6 +376,7 @@ public class MapEditorController {
             Intersector.intersectRayPlane(pickRay, new Plane(new Vector3(0f, 1f, 0f), 0f), intersection);
 
 
+
             setEvaderInfo(intersection);
 
             Model evaderModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.RED)),
@@ -293,7 +384,8 @@ public class MapEditorController {
 
             if(!nearNeighbor(intersection)) {
                 ModelInstance evaderInstance = new ModelInstance(evaderModel, intersection);
-                instances.add(evaderInstance);
+                //instances.add(evaderInstance);
+                evaderInstances.add(evaderInstance);
             }
         }else{
             setEvaderInfo(position);
@@ -303,15 +395,13 @@ public class MapEditorController {
 
             if(!nearNeighbor(position)) {
                 ModelInstance evaderInstance = new ModelInstance(evaderModel, position);
-                instances.add(evaderInstance);
+                //instances.add(evaderInstance);
+                evaderInstances.add(evaderInstance);
             }
         }
 
     }
 
-    public void removeEvader(int screenX, int screenY, PerspectiveCamera camera){
-        instances.get(0);
-    }
 
     public void addWall(Vector3 click, Vector3 clickDrag){
         currentVector = click.cpy();
@@ -362,7 +452,8 @@ public class MapEditorController {
     public void addWallToArray(){
         mWall = null;
         if(mWallPerm!=null)
-        instances.add(mWallPerm);
+            wallInstances.add(mWallPerm);
+        //instances.add(mWallPerm);
         setWallInfo(Distance, Height, Angle, Midpoint, currentVector, nextVector);
     }
 

@@ -9,5 +9,6 @@ public enum Mode {
     WALL_EDITOR,
     PURSUER_EDITOR,
     EVADER_EDITOR,
-    CCTV_EDITOR
+    CCTV_EDITOR,
+    REMOVE_EDITOR
 }
