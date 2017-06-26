@@ -30,7 +30,7 @@ public class PFMap {
     private EvaderComponent evader;
     private PathFinder pathFinder;
     private ImmutableArray<Entity> entities;
-    private int startValue = 35;
+    private int startValue = 10;
     private int updateCounter = 0;
 
     public PFMap(int[][] o, Engine e, PolyMap map, EvaderComponent evader){
@@ -65,8 +65,8 @@ public class PFMap {
     public void updateMap(){
 
         for (int a = 0; a < obstacleMap.length; a++) {
-            for (int b = 0; b < obstacleMap[a].length; b++) {
-                heatMap[b][a] = obstacleMap[b][a];
+            for (int b = 0; b < obstacleMap[0].length; b++) {
+                heatMap[a][b] = obstacleMap[a][b];
             }
         }
 
@@ -379,7 +379,7 @@ public class PFMap {
 
         for (int i = 0; i < heatMap.length; i++) {
             for (int j = 0; j < heatMap[0].length; j++) {
-                System.out.print(heatMap[i][j] + "  ");
+                System.out.print(heatMap[j][i] + "  ");
             }
             System.out.println();
         }
