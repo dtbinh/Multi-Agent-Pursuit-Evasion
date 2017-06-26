@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.ShortArray;
 import com.dke.pursuitevasion.*;
 import com.dke.pursuitevasion.UI.FileChooser;
 import com.dke.pursuitevasion.UI.FileSaver;
+import com.sun.javafx.geom.Line2D;
 import sun.management.Agent;
 
 import java.util.*;
@@ -57,7 +58,7 @@ public class MapEditorController {
     private Mesh polygonMesh;
     private ModelInstance polygonModel;
     public boolean meshRenderable, meshRendered, delauneyTri = true;
-    ModelInstance mWall, mWallPerm;
+    ModelInstance mWall, mWallPerm, mXWall;
 
     private Color evaderColor = Color.BLACK;
     private Color agentColor = Color.WHITE;
@@ -396,61 +397,114 @@ public class MapEditorController {
 
     }
 
+    public boolean farFromWall(Vector3 vec){
+        for(int i=0;i<wallInfo.size();i++){
+            float tolerance = 0.12f;
+            Vector2 point = new Vector2(vec.x, vec.z);
+            Vector2 lineStart = new Vector2(wallInfo.get(i).start.x, wallInfo.get(i).start.z);
+            Vector2 lineEnd = new Vector2(wallInfo.get(i).end.x, wallInfo.get(i).end.z);
+            float dist = Intersector.distanceSegmentPoint(lineStart, lineEnd, point);
+            if (dist < tolerance) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void addWall(Vector3 click, Vector3 clickDrag){
-        //first vec not close to a wall
-        //second vec not close to a wall
-        //line does not intersect
-        currentVector = click.cpy();
-        nextVector = clickDrag.cpy();
-        Vector3 cClick = click.cpy();
-        Vector3 cClickDrag = clickDrag.cpy();
+        if(farFromWall(click)) {
+            Vector3 ocClick = click.cpy();
+            Vector3 ocClickDrag = clickDrag.cpy();
+            //first vec not close to a wall
+            //second vec not close to a wall
+            //line does not intersect
+            currentVector = click.cpy();
+            nextVector = clickDrag.cpy();
+            Vector3 cClick = click.cpy();
+            Vector3 cClickDrag = clickDrag.cpy();
 
-        float width = Math.abs(click.x - clickDrag.x);
-        float depth = Math.abs(click.z - clickDrag.z);
-        float distance = click.dst(clickDrag);
+            float width = Math.abs(click.x - clickDrag.x);
+            float depth = Math.abs(click.z - clickDrag.z);
+            float distance = click.dst(clickDrag);
 
-        if(width<0.1f)
-            width = 0.1f;
-        if(depth<0.1f)
-            depth = 0.1f;
-        float height = 0.06f;
-        Vector3 midPoint = ((click.sub(clickDrag)).scl(0.5f)).add(clickDrag);
-        midPoint.y +=height/2+0.01f;
-        Color wallColor = new Color(156,229,251,0);
+            if (width < 0.1f)
+                width = 0.1f;
+            if (depth < 0.1f)
+                depth = 0.1f;
+            float height = 0.06f;
+            Vector3 midPoint = ((click.sub(clickDrag)).scl(0.5f)).add(clickDrag);
+            midPoint.y += height / 2 + 0.01f;
+            Color wallColor = new Color(156, 229, 251, 0);
 
-        Model wall = modelBuilder.createBox(distance, height, 0.08f,new Material(ColorAttribute.createDiffuse(wallColor)),
-                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
-        mWall = new ModelInstance(wall, midPoint);
-        Model wallPerm = modelBuilder.createBox(distance, height, 0.08f,new Material(ColorAttribute.createDiffuse(wallColor)),
-                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
-        mWallPerm = new ModelInstance(wallPerm, midPoint);
+            Model wall = modelBuilder.createBox(distance, height, 0.08f, new Material(ColorAttribute.createDiffuse(wallColor)),
+                    VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+            mWall = new ModelInstance(wall, midPoint);
 
-        Vector3 difference = (cClick.sub(cClickDrag));
-        Vector3 xAxis = new Vector3(1, 0, 0);
-        float dotProd = difference.dot(xAxis);
-        Vector3 origin = new Vector3(0, 0, 0);
-        dotProd = dotProd / (difference.dst(origin) * xAxis.dst(origin));
-        double dotResult = (double) dotProd;
-        double angle = Math.acos(dotResult);
-        float floatAngle = (float) angle;
+            Model wallWrong = modelBuilder.createBox(distance, height, 0.08f, new Material(ColorAttribute.createDiffuse(Color.RED)),
+                    VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+            mXWall = new ModelInstance(wallWrong, midPoint);
 
-        if (difference.z > 0)
-            floatAngle *= -1;
-        mWall.transform.rotateRad(new Vector3(0, 1, 0), floatAngle);
-        mWallPerm.transform.rotateRad(new Vector3(0, 1, 0), floatAngle);
+            Model wallPerm = modelBuilder.createBox(distance, height, 0.08f, new Material(ColorAttribute.createDiffuse(wallColor)),
+                    VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+            mWallPerm = new ModelInstance(wallPerm, midPoint);
 
-        Distance = distance;
-        Height = height;
-        Angle = floatAngle;
-        Midpoint = midPoint;
+            Vector3 difference = (cClick.sub(cClickDrag));
+            Vector3 xAxis = new Vector3(1, 0, 0);
+            float dotProd = difference.dot(xAxis);
+            Vector3 origin = new Vector3(0, 0, 0);
+            dotProd = dotProd / (difference.dst(origin) * xAxis.dst(origin));
+            double dotResult = (double) dotProd;
+            double angle = Math.acos(dotResult);
+            float floatAngle = (float) angle;
+
+            if (difference.z > 0)
+                floatAngle *= -1;
+            mWall.transform.rotateRad(new Vector3(0, 1, 0), floatAngle);
+            mWallPerm.transform.rotateRad(new Vector3(0, 1, 0), floatAngle);
+            //if wall is fucked = mWall = mXwall
+            mXWall.transform.rotateRad(new Vector3(0, 1, 0), floatAngle);
+            if(!farFromWall(ocClickDrag)){
+                mWall = mXWall;
+            }
+            if(lineIntersectWall(ocClick, ocClickDrag)){
+                mWall = mXWall;
+            }
+
+            Distance = distance;
+            Height = height;
+            Angle = floatAngle;
+            Midpoint = midPoint;
+        }
+    }
+
+    public boolean lineIntersectWall(Vector3 lineStart, Vector3 lineEnd){
+        for (int i = 0; i < wallInfo.size(); i++) {
+            float x1 = wallInfo.get(i).start.x;
+            float z1 = wallInfo.get(i).start.z;
+            float x2 = wallInfo.get(i).end.x;
+            float z2 = wallInfo.get(i).end.z;
+
+            Line2D line = new Line2D(lineStart.x, lineStart.z, lineEnd.x, lineEnd.z);
+            Line2D wall = new Line2D(x1, z1, x2, z2);
+            if(wall.intersectsLine(line)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void addWallToArray(){
         mWall = null;
-        if(mWallPerm!=null)
-            wallInstances.add(mWallPerm);
-        //instances.add(mWallPerm);
-        setWallInfo(Distance, Height, Angle, Midpoint, currentVector, nextVector);
+        if(mWallPerm!=null) {
+            if(farFromWall(currentVector)&& farFromWall(nextVector)&&!lineIntersectWall(currentVector, nextVector)) {
+                wallInstances.add(mWallPerm);
+                //instances.add(mWallPerm);
+                setWallInfo(Distance, Height, Angle, Midpoint, currentVector, nextVector);
+            }
+        }else{
+            currentVector = new Vector3();
+            nextVector = new Vector3();
+        }
     }
 
     private void resizeArray(float[] oldVertList) {

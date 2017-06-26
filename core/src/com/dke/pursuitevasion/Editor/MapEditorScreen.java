@@ -494,7 +494,6 @@ public class MapEditorScreen implements Screen, InputProcessor {
                     break;
                 case WALL_EDITOR:
                     controller.addWallToArray();
-                    System.out.println("TOUCH UP ADD WALL");
                     leftPressed = false;
                     wallVec = null;
                     break;
