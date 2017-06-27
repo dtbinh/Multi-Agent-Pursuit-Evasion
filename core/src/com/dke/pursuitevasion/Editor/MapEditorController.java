@@ -324,7 +324,6 @@ public class MapEditorController {
             Ray pickRay = camera.getPickRay(screenX, screenY);
             Vector3 intersection = new Vector3();
             Intersector.intersectRayTriangles(pickRay,vertList, mIndices, 5, intersection);
-            System.out.println(intersection+"  ++");
             if(isCCTV){
                 Model cctvModel = modelBuilder.createSphere(0.15f, 0.15f, 0.15f, 20, 20, new Material(ColorAttribute.createDiffuse(Color.BLACK)),
                         VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);

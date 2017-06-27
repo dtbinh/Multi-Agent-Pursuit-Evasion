@@ -180,7 +180,6 @@ public class MapEditorScreen implements Screen, InputProcessor {
                 isBuilt=true;
                 addOuterVertexButton.setDisabled(true);
                 makePolygonButton.setDisabled(true);
-                wallEditorButton.setDisabled(true);
                 controller.setMode(Mode.DO_NOTHING);
             }
         });

@@ -88,6 +88,7 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
 
     public int mapSize = 250;
     public float gapSize = 0.1f;
+    public boolean noComm = true;
 
     private double startTime, finishTime;
     private int evaderCounter;
@@ -107,7 +108,7 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
         sightDist = SightDist;
         mMap = map;
         pursCount = pursuerCount;
-        coordExplorer = new CoordExplor(map, 0.2f, discWidth, pursuerCount, pathFinder, true);
+        coordExplorer = new CoordExplor(map, 0.2f, discWidth, pursuerCount, pathFinder, noComm);
 
 
         ModelBuilder modelBuilder = new ModelBuilder();
@@ -156,7 +157,7 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
         PursuerComponent pursuerComponent = Mappers.pursuerMapper.get(entity);
         ObserverComponent observerComponent = Mappers.observerMapper.get(entity);
         StateComponent stateComponent = Mappers.stateMapper.get(entity);
-        if(completeUpdate && (terribleSolution ||(coordExplorer.unexploredFrontier.size()==0 && coordExplorer.runOnce))){
+        if(!noComm && completeUpdate && (terribleSolution ||(coordExplorer.unexploredFrontier.size()==0 && coordExplorer.runOnce))){
             pursuerComponent.updatePosition = true;
             pursuerComponent.pursuerPointPath.clear();
             if(restartCounter==0){
@@ -184,7 +185,11 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
             if (!completeUpdate) {
                 pursuerComponent.costs = new double[discWidth][discWidth];
                 pursuerIndex = 0;
+                if(noComm){
+                    pursuerComponent.localMap = coordExplorer.localCellGrid();
+                }
                 coordExplorer.updateGrid(pursuerComponent, observerComponent);
+
             } else {
                 //if there is no path, assign task
                 if (pursuerComponent.pursuerPointPath.size() == 0) {

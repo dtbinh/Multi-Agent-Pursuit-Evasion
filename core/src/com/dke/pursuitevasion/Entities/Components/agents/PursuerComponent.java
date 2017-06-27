@@ -10,6 +10,7 @@ import com.dke.pursuitevasion.CellDecompose.Graph.CXPoint;
 import com.dke.pursuitevasion.Entities.Direction;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -45,6 +46,9 @@ public class PursuerComponent implements Component {
     public double[][] costs;
     public boolean updatePosition = true;
     public Cell targetCell;
+    public Cell[][] localMap;
+    public HashMap<Cell, Boolean> unexploredFrontierLocal = new HashMap<Cell, Boolean>();
+
 
     public void setState(CXAgentState state){
         //System.out.println("ComponentOperationHandlerge State from "+ this.state +  " to "+ state);
