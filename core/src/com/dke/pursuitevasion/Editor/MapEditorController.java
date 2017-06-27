@@ -408,6 +408,17 @@ public class MapEditorController {
                 return false;
             }
         }
+
+        for(int i=0;i<edges.size();i++){
+            float tolerance = 0.2f;
+            Vector2 point = new Vector2(vec.x, vec.z);
+            Vector2 lineStart = new Vector2(edges.get(i).Vector1.x, edges.get(i).Vector1.z);
+            Vector2 lineEnd = new Vector2(edges.get(i).Vector2.x, edges.get(i).Vector2.z);
+            float dist = Intersector.distanceSegmentPoint(lineStart, lineEnd, point);
+            if (dist < tolerance) {
+                return false;
+            }
+        }
         return true;
     }
 
