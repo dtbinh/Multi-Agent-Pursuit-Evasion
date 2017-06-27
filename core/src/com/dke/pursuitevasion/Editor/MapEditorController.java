@@ -206,12 +206,12 @@ public class MapEditorController {
     }
 
     private boolean nearNeighbor(Vector3 vec) {
-        for (int i=0; i<instanceVectors.size(); i++) {
+        /*for (int i=0; i<instanceVectors.size(); i++) {
             Vector3 v = instanceVectors.get(i);
             float tolerance = 0.2f;
             if (vec.x<v.x+tolerance && vec.x>v.x-tolerance && vec.z<v.z+tolerance && vec.z>v.z-tolerance)
                 return true;
-        }
+        }*/
         return false;
     }
 

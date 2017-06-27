@@ -52,16 +52,18 @@ public class NewSimulationWindow extends Window {
             }
         });
 
-        CheckBox graphCheckBox = new CheckBox("Graph Searcher", skin);
+        CheckBox graphCheckBox = new CheckBox(" Graph Searcher", skin);
         graphCheckBox.setName("GRAPHSEARCHER");
         //graphCheckBox.setChecked(true);
-        CheckBox coordinateExplorer = new CheckBox("Coordinate Explorer", skin);
+        CheckBox coordinateExplorer = new CheckBox(" Coordinate Explorer", skin);
         coordinateExplorer.setName("COORDINATEEXPLORER");
         coordinateExplorer.setChecked(true);
+
+        final CheckBox disCom = new CheckBox("Disable Comms", skin);
         final ButtonGroup aiGroup = new ButtonGroup(graphCheckBox, coordinateExplorer);
-        aiGroup.setMaxCheckCount(1);
+        aiGroup.setMaxCheckCount(2);
         aiGroup.setMinCheckCount(0);
-        aiGroup.setUncheckLast(true);
+        aiGroup.setUncheckLast(false);
 
         final Label heatSizeInfo = new Label("Set PF size",skin);
         final TextField heatSize = new TextField("19",skin);
@@ -75,14 +77,26 @@ public class NewSimulationWindow extends Window {
         startButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println(aiGroup.getChecked().getName());
-                if(file!= null) {
-                    game.setScreen(new SimulatorScreen(game, file, null, aiGroup.getChecked().getName(), Integer.parseInt(heatSize.getText()), Float.parseFloat(pursDist.getText())));
-                    remove();
-                }
-                if(map!=null){
-                    game.setScreen(new SimulatorScreen(game, null, map, aiGroup.getChecked().getName(), Integer.parseInt(heatSize.getText()), Float.parseFloat(pursDist.getText())));
-                    remove();
+                if(aiGroup.getAllChecked().size>0) {
+                    if (file != null) {
+                        if (aiGroup.getAllChecked().size == 2) {
+                            game.setScreen(new SimulatorScreen(game, file, null, "BOTH", Integer.parseInt(heatSize.getText()), Float.parseFloat(pursDist.getText()), disCom.isChecked()));
+                            remove();
+                        } else {
+                            game.setScreen(new SimulatorScreen(game, file, null, aiGroup.getChecked().getName(), Integer.parseInt(heatSize.getText()), Float.parseFloat(pursDist.getText()), disCom.isChecked()));
+                            remove();
+                        }
+                    }
+                    if (map != null) {
+                        if (aiGroup.getAllChecked().size == 2) {
+                            System.out.println("2");
+                            game.setScreen(new SimulatorScreen(game, null, map, "BOTH", Integer.parseInt(heatSize.getText()), Float.parseFloat(pursDist.getText()), disCom.isChecked()));
+                            remove();
+                        } else {
+                            game.setScreen(new SimulatorScreen(game, null, map, aiGroup.getChecked().getName(), Integer.parseInt(heatSize.getText()), Float.parseFloat(pursDist.getText()), disCom.isChecked()));
+                            remove();
+                        }
+                    }
                 }
             }
         });
@@ -99,12 +113,14 @@ public class NewSimulationWindow extends Window {
         //selectMapButton.setPosition(140,250);
 
         if(!fromSimScreen) {
-            table.add(selectMapButton).width(150).center().colspan(2).padBottom(3f);
+            table.add(selectMapButton).width(150).center().colspan(2).padBottom(9f);
             table.row();
         }
 
-        table.add(coordinateExplorer).width(150).padBottom(8f);
-        table.add(graphCheckBox).width(150).padBottom(8f);
+        table.add(coordinateExplorer).width(150).padBottom(2f);
+        table.add(graphCheckBox).width(150).padBottom(2f);
+        table.row();
+        table.add(disCom).padBottom(8f);
         table.row();
         table.add(heatSizeInfo);
         table.add(pursVision);

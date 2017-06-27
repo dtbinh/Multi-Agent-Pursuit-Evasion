@@ -222,7 +222,7 @@ public class VisionSystem extends IteratingSystem implements EntityListener, Deb
                 builder.setColor(visionColor);
                 float radius = observer.distance;
                 Vector3 center = new Vector3(observer.position.x, 0, observer.position.y);
-                builder.circle(radius, 1000, center, new Vector3(0,1,0));
+                builder.circle(radius, 350, center, new Vector3(0,1,0));
                 Model circleModel = modelBuilder.end();
                 ModelInstance circleInstance = new ModelInstance(circleModel);
                 modelBatch.render(circleInstance);

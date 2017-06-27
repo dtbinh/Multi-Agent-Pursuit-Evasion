@@ -250,7 +250,7 @@ public class CXAgentUtility {
 
     public ArrayList<CXPoint> addAdditionalSteps(PursuerComponent pC, List<Node> p){
         pC.pursuerPointPath= new ArrayList<CXPoint>();
-        float stepSize = 10;
+        float stepSize = 8;
         float diagStepSize= (float) Math.floor(1.4*stepSize);
         if(p.size()>1) {
             for (int i = 0; i < p.size() - 1; i++) {
@@ -296,7 +296,7 @@ public class CXAgentUtility {
         double distY = end.y - start.y;
         double distance = Math.sqrt((distX*distX)+(distY*distY));
         double steps = distance/0.2;
-        double stepSize = 10;
+        double stepSize = 8;
 
         for(int i=0;i<steps*stepSize;i++){
             double scale = i/(steps*stepSize);
