@@ -33,11 +33,11 @@ public class CoordExplor {
     public ArrayList<ModelInstance> nodes =  new ArrayList<ModelInstance>();
     Model box, expBox;
     Random random = new Random();
-    public boolean runOnce = false;
+    public boolean runOnce = false, noComms;
     public HashMap<Cell, Boolean> unexploredFrontier = new HashMap<Cell, Boolean>();
     Vector3[] pursuerPos;
     PathFinder pathFinder;
-    double stepSize = 6;
+    double stepSize = 4;
     int pursCount;
 
     private Color exploredColor = new Color(93f/255,215f/255,251f/255,0.5f);
@@ -45,7 +45,7 @@ public class CoordExplor {
 
 
 
-    public CoordExplor(PolyMap Map, float Gap, int Width, int pursuerCount, PathFinder pathFinder){
+    public CoordExplor(PolyMap Map, float Gap, int Width, int pursuerCount, PathFinder pathFinder, boolean disableComm){
         gap = Gap;
         mWidth = Width;
         cellGrid = new Cell[Width][Width];
@@ -53,6 +53,7 @@ public class CoordExplor {
         pursCount = pursuerCount;
         pursuerPos = new Vector3[pursuerCount];
         this.pathFinder = pathFinder;
+        noComms = disableComm;
         for(int i=0;i<Width;i++){
             for(int j=0;j<Width;j++){
                 cellGrid[i][j] = new Cell(i,j);
@@ -66,14 +67,32 @@ public class CoordExplor {
             }
         }
 
-
         computeOpenness();
         ModelBuilder modelBuilder = new ModelBuilder();
         box = modelBuilder.createBox(0.05f, 0.02f, 0.05f,new Material(ColorAttribute.createDiffuse(exploredColor)),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
-        expBox = modelBuilder.createBox(0.05f, 0.02f, 0.05f,new Material(ColorAttribute.createDiffuse(otherColor)),
+        expBox = modelBuilder.createBox(0.05f, 0.02f, 0.05f,new Material(ColorAttribute.createDiffuse(Color.RED)),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
 
+    }
+
+    public Cell[][] localCellGrid(){
+        Cell[][] lCG = new Cell[mWidth][mWidth];
+        for(int i=0;i<mWidth;i++){
+            for(int j=0;j<mWidth;j++){
+                lCG[i][j] = new Cell(i,j);
+                int index = mWidth*i+j;
+                float x = discretiser.pF.allNodes.get(discretiser.pF.CC.get(index)).worldX;
+                float z = discretiser.pF.allNodes.get(discretiser.pF.CC.get(index)).worldZ;
+                lCG[i][j].position = new Vector3(x, 0f, z);
+                if(!discretiser.nodeGrid[i][j]){
+                    lCG[i][j].ignore = true;
+                }
+                lCG[i][j].distanceToClosestWall = wallDist(lCG[i][j].position);
+                lCG[i][j].openness = discretiser.calcOpenness(i,j);
+            }
+        }
+        return lCG;
     }
 
     public void restart(){
@@ -93,9 +112,9 @@ public class CoordExplor {
         if (pursuerComponent.updatePosition && pursuerComponent.position != null) {
             pursuerPos[pursuerComponent.number] = pursuerComponent.position;
         }
-        //if approaching a wall, get new task
-        if(pursuerComponent.updatePosition && pursuerComponent.targetCell!= null && !pursuerComponent.targetCell.frontier){
-            //assignTask(pursuerComponent);
+
+        if(pursuerComponent.updatePosition && pursuerComponent.frontierCells.size()==0){
+            assignTask(pursuerComponent);
         }
 
         if (!pursuerComponent.updatePosition) {
@@ -107,7 +126,6 @@ public class CoordExplor {
         if (!pursuerComponent.updatePosition && pursuerComponent.position.dst(pursuerPos[pursuerComponent.number]) < 0.05f) {
             pursuerComponent.updatePosition = true;
         }
-
 
         //nodes.clear();
         pursuerComponent.frontierCells.clear();
@@ -123,46 +141,63 @@ public class CoordExplor {
         for (int i = 0; i < mWidth; i++) {
             for (int j = 0; j < mWidth; j++) {
                 Cell cell = cellGrid[i][j];
-                cell.cost = 0;
-                boolean contains = false;
-                //REMOVE all visible pursuers from the cell
-                int pursuerIndex = -1;
-                for (int k = 0; k < cell.visibleToPursuers.size(); k++) {
-                    if (pursuerComponent.number == cell.visibleToPursuers.get(k) && !isVisible(cell.position, pursuerComponent, observerComponent, i, j)) {
-                        pursuerIndex = k;
-                        contains = true;
-                        break;
+                if(!noComms) {
+                    cell.cost = 0;
+                    boolean contains = false;
+                    //REMOVE all visible pursuers from the cell
+                    int pursuerIndex = -1;
+                    for (int k = 0; k < cell.visibleToPursuers.size(); k++) {
+                        if (pursuerComponent.number == cell.visibleToPursuers.get(k) && !isVisible(cell.position, pursuerComponent, observerComponent, i, j)) {
+                            pursuerIndex = k;
+                            contains = true;
+                            break;
+                        }
                     }
-                }
-                if (contains) {
-                    cell.visibleToPursuers.remove(pursuerIndex);
-                    cell.visibleCounter--;
-                }
+                    if (contains) {
+                        cell.visibleToPursuers.remove(pursuerIndex);
+                        cell.visibleCounter--;
+                    }
 
-                //check if a cell is explored
-                if (!cell.explored && isVisible(cell.position, pursuerComponent, observerComponent, i, j)) {
-                    cell.explored = true;
-                    ModelInstance m = new ModelInstance(box, cell.position);
-                    nodes.add(m);
+                    //check if a cell is explored
+                    if (!cell.explored && isVisible(cell.position, pursuerComponent, observerComponent, i, j)) {
+                        cell.explored = true;
+                        ModelInstance m = new ModelInstance(box, cell.position);
+                        //nodes.add(m);
+                    }
+                }else{
+                    Cell lCell = pursuerComponent.localMap[i][j];
+                    if (!lCell.explored && isVisible(lCell.position, pursuerComponent, observerComponent, i, j)) {
+                        lCell.explored = true;
+                        ModelInstance m = new ModelInstance(expBox, lCell.position);
+                        //nodes.add(m);
+                    }
                 }
 
                 //utility is not changing so we only have to compute it once
                 if (!runOnce) {
                     if (cell.distanceToClosestWall < observerComponent.distance) {
                         cell.utility = 1 - cell.distanceToClosestWall / observerComponent.distance;
-                        if(cell.utility>0.3){
+                        if(cell.utility>0.2){
                             cell.utility = 1-cell.utility;
                         }
                     } else {
                         cell.utility = 0;
                     }
+                    if(noComms){
+                        Cell lCell = pursuerComponent.localMap[i][j];
+                        if (lCell.distanceToClosestWall < observerComponent.distance) {
+                            lCell.utility = 1 - cell.distanceToClosestWall / observerComponent.distance;
+                            if(lCell.utility>0.2){
+                                lCell.utility = 1-cell.utility;
+                            }
+                        } else {
+                            lCell.utility = 0;
+                        }
+                    }
                 }
             }
         }
         runOnce = true;
-        if(runOnce){
-            //utilityToString();
-        }
 
         //searching local within pursuer vision
         for (int i = -viewNode; i < viewNode; i++) {
@@ -171,72 +206,101 @@ public class CoordExplor {
                 if (i + pursuerNodeX > 0 && i + pursuerNodeX < discretiser.width - 1 && j + pursuerNodeY > 0 && j + pursuerNodeY < discretiser.width - 1) {
                     Cell cell = cellGrid[i + pursuerNodeX][j + pursuerNodeY];
                     //compute new frontier cells
-                    if (cell.explored == true) {
-                        boolean trigger = false;
-                        outerloop:
-                        for (int k = -1; k < 2; k++) {
-                            for (int l = -1; l < 2; l++) {
-                                //within bounds of map
-                                if (cell.x+k < discretiser.width && cell.x+k >0 && cell.y+l < discretiser.width && cell.y+l > 0) {
-                                    //cell is unexplored and inside map
-                                    if ((k != 0 || l != 0) && !cellGrid[cell.x + k][cell.y + l].explored && !cellGrid[cell.x + k][cell.y + l].ignore) {
-                                        //if(isVisible(cell.position, pursuerComponent, observerComponent, cell.x,cell.y)){
-                                            //if (!discretiser.lineIntersectWall(cell.position, pursuerComponent.position)) {
+                    if(!noComms) {
+                        if (cell.explored == true) {
+                            boolean trigger = false;
+                            outerloop:
+                            for (int k = -1; k < 2; k++) {
+                                for (int l = -1; l < 2; l++) {
+                                    //within bounds of map
+                                    if (cell.x + k < discretiser.width && cell.x + k > 0 && cell.y + l < discretiser.width && cell.y + l > 0) {
+                                        //cell is unexplored and inside map
+                                        if ((k != 0 || l != 0) && !cellGrid[cell.x + k][cell.y + l].explored && !cellGrid[cell.x + k][cell.y + l].ignore) {
                                             cell.frontier = true;
                                             if (!unexploredFrontier.containsKey(cell)) {
                                                 unexploredFrontier.put(cell, true);
                                             }
                                             trigger = true;
                                             break outerloop;
-                                        //}
+                                        }
                                     }
                                 }
                             }
-                        }
-                        //KEEPING track of frontier cells
-                        if (!trigger) {
-                            if (unexploredFrontier.containsKey(cell)) {
-                                unexploredFrontier.remove(cell);
-                            }
-                            cell.frontier = false;
-                        }
-                    }
-
-                    if (cell.frontier && isVisible(cell.position, pursuerComponent, observerComponent, cell.x,cell.y)) {
-                        pursuerComponent.frontierCells.add(cell);
-                        boolean contains = false;
-                        for (int k = 0; k < cell.visibleToPursuers.size(); k++) {
-                            if (pursuerComponent.number == cell.visibleToPursuers.get(k)) {
-                                contains = true;
-                                break;
+                            //KEEPING track of frontier cells
+                            if (!trigger) {
+                                if (unexploredFrontier.containsKey(cell)) {
+                                    unexploredFrontier.remove(cell);
+                                }
+                                cell.frontier = false;
                             }
                         }
-                        if (!contains) {
-                            cell.visibleToPursuers.add(pursuerComponent.number);
-                            cell.visibleCounter++;
+
+                        if (cell.frontier && isVisible(cell.position, pursuerComponent, observerComponent, cell.x, cell.y)) {
+                            pursuerComponent.frontierCells.add(cell);
+                            boolean contains = false;
+                            for (int k = 0; k < cell.visibleToPursuers.size(); k++) {
+                                if (pursuerComponent.number == cell.visibleToPursuers.get(k)) {
+                                    contains = true;
+                                    break;
+                                }
+                            }
+                            if (!contains) {
+                                cell.visibleToPursuers.add(pursuerComponent.number);
+                                cell.visibleCounter++;
+                            }
+
+                            float distance = pursuerComponent.position.dst(cell.position);
+
+                            pursuerComponent.costs[i + pursuerNodeX][j + pursuerNodeY] = distance;
+                            if (pursuerComponent.number != cell.visibleToPursuers.get(0)) {
+                                pursuerComponent.costs[i + pursuerNodeX][j + pursuerNodeY] /= cell.visibleCounter;
+                            }
                         }
-
-                        float distance = pursuerComponent.position.dst(cell.position);
-
-                        //cost does not exist for a single cell, need to store this in pursuers
-                        cell.cost = distance;
-                        if (cell.visibleCounter > 1) {
-                            cell.cost /= cell.visibleCounter * 2;
+                    }else{
+                        Cell lCell = pursuerComponent.localMap[i + pursuerNodeX][j + pursuerNodeY];
+                        if (lCell.explored == true) {
+                            boolean trigger = false;
+                            outerloop:
+                            for (int k = -1; k < 2; k++) {
+                                for (int l = -1; l < 2; l++) {
+                                    //within bounds of map
+                                    if (lCell.x + k < discretiser.width && lCell.x + k > 0 && lCell.y + l < discretiser.width && lCell.y + l > 0) {
+                                        //cell is unexplored and inside map
+                                        if ((k != 0 || l != 0) && !pursuerComponent.localMap[lCell.x + k][lCell.y + l].explored && !pursuerComponent.localMap[lCell.x + k][lCell.y + l].ignore) {
+                                            lCell.frontier = true;
+                                            if (!pursuerComponent.unexploredFrontierLocal.containsKey(lCell)) {
+                                                pursuerComponent.unexploredFrontierLocal.put(lCell, true);
+                                                ModelInstance m = new ModelInstance(expBox, lCell.position);
+                                                //nodes.add(m);
+                                            }
+                                            trigger = true;
+                                            break outerloop;
+                                        }
+                                    }
+                                }
+                            }
+                            //KEEPING track of frontier cells
+                            if (!trigger) {
+                                if (pursuerComponent.unexploredFrontierLocal.containsKey(lCell)) {
+                                    pursuerComponent.unexploredFrontierLocal.remove(lCell);
+                                }
+                                lCell.frontier = false;
+                            }
                         }
-
-                        pursuerComponent.costs[i + pursuerNodeX][j + pursuerNodeY] = distance;
-                        if (pursuerComponent.number != cell.visibleToPursuers.get(0)) {
-                            pursuerComponent.costs[i + pursuerNodeX][j + pursuerNodeY] /= cell.visibleCounter;
+                        if (lCell.frontier && isVisible(lCell.position, pursuerComponent, observerComponent, lCell.x, lCell.y)) {
+                            pursuerComponent.frontierCells.add(lCell);
+                            float distance = pursuerComponent.position.dst(lCell.position);
+                            pursuerComponent.costs[i + pursuerNodeX][j + pursuerNodeY] = distance;
                         }
                     }
                 }
             }
         }
-        /*for (Cell key : unexploredFrontier.keySet()) {
+        for (Cell key : unexploredFrontier.keySet()) {
             Vector3 position = new Vector3(key.position);
             ModelInstance m = new ModelInstance(expBox, position);
-            nodes.add(m);
-        }*/
+            //nodes.add(m);
+        }
     }
 
     public boolean isVisible(Vector3 point, PursuerComponent pursuerComponent, ObserverComponent observerComponent, int x, int y){
@@ -281,6 +345,7 @@ public class CoordExplor {
                 float cost = (float) pursuerComponent.costs[x][y];
                 cost *= pursuerComponent.frontierCells.get(i).openness;
                 float score = (float) (beta*pursuerComponent.frontierCells.get(i).utility + cost);
+                System.out.println(pursuerComponent.frontierCells.get(i).utility);
 
                 if (score > maxScore) {
                     maxScore = score;
@@ -304,7 +369,7 @@ public class CoordExplor {
                 }
             }
             ModelInstance m = new ModelInstance(expBox, bestCell.position);
-            nodes.add(m);
+            //nodes.add(m);
         }else{
             bestCell = requestNewFrontier(pursuerComponent);
             CXPoint start = new CXPoint(pursuerComponent.position.x, pursuerComponent.position.z);
@@ -321,7 +386,7 @@ public class CoordExplor {
             }
             if(bestCell!=null && bestCell.position!=null) {
                 ModelInstance m = new ModelInstance(expBox, bestCell.position);
-                nodes.add(m);
+                //nodes.add(m);
             }
         }
     }
@@ -329,18 +394,46 @@ public class CoordExplor {
     public Cell requestNewFrontier(PursuerComponent pursuerComponent){
         Cell bestCell = null;
         float maxDistFromPursuers = -1*Float.MAX_VALUE;
-        for (Cell key : unexploredFrontier.keySet()) {
-            float minCellDistToPursuer = Float.MAX_VALUE;
-            //Calcing maximum min distance to other pursuers
-            for(int i = 0; i < pursuerPos.length; i++){
-                float pursuerDistance = key.position.dst(pursuerPos[i]);
-                if(pursuerDistance < minCellDistToPursuer){
-                    minCellDistToPursuer = pursuerDistance;
+        float closestCell = Float.MAX_VALUE;
+        if(pursCount==1 || noComms){
+            if(!noComms) {
+                for (Cell key : unexploredFrontier.keySet()) {
+                    float pursuerDistance = key.position.dst(pursuerPos[0]);
+                    //Calcing maximum min distance to other pursuers
+                    if (pursuerDistance < closestCell) {
+                        closestCell = pursuerDistance;
+                        bestCell = key;
+                    }
+                }
+            }else{
+                System.out.println("kk");
+                if(pursuerComponent.unexploredFrontierLocal.size()>0) {
+                    for (Cell key : pursuerComponent.unexploredFrontierLocal.keySet()) {
+                        float pursuerDistance = key.position.dst(pursuerPos[0]);
+                        if (pursuerDistance < closestCell) {
+                            closestCell = pursuerDistance;
+                            bestCell = key;
+                        }
+                    }
+                }else{
+                    pursuerComponent.localMap = localCellGrid();
+                    nodes.clear();
                 }
             }
-            if(minCellDistToPursuer > maxDistFromPursuers){
-                maxDistFromPursuers = minCellDistToPursuer;
-                bestCell = key;
+        }else {
+            for (Cell key : unexploredFrontier.keySet()) {
+                float minCellDistToPursuer = Float.MAX_VALUE;
+                //Calcing maximum min distance to other pursuers
+                for (int i = 0; i < pursuerPos.length; i++) {
+                    float pursuerDistance = key.position.dst(pursuerPos[i]);
+                    if (pursuerDistance < minCellDistToPursuer) {
+                        minCellDistToPursuer = pursuerDistance;
+                    }
+                }
+                if (minCellDistToPursuer > maxDistFromPursuers) {
+                    maxDistFromPursuers = minCellDistToPursuer;
+                    bestCell = key;
+                }
             }
         }
         if(bestCell!=null) {

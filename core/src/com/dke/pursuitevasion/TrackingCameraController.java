@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Vector3;
  * A camera controller that can track position vectors automatically.
  */
 public class TrackingCameraController implements InputProcessor {
-    float cameraDistance = 8f;
+    float cameraDistance = 15f;
     float cameraLerp = 0.15f;
 
     float maxCameraDistance = 20f;

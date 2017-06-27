@@ -180,7 +180,6 @@ public class MapEditorScreen implements Screen, InputProcessor {
                 isBuilt=true;
                 addOuterVertexButton.setDisabled(true);
                 makePolygonButton.setDisabled(true);
-                wallEditorButton.setDisabled(true);
                 controller.setMode(Mode.DO_NOTHING);
             }
         });
@@ -393,6 +392,10 @@ public class MapEditorScreen implements Screen, InputProcessor {
                     }
                     //Add mesh
                     controller.setPolygonMesh(map.getPolygonMesh());
+                    controller.vertList = new float[map.getPolygonMesh().getMaxVertices()];
+                    controller.mIndices = new short[map.getPolygonMesh().getNumIndices()];
+                    map.getPolygonMesh().getVertices(controller.vertList);
+                    map.getPolygonMesh().getIndices(controller.mIndices);
 
                     controller.meshRenderable = true;
 
@@ -494,7 +497,6 @@ public class MapEditorScreen implements Screen, InputProcessor {
                     break;
                 case WALL_EDITOR:
                     controller.addWallToArray();
-                    System.out.println("TOUCH UP ADD WALL");
                     leftPressed = false;
                     wallVec = null;
                     break;

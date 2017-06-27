@@ -67,7 +67,7 @@ public class NewSimulationWindow extends Window {
         final TextField heatSize = new TextField("19",skin);
         heatSize.setAlignment(1);
         final Label pursVision = new Label("Set Vision", skin);
-        final TextField pursDist = new TextField("1",skin);
+        final TextField pursDist = new TextField("1.5",skin);
         pursDist.setAlignment(1);
 
         TextButton startButton = new TextButton("Start", skin);

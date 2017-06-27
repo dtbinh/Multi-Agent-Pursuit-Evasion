@@ -193,6 +193,19 @@ public class Discretiser{
                 return true;
             }
         }
+        for(int i=0;i<edges.size()/2;i++){
+            float x1 = edges.get(i * 2).x;
+            float z1 = edges.get(i * 2).z;
+            float x2 = edges.get(i * 2 + 1).x;
+            float z2 = edges.get(i * 2 + 1).z;
+
+            Line2D line = new Line2D(lineStart.x, lineStart.z, lineEnd.x, lineEnd.z);
+            Line2D wall = new Line2D(x1, z1, x2, z2);
+            if(wall.intersectsLine(line)){
+                return true;
+            }
+        }
+
         return false;
     }
 
