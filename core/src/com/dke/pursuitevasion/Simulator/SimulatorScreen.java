@@ -44,12 +44,13 @@ public class SimulatorScreen implements Screen, InputProcessor{
 
     private Color agentColor = new Color(156,229,251,0);
     private Color evaderColor = new Color(0,0,0,0);
+    public boolean disComms;
 
     ArrayList<ModelInstance> nodes =  new ArrayList<ModelInstance>();
     ModelBatch modelBatch = new ModelBatch();
 
-    public SimulatorScreen(PursuitEvasion game, FileHandle mapFile, PolyMap Map, String AI, int heatSize, float visionSight) {
-
+    public SimulatorScreen(PursuitEvasion game, FileHandle mapFile, PolyMap Map, String AI, int heatSize, float visionSight, boolean DisComs) {
+        disComms = DisComs;
         this.heatSize = heatSize;
         /* Load the course from a file */
         this.game = game;
@@ -121,7 +122,8 @@ public class SimulatorScreen implements Screen, InputProcessor{
             obstacle.add_edge(node1,node2,1);
         }
 
-        if(AI.equals("GRAPHSEARCHER")) {
+        if(AI.equals("GRAPHSEARCHER")||AI.equals("BOTH")) {
+            System.out.println(AI +"   SHOULD NOT BE BOTH");
             CellDecompositionAlgorithm cellDecomposeAlgorithm = new CellDecompositionAlgorithm(polygon, obstacle);
             graph = cellDecomposeAlgorithm.decomposeGraph();
         }
@@ -147,7 +149,7 @@ public class SimulatorScreen implements Screen, InputProcessor{
         engine.addSystem(visionSystem);
         engine.addSystem(new EvaderSystem(visionSystem, map, engine, heatSize));
         engine.addSystem(new CCTvSystem(visionSystem, map));
-        engine.addSystem(new PursuerSystem(visionSystem, graph, map, map.getaI().length,AI,heatSize, visionSight));
+        engine.addSystem(new PursuerSystem(visionSystem, graph, map, map.getaI().length,AI,heatSize, visionSight, disComms));
 
 
 
@@ -162,6 +164,7 @@ public class SimulatorScreen implements Screen, InputProcessor{
         for (int i=0; i<map.geteI().length; i++) {
             engine.addEntity(entityFactory.createEvader(map.geteI()[i].position, evaderColor));
         }
+
         EntityFactory.pursuerCounter = 0;
 
         ModelBuilder modelBuilder = new ModelBuilder();

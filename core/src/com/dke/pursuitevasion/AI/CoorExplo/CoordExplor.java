@@ -345,7 +345,6 @@ public class CoordExplor {
                 float cost = (float) pursuerComponent.costs[x][y];
                 cost *= pursuerComponent.frontierCells.get(i).openness;
                 float score = (float) (beta*pursuerComponent.frontierCells.get(i).utility + cost);
-                System.out.println(pursuerComponent.frontierCells.get(i).utility);
 
                 if (score > maxScore) {
                     maxScore = score;

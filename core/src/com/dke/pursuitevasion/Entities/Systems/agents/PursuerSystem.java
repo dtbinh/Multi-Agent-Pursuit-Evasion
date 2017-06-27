@@ -88,17 +88,16 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
 
     public int mapSize = 250;
     public float gapSize = 0.1f;
-    public boolean noComm = false;
+    public boolean noComm, changeAlgo = false;
 
     private double startTime, finishTime;
     private int evaderCounter;
     private String stats = "";
     private int heatSize;
     float sightDist;
+    int purCountCpy;
 
-    int captured = 0;
-
-    public PursuerSystem(VisionSystem visionSystem, CXGraph graph, PolyMap map, int pursuerCount, String AI, int heatSize, float SightDist) {
+    public PursuerSystem(VisionSystem visionSystem, CXGraph graph, PolyMap map, int pursuerCount, String AI, int heatSize, float SightDist, boolean disComms) {
         super(Family.all(PursuerComponent.class).get());
 
         this.heatSize = heatSize;
@@ -106,7 +105,9 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
         this.graph = graph;
         pathFinder = new PathFinder(map, mapSize, gapSize);
         entityFactory = new EntityFactory();
+        purCountCpy = pursuerCount;
 
+        noComm = disComms;
         sightDist = SightDist;
         mMap = map;
         pursCount = pursuerCount;
@@ -134,7 +135,7 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        if (AI.equals("GRAPHSEARCHER")) {
+        if (!changeAlgo && (AI.equals("GRAPHSEARCHER")||AI.equals("BOTH"))) {
             if (!runOnce) {
                 assignInitialTask(entity);
             } else {
@@ -235,9 +236,9 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
         this.agentUtility.finalArea = finalNode;
 
         CXAgentTask task2 = new CXAgentTask(CXAgentState.Scanning);
-        task2.scanTask.scanScope.add(180.0f);
-        task2.scanTask.scanScope.add(90.0f);
-
+//        task2.scanTask.scanScope.add(180.0f);
+//        task2.scanTask.scanScope.add(90.0f);
+        task2.scanTask.scanScope.add(0.0f);
         pC.taskList.add(task1);
         pC.setState(CXAgentState.Moving);
         pC.currentSearchArea = node.nodeNumber;
@@ -250,8 +251,8 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
         // Get the pursuer current state
         PursuerComponent pursuerC = Mappers.pursuerMapper.get(entity);
         StateComponent stateC = Mappers.stateMapper.get(entity);
-       // System.out.println();
-        //System.out.println("------------- Agent: "+ pursuerC.number + " -------------");
+        System.out.println();
+        System.out.println("------------- Agent: "+ pursuerC.number + " -------------");
 
         if (pursuerC.number == 0){
             messageNumber = 0;
@@ -259,148 +260,150 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
         if (pursuerC.getState() == CXAgentState.WaitSearching || pursuerC.getState() == CXAgentState.Hold || pursuerC.getState() == CXAgentState.WaitBackup){
             messageNumber ++ ;
         }
-        if (messageNumber == EntityFactory.pursuerCounter )
+        if (messageNumber == purCountCpy )
         {
-            engine.addEntity(entityFactory.createPursuer(new Vector3(0f,0f,0f), agentColor, sightDist));
-            messageNumber = 0;
+            if(AI.equals("BOTH") && !changeAlgo){
+               changeAlgo = true;
+            }else{
+                engine.addEntity(entityFactory.createPursuer(new Vector3(0f,0f,0f), agentColor, sightDist));
+                messageNumber = 0;
+                purCountCpy++;
+                pursCount++;
+            }
         }
 
+        if (!changeAlgo) {
+            switch (pursuerC.getState()) {
+                case Free: {
+                    this.printStateAndLocation("Free", new CXPoint(stateC.position.x, stateC.position.z));
+                    if (pursuerC.taskList.size() != 0) {
+                        CXAgentTask task = (CXAgentTask) pursuerC.taskList.getFirst();
+                        pursuerC.setState(task.taskState);
+                        break;
+                    } else {
+                        pursuerC = this.agentUtility.checkMessage(this.messageArrayList, pursuerC);
+                        // doesn't get task
+                        if (pursuerC.taskList.size() == 0 && pursuerC.pursuerPointPath.size() == 0) {
+                            this.agentUtility.randomMovement(stateC, pursuerC, pathFinder);
 
-        switch (pursuerC.getState()){
-            case Free:{
-                this.printStateAndLocation("Free",new CXPoint(stateC.position.x, stateC.position.z));
-                if (pursuerC.taskList.size() != 0){
-                    CXAgentTask task = (CXAgentTask)pursuerC.taskList.getFirst();
-                    pursuerC.setState(task.taskState);
+                        }
+                        if (pursuerC.taskList.size() == 0 && pursuerC.pursuerPointPath.size() > 0) {
+                            followPath(pursuerC, stateC);
+                        } else {
+                            pursuerC.pursuerPointPath.clear();
+                        }
+                    }
                     break;
                 }
-                else {
+                case Hold: {
+                    this.printStateAndLocation("Hold", new CXPoint(stateC.position.x, stateC.position.z));
                     pursuerC = this.agentUtility.checkMessage(this.messageArrayList, pursuerC);
-                    // doesn't get task
-                    if (pursuerC.taskList.size() == 0 && pursuerC.pursuerPointPath.size() == 0) {
-                        this.agentUtility.randomMovement(stateC, pursuerC, pathFinder);
-
-                    }
-                    if(pursuerC.taskList.size() == 0 && pursuerC.pursuerPointPath.size()>0){
-                        followPath(pursuerC, stateC);
-                    }
-                    else {
-                        pursuerC.pursuerPointPath.clear();
-                    }
-                }
                     break;
                 }
-            case Hold:{
-                this.printStateAndLocation("Hold",new CXPoint(stateC.position.x, stateC.position.z));
-                pursuerC = this.agentUtility.checkMessage(this.messageArrayList,pursuerC);
-                break;
-            }
-            case Searching:{
-                this.printStateAndLocation("Seaching",new CXPoint(stateC.position.x, stateC.position.z));
-                pursuerC = this.agentUtility.tranferSearchingTaskToMovingTask(pursuerC);
-                this.searchedArea.put(pursuerC.currentSearchArea,Boolean.FALSE);
-                break;
-            }
-            case FinisihSearching:{
-                this.printStateAndLocation("FinishSearching",new CXPoint(stateC.position.x, stateC.position.z));
-                // Put all searched Area in to map
-                searchedArea.put(pursuerC.currentSearchArea,Boolean.TRUE);
-                pursuerC = this.agentUtility.findNewSearchingArea(pursuerC,stateC,this.graph,searchedArea,messageArrayList);
-                break;
-            }
-            case SendMessage:{
-                this.printStateAndLocation("SendMessage",new CXPoint(stateC.position.x, stateC.position.z));
-                // Send Message
-                CXAgentTask task = (CXAgentTask) pursuerC.taskList.get(0);
-                CXMessage message = new CXMessage();
-                message.receiver = task.messageTask.messageReceiver;
-                message.messageContent = task.messageTask.messageContent;
-                message.messageType = task.messageTask.messageType;
-                this.messageArrayList.add(message);
-
-                // Update state
-                pursuerC.taskList.removeFirst();
-                if (pursuerC.taskList.size() != 0){
-                    CXAgentTask newTask = (CXAgentTask)pursuerC.taskList.getFirst();
-                    pursuerC.setState(newTask.taskState);
+                case Searching: {
+                    this.printStateAndLocation("Seaching", new CXPoint(stateC.position.x, stateC.position.z));
+                    pursuerC = this.agentUtility.tranferSearchingTaskToMovingTask(pursuerC);
+                    this.searchedArea.put(pursuerC.currentSearchArea, Boolean.FALSE);
                     break;
                 }
-                pursuerC.setState(CXAgentState.Free);
-                break;
-            }
-            case Moving:{
-                CXPoint curLocation = new CXPoint(stateC.position.x, stateC.position.z);
-                this.printStateAndLocation("Moving", curLocation);
-                CXAgentTask task = (CXAgentTask) pursuerC.taskList.get(0);
-                CXPoint destination = task.movingTask.movingDestination;
-
-                // Get the update location
-                float velocity = stateC.velocity.x;
-
-                CXPoint updateLocation = this.agentUtility.getNextMovingPoint(pursuerC, curLocation, destination, pathFinder);
-
-                CXPoint newDestination = CXPoint.converToGraphCoordination(destination);
-                CXPoint newUpdateLocation = CXPoint.converToGraphCoordination(updateLocation);
-                //System.out.println("Moving destination x = "+ newDestination.x + " y = "+newDestination.y + " ; UpdateLocation is x = "+ newUpdateLocation.x + " y = " + newUpdateLocation.y);
-
-                stateC.position = stateC.position.set((float)updateLocation.x,stateC.position.y,(float)updateLocation.y);
-                if (updateLocation == destination){
-                    // Check the angle is correct
-                    if (task.movingTask.radius != -1.0f && pursuerC.currentAngle != task.movingTask.radius){
-                        pursuerC.currentAngle = agentUtility.getNextScanPositionForMoving(pursuerC,task.movingTask.radius);
-                        System.out.println("Current angle " + pursuerC.currentAngle + " Target Angle " + task.movingTask.radius);
-                    }
-                    else {
-                        pursuerC.taskList.removeFirst();
-                        //System.out.println("Agent " + pursuerC.number + " is arrived Destination ");
-                        if (!pursuerC.taskList.isEmpty()){
-                            CXAgentTask newTask = (CXAgentTask) pursuerC.taskList.getFirst();
-                            pursuerC.setState(newTask.taskState);
-                        }
-                        else {
-                            pursuerC.setState(CXAgentState.FinisihSearching);
-                        }
-                    }
+                case FinisihSearching: {
+                    this.printStateAndLocation("FinishSearching", new CXPoint(stateC.position.x, stateC.position.z));
+                    // Put all searched Area in to map
+                    searchedArea.put(pursuerC.currentSearchArea, Boolean.TRUE);
+                    pursuerC = this.agentUtility.findNewSearchingArea(pursuerC, stateC, this.graph, searchedArea, messageArrayList);
+                    break;
                 }
-                break;
-            }
-            case Scanning:{
-                this.printStateAndLocation("Scanning",new CXPoint(stateC.position.x, stateC.position.z));
-                CXAgentTask task = (CXAgentTask) pursuerC.taskList.getFirst();
-                Float targetRadius = (Float) task.scanTask.scanScope.getFirst();
-                float value =  this.agentUtility.getTheNextScanPosition(pursuerC,targetRadius);
-                System.out.println("Current Radius is " + stateC.angle + " TargetRadius is "+ value);
-                stateC.angle = value;
-                pursuerC.currentAngle = value; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                case SendMessage: {
+                    this.printStateAndLocation("SendMessage", new CXPoint(stateC.position.x, stateC.position.z));
+                    // Send Message
+                    CXAgentTask task = (CXAgentTask) pursuerC.taskList.get(0);
+                    CXMessage message = new CXMessage();
+                    message.receiver = task.messageTask.messageReceiver;
+                    message.messageContent = task.messageTask.messageContent;
+                    message.messageType = task.messageTask.messageType;
+                    this.messageArrayList.add(message);
 
-                if (task.scanTask.scanScope.isEmpty()){
+                    // Update state
                     pursuerC.taskList.removeFirst();
-                    if (pursuerC.taskList.isEmpty()){
-                        pursuerC.setState(CXAgentState.FinisihSearching);
+                    if (pursuerC.taskList.size() != 0) {
+                        CXAgentTask newTask = (CXAgentTask) pursuerC.taskList.getFirst();
+                        pursuerC.setState(newTask.taskState);
+                        break;
                     }
-                    else {
-                        CXAgentTask agentTask = (CXAgentTask) pursuerC.taskList.getFirst();
-                        pursuerC.setState(agentTask.taskState);
-                    }
+                    pursuerC.setState(CXAgentState.Free);
+                    break;
                 }
-                break;
-            }
-            case WaitBackup:{
-                this.printStateAndLocation("WaitBackup",new CXPoint(stateC.position.x, stateC.position.z));
-                // 1. Check the the right area is marked in searched or not ? --> Yes, add searching task.
-                pursuerC = this.agentUtility.checkTheBackupLocation(this.graph,pursuerC,this.searchedArea);
-                break;
-            }
-            case WaitSearching:{
-                this.printStateAndLocation("WaitSearching",new CXPoint(stateC.position.x, stateC.position.z));
-                // 1. Check the left area is been searched or not ? --> Yes, Check the location --> It's in the top-right location? Add Searching task: state = Free;
-                pursuerC = this.agentUtility.checkLeftAreaIsBeenSearched(this.graph,pursuerC,this.searchedArea,stateC);
-                break;
-            }
-            case FinishGame:{
-                pursuerC.setState(CXAgentState.Free);
-                System.out.println("The game is over.");
-                break;
+                case Moving: {
+                    CXPoint curLocation = new CXPoint(stateC.position.x, stateC.position.z);
+                    this.printStateAndLocation("Moving", curLocation);
+                    CXAgentTask task = (CXAgentTask) pursuerC.taskList.get(0);
+                    CXPoint destination = task.movingTask.movingDestination;
+
+                    // Get the update location
+                    float velocity = stateC.velocity.x;
+
+                    CXPoint updateLocation = this.agentUtility.getNextMovingPoint(pursuerC, curLocation, destination, pathFinder);
+
+                    CXPoint newDestination = CXPoint.converToGraphCoordination(destination);
+                    CXPoint newUpdateLocation = CXPoint.converToGraphCoordination(updateLocation);
+                    //System.out.println("Moving destination x = "+ newDestination.x + " y = "+newDestination.y + " ; UpdateLocation is x = "+ newUpdateLocation.x + " y = " + newUpdateLocation.y);
+
+                    stateC.position = stateC.position.set((float) updateLocation.x, stateC.position.y, (float) updateLocation.y);
+                    if (updateLocation == destination) {
+                        // Check the angle is correct
+//                        if (task.movingTask.radius != -1.0f && pursuerC.currentAngle != task.movingTask.radius) {
+//                            pursuerC.currentAngle = agentUtility.getNextScanPositionForMoving(pursuerC, task.movingTask.radius);
+//                            System.out.println("Current angle " + pursuerC.currentAngle + " Target Angle " + task.movingTask.radius);
+//                        } else {
+                            pursuerC.taskList.removeFirst();
+                            //System.out.println("Agent " + pursuerC.number + " is arrived Destination ");
+                            if (!pursuerC.taskList.isEmpty()) {
+                                CXAgentTask newTask = (CXAgentTask) pursuerC.taskList.getFirst();
+                                pursuerC.setState(newTask.taskState);
+                            } else {
+                                pursuerC.setState(CXAgentState.FinisihSearching);
+                            }
+//                        }
+                    }
+                    break;
+                }
+                case Scanning: {
+                    this.printStateAndLocation("Scanning", new CXPoint(stateC.position.x, stateC.position.z));
+                    CXAgentTask task = (CXAgentTask) pursuerC.taskList.getFirst();
+                    Float targetRadius = (Float) task.scanTask.scanScope.getFirst();
+                    float value = this.agentUtility.getTheNextScanPosition(pursuerC, targetRadius);
+                    System.out.println("Current Radius is " + stateC.angle + " TargetRadius is " + value);
+                    stateC.angle = value;
+                    pursuerC.currentAngle = value; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+                    if (task.scanTask.scanScope.isEmpty()) {
+                        pursuerC.taskList.removeFirst();
+                        if (pursuerC.taskList.isEmpty()) {
+                            pursuerC.setState(CXAgentState.FinisihSearching);
+                        } else {
+                            CXAgentTask agentTask = (CXAgentTask) pursuerC.taskList.getFirst();
+                            pursuerC.setState(agentTask.taskState);
+                        }
+                    }
+                    break;
+                }
+                case WaitBackup: {
+                    this.printStateAndLocation("WaitBackup", new CXPoint(stateC.position.x, stateC.position.z));
+                    // 1. Check the the right area is marked in searched or not ? --> Yes, add searching task.
+                    pursuerC = this.agentUtility.checkTheBackupLocation(this.graph, pursuerC, this.searchedArea);
+                    break;
+                }
+                case WaitSearching: {
+                    this.printStateAndLocation("WaitSearching", new CXPoint(stateC.position.x, stateC.position.z));
+                    // 1. Check the left area is been searched or not ? --> Yes, Check the location --> It's in the top-right location? Add Searching task: state = Free;
+                    pursuerC = this.agentUtility.checkLeftAreaIsBeenSearched(this.graph, pursuerC, this.searchedArea, stateC);
+                    break;
+                }
+                case FinishGame: {
+                    pursuerC.setState(CXAgentState.Free);
+                    System.out.println("The game is over.");
+                    break;
+                }
             }
         }
         stateC.update();
@@ -408,8 +411,8 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
     }
 
     private void printStateAndLocation(String state,CXPoint location){
-//        CXPoint point = CXPoint.converToGraphCoordination(location);
-//        System.out.println("State: " + state +  ",Current Location " + point.x + " " +point.y);
+        CXPoint point = CXPoint.converToGraphCoordination(location);
+        System.out.println("State: " + state + ",Current Location " + point.x + " " + point.y);
     }
 
     private void movePursuer(Entity entity, float deltaTime) {
@@ -525,10 +528,7 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
         System.out.println("************************************* BENCHMARKS *************************************");
         System.out.println("\nNumber of pursuers: " + pursCount);
         System.out.println("\nPotential field radius: " + heatSize);
-        finishTime = System.currentTimeMillis();
-        if(finishTime-startTime>30000)
-            System.out.println("\nCaptured after 30's" + captured);
-        //System.out.println(stats);
+        System.out.println(stats);
     }
 
     public static ArrayList<Vector3> addAdditionalSteps(PursuerComponent pC, List<Node> p, Vector3 Start){
@@ -568,7 +568,6 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
         pursuer.alerted = false;
         pursuer.targetPosition.set(0.0f, 0.0f);
 
-
         if (visionSystem.canSee(entity,target)) {
             pursuer.alerted = true;
             pursuer.targetPosition.set(targetPos);
@@ -576,12 +575,7 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
             evader.captured = true;
             System.out.println(evader + " is captured.");
             engine.removeEntity(target);
-            finishTime = System.currentTimeMillis();
-            if(finishTime-startTime<30000)
-                captured++;
         }
-
-        //System.out.println(captured);
 
     }
 
