@@ -425,8 +425,9 @@ public class PFMap {
         } catch (ArrayIndexOutOfBoundsException e) {
         }
 
-        if (dangerDetected)
-            System.out.println("Danger detected");
+        if (dangerDetected) {
+            //System.out.println("Danger detected");
+        }
     }
 
     private void printArray() {

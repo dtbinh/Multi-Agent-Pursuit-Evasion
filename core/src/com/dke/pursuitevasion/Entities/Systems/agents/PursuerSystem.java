@@ -88,13 +88,15 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
 
     public int mapSize = 250;
     public float gapSize = 0.1f;
-    public boolean noComm = true;
+    public boolean noComm = false;
 
     private double startTime, finishTime;
     private int evaderCounter;
     private String stats = "";
     private int heatSize;
     float sightDist;
+
+    int captured = 0;
 
     public PursuerSystem(VisionSystem visionSystem, CXGraph graph, PolyMap map, int pursuerCount, String AI, int heatSize, float SightDist) {
         super(Family.all(PursuerComponent.class).get());
@@ -248,8 +250,8 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
         // Get the pursuer current state
         PursuerComponent pursuerC = Mappers.pursuerMapper.get(entity);
         StateComponent stateC = Mappers.stateMapper.get(entity);
-        System.out.println();
-        System.out.println("------------- Agent: "+ pursuerC.number + " -------------");
+       // System.out.println();
+        //System.out.println("------------- Agent: "+ pursuerC.number + " -------------");
 
         if (pursuerC.number == 0){
             messageNumber = 0;
@@ -523,7 +525,10 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
         System.out.println("************************************* BENCHMARKS *************************************");
         System.out.println("\nNumber of pursuers: " + pursCount);
         System.out.println("\nPotential field radius: " + heatSize);
-        System.out.println(stats);
+        finishTime = System.currentTimeMillis();
+        if(finishTime-startTime>30000)
+            System.out.println("\nCaptured after 30's" + captured);
+        //System.out.println(stats);
     }
 
     public static ArrayList<Vector3> addAdditionalSteps(PursuerComponent pC, List<Node> p, Vector3 Start){
@@ -563,6 +568,7 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
         pursuer.alerted = false;
         pursuer.targetPosition.set(0.0f, 0.0f);
 
+
         if (visionSystem.canSee(entity,target)) {
             pursuer.alerted = true;
             pursuer.targetPosition.set(targetPos);
@@ -570,7 +576,12 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
             evader.captured = true;
             System.out.println(evader + " is captured.");
             engine.removeEntity(target);
+            finishTime = System.currentTimeMillis();
+            if(finishTime-startTime<30000)
+                captured++;
         }
+
+        //System.out.println(captured);
 
     }
 
