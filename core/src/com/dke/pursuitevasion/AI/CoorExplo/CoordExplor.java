@@ -405,7 +405,7 @@ public class CoordExplor {
                     }
                 }
             }else{
-                System.out.println("kk");
+                System.out.println("No Comm Request New Frontier");
                 if(pursuerComponent.unexploredFrontierLocal.size()>0) {
                     for (Cell key : pursuerComponent.unexploredFrontierLocal.keySet()) {
                         float pursuerDistance = key.position.dst(pursuerPos[0]);
