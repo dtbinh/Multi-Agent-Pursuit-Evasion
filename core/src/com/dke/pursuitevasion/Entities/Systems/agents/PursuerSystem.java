@@ -569,12 +569,13 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
     private void updateDetection(Entity entity, Entity target) {
         Vector2 targetPos = Mappers.observableMapper.get(target).position;
         PursuerComponent pursuer = Mappers.pursuerMapper.get(entity);
+        ObserverComponent observer = Mappers.observerMapper.get(entity);
         EvaderComponent evader = Mappers.agentMapper.get(target);
 
         pursuer.alerted = false;
         pursuer.targetPosition.set(0.0f, 0.0f);
 
-        if (visionSystem.canSee(entity,target)) {
+        if(CoordExplor.canCapture(pursuer, observer, evader)){
             pursuer.alerted = true;
             pursuer.targetPosition.set(targetPos);
             //System.out.println(evader);
@@ -582,6 +583,15 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
             System.out.println(evader + " is captured.");
             engine.removeEntity(target);
         }
+
+        /*if (visionSystem.canSee(entity,target)) {
+            pursuer.alerted = true;
+            pursuer.targetPosition.set(targetPos);
+            //System.out.println(evader);
+            evader.captured = true;
+            System.out.println(evader + " is captured.");
+            engine.removeEntity(target);
+        }*/
 
     }
 

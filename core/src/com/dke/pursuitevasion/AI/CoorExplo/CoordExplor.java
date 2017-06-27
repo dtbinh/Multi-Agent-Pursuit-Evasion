@@ -13,7 +13,9 @@ import com.dke.pursuitevasion.AI.Node;
 import com.dke.pursuitevasion.AI.PathFinder;
 import com.dke.pursuitevasion.CellDecompose.Graph.CXPoint;
 import com.dke.pursuitevasion.Entities.Components.ObserverComponent;
+import com.dke.pursuitevasion.Entities.Components.agents.EvaderComponent;
 import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
+import com.dke.pursuitevasion.Entities.Systems.agents.EvaderSystem;
 import com.dke.pursuitevasion.PolyMap;
 
 import java.math.BigDecimal;
@@ -26,7 +28,7 @@ import java.util.Random;
  * Created by Envy on 6/19/2017.
  */
 public class CoordExplor {
-    public Discretiser discretiser;
+    public static Discretiser discretiser;
     public Cell[][] cellGrid;
     public float gap;
     public int mWidth;
@@ -311,6 +313,18 @@ public class CoordExplor {
                 return true;
             }
         }
+        return false;
+    }
+
+    public static boolean canCapture(PursuerComponent pursuerComponent, ObserverComponent observerComponent, EvaderComponent evaderComponent){
+        float obsDist = observerComponent.distance;
+        float dist = pursuerComponent.position.dst(evaderComponent.position);
+        if(dist<obsDist){
+            if(!discretiser.lineIntersectWall(pursuerComponent.position, evaderComponent.position)){
+                return true;
+            }
+        }
+
         return false;
     }
 
