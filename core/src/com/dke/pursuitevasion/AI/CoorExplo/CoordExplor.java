@@ -37,7 +37,7 @@ public class CoordExplor {
     public HashMap<Cell, Boolean> unexploredFrontier = new HashMap<Cell, Boolean>();
     Vector3[] pursuerPos;
     PathFinder pathFinder;
-    double stepSize = 4;
+    double stepSize = 6;
     int pursCount;
 
     private Color exploredColor = new Color(93f/255,215f/255,251f/255,0.5f);
