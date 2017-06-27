@@ -135,18 +135,17 @@ public class PFMap {
 
     private void generateColumn(int step, int centerX, int centerY, int startValue) {
 
-        int tempCX = centerX;
-        int tempCY = centerY - step;
+        centerY -= step;
         int var = startValue - Math.abs(step);
 
         for (int i = 0; i < var; i++) {
             try {
-                if (heatMap[tempCX-i][tempCY] != 1000 && heatMap[tempCX-i][tempCY] < var-i)
-                    heatMap[tempCX-i][tempCY] = var-i; } catch (ArrayIndexOutOfBoundsException e) {
+                if (heatMap[centerX-i][centerY] != 1000 && heatMap[centerX-i][centerY] < var-i)
+                    heatMap[centerX-i][centerY] = var-i; } catch (ArrayIndexOutOfBoundsException e) {
             }
             try {
-                if (heatMap[tempCX+i][tempCY] != 1000 && heatMap[tempCX+i][tempCY] < var-i)
-                    heatMap[tempCX+i][tempCY] = var-i; } catch (ArrayIndexOutOfBoundsException e) {
+                if (heatMap[centerX+i][centerY] != 1000 && heatMap[centerX+i][centerY] < var-i)
+                    heatMap[centerX+i][centerY] = var-i; } catch (ArrayIndexOutOfBoundsException e) {
             }
         }
     }
@@ -223,16 +222,16 @@ public class PFMap {
         coords = new Triplet(x,y);
 
         if (evader.first) {
-        regularCheck(x,y);
-        evader.first = false;
-        evader.previousPosition = coords;
+            regularCheck(x,y);
+            evader.first = false;
+            //evader.previousPosition = coords;
         } else if (evader.previousPosition.getX() == coords.getX() && evader.previousPosition.getY() == coords.getY()) {
             //System.out.println("BOT WAS STUCK");
             explore(x,y);
             evader.evaderPath = null;
             evader.position = arrayToCoords(new Vector2(coords.getX(),coords.getY()));
         } else {
-            explore(x, y);
+            explore(x,y);
         }
 
         evader.previousPosition = new Triplet(x,y);
@@ -331,7 +330,8 @@ public class PFMap {
         return false;
     }
 
-    private void regularCheck(int x, int y) {
+    private void regularCheck(int x, int y)
+    {
 
         int firstCheck = (int)(Math.ceil((7*Math.random())));
         switchCase(firstCheck,x,y);
