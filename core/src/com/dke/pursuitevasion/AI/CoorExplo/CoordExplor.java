@@ -15,7 +15,6 @@ import com.dke.pursuitevasion.CellDecompose.Graph.CXPoint;
 import com.dke.pursuitevasion.Entities.Components.ObserverComponent;
 import com.dke.pursuitevasion.Entities.Components.agents.EvaderComponent;
 import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
-import com.dke.pursuitevasion.Entities.Systems.agents.EvaderSystem;
 import com.dke.pursuitevasion.PolyMap;
 
 import java.math.BigDecimal;
@@ -438,10 +437,11 @@ public class CoordExplor {
                 float minCellDistToPursuer = Float.MAX_VALUE;
                 //Calcing maximum min distance to other pursuers
                 for (int i = 0; i < pursuerPos.length; i++) {
+                    if (pursuerPos[i] != null) {
                     float pursuerDistance = key.position.dst(pursuerPos[i]);
-                    if (pursuerDistance < minCellDistToPursuer) {
-                        minCellDistToPursuer = pursuerDistance;
-                    }
+                        if (pursuerDistance < minCellDistToPursuer) {
+                          minCellDistToPursuer = pursuerDistance;
+                    }}
                 }
                 if (minCellDistToPursuer > maxDistFromPursuers) {
                     maxDistFromPursuers = minCellDistToPursuer;

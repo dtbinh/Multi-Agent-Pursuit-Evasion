@@ -505,16 +505,13 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
 
         if (pursuer.detectionTime > DETECTION_TIME) {
             System.out.println("INTRUDER DETECTED");
-            initialEvaderCount--;
-            System.out.println("decrementing counter, counter = " + initialEvaderCount);
-            if (initialEvaderCount == 0)
-                printStats();
 
             evaderCounter++;
             finishTime = System.currentTimeMillis();
 
             //System.out.println("Captured " + evaderCounter + " in " + (finishTime-startTime) + " ms");
             stats += "\nCaptured " + evaderCounter + " in " + (finishTime-startTime) + " ms";
+            System.out.println("\nCaptured " + evaderCounter + " in " + (finishTime-startTime) + " ms");
             //printStats();
 
             /*Vector3 start = new Vector3(pursuer.position.x, 0, pursuer.position.z);
@@ -582,6 +579,10 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
             evader.captured = true;
             System.out.println(evader + " is captured.");
             engine.removeEntity(target);
+            initialEvaderCount--;
+            System.out.println("decrementing counter, counter = " + initialEvaderCount);
+            if (initialEvaderCount == 0)
+                printStats();
         }
 
         /*if (visionSystem.canSee(entity,target)) {

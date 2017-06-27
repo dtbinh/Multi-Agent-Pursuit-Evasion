@@ -65,10 +65,10 @@ public class NewSimulationWindow extends Window {
         aiGroup.setUncheckLast(false);
 
         final Label heatSizeInfo = new Label("Set PF size",skin);
-        final TextField heatSize = new TextField("25",skin);
+        final TextField heatSize = new TextField("100",skin);
         heatSize.setAlignment(1);
         final Label pursVision = new Label("Set Vision", skin);
-        final TextField pursDist = new TextField("1.5",skin);
+        final TextField pursDist = new TextField("20",skin);
         pursDist.setAlignment(1);
 
         TextButton startButton = new TextButton("Start", skin);
