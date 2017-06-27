@@ -1,0 +1,152 @@
+/* -XXXX- denotes a folder */
+Eric
+    -AI-
+        -CoorExplo-
+            Cell
+            CoordExplor
+            Discretiser
+        AStarPathFinder
+        CustomConnection
+        CustomPoint
+        Node
+        NodeState
+        PathFinder
+
+    -CXSearchingAlgorithm-
+        -CXMessage-
+            CXAgentUtility
+
+    -Editor-
+        MapEditorController
+        MapEditorScreen
+
+    -Entities-
+        -Components-
+            -Systems-
+                -Agents-
+                    PursuerSystem
+
+    Edge
+    Edges
+    EdgeVectors
+    TrackingCameraController
+    WallInfo
+
+
+Nicola
+    -Editor-
+        MapEditorController
+        MapEditorScreen
+        Mode
+
+    -Entities-
+        -Components-
+            -Agents-
+                CCTvComponent
+                EvaderComponent
+                PursuerComponent
+            GraphicsComponent
+            ObservableComponent
+            ObserverComponent
+            StateComponent
+            VisibleComponent
+            StateComponent
+            VisibleComponent
+            WallComponent
+
+        -System-
+            -Agents-
+                CCTvSystem
+                EvaderSystem
+                PursuerSystem
+            GraphicsSystem
+            SimulationSystem
+            VisionSystem
+    Direction
+    EntityFactory
+    Mappers
+
+    -Menu-
+        MenuScreen
+        NewExperimenterWindow
+        NewSimulationWindow
+
+    -Simulator-
+        SimulatorController
+        SimulatorScreen
+
+    PolyMap
+
+Callum
+    -Entities-
+        -Components-
+            -Agents-
+                EvaderComponent
+                PursuerComponent
+        -Systems-
+            -Agents-
+                EvaderSystem
+                PursuerSystem
+        EntityFactory
+
+    -Editor-
+        MapEditorController
+        MapEditorScreen
+        Mode
+
+    -Menu-
+        NewExperimenterWindow
+        NewSimulationWindow
+
+    PolyMap
+
+Xi
+    -CellDecompose-
+        -Graph-
+            CellDecompositionAlgorithm
+            CellDecomposedGraphNode
+            CXGraph
+            CXGraphNode
+            CXPoint
+            GraphTool
+
+        -Model-
+            CXExtendedModel
+            CXExtendInfoModel
+
+    -CXSearchingAlgorithm-
+        -CXAgentTaskType-
+            CXAgentMessageTask
+            CXAgentMovingTask
+            CXAgentScanTask
+            CXAgentSearchTask
+        -CXMessage-
+            CXMessage
+            CXMessageType
+        CXAgentState
+        CXAgentTask
+        CXAgentUtility
+
+    -Entities-
+        -Components-
+            -Agents-
+                PursuerComponent
+        -System-
+            -Agents-
+            PursuerSystem
+
+Max
+    -AI-
+        -PotentialField
+            PFDirection
+            PFMap
+            PotentialFieldAlgorithm
+            Triplet
+
+    -Entities-
+            -Components-
+                -Agents-
+                    EvaderComponent
+            -System-
+                -Agents-
+                    EvaderSystem
