@@ -25,9 +25,9 @@ import com.dke.pursuitevasion.CXSearchingAlgorithm.CXAgentTaskType.CXAgentMoving
 import com.dke.pursuitevasion.CXSearchingAlgorithm.CXAgentUtility;
 import com.dke.pursuitevasion.CXSearchingAlgorithm.CXMessage.CXMessage;
 import com.dke.pursuitevasion.CellDecompose.Graph.*;
-import com.dke.pursuitevasion.Entities.Components.agents.EvaderComponent;
 import com.dke.pursuitevasion.Entities.Components.ObserverComponent;
 import com.dke.pursuitevasion.Entities.Components.StateComponent;
+import com.dke.pursuitevasion.Entities.Components.agents.EvaderComponent;
 import com.dke.pursuitevasion.Entities.Components.agents.PursuerComponent;
 import com.dke.pursuitevasion.Entities.EntityFactory;
 import com.dke.pursuitevasion.Entities.Mappers;
@@ -96,8 +96,9 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
     private int heatSize;
     float sightDist;
     int purCountCpy;
+    int initialEvaderCount;
 
-    public PursuerSystem(VisionSystem visionSystem, CXGraph graph, PolyMap map, int pursuerCount, String AI, int heatSize, float SightDist, boolean disComms) {
+    public PursuerSystem(VisionSystem visionSystem, CXGraph graph, PolyMap map, int pursuerCount, String AI, int heatSize, float SightDist, boolean disComms, int initialEvaderCount) {
         super(Family.all(PursuerComponent.class).get());
 
         this.heatSize = heatSize;
@@ -112,6 +113,7 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
         mMap = map;
         pursCount = pursuerCount;
         coordExplorer = new CoordExplor(map, 0.2f, discWidth, pursuerCount, pathFinder, noComm);
+        this.initialEvaderCount = initialEvaderCount;
 
 
         ModelBuilder modelBuilder = new ModelBuilder();
@@ -251,8 +253,8 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
         // Get the pursuer current state
         PursuerComponent pursuerC = Mappers.pursuerMapper.get(entity);
         StateComponent stateC = Mappers.stateMapper.get(entity);
-        System.out.println();
-        System.out.println("------------- Agent: "+ pursuerC.number + " -------------");
+        //System.out.println();
+        //System.out.println("------------- Agent: "+ pursuerC.number + " -------------");
 
         if (pursuerC.number == 0){
             messageNumber = 0;
@@ -275,7 +277,7 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
         if (!changeAlgo) {
             switch (pursuerC.getState()) {
                 case Free: {
-                    this.printStateAndLocation("Free", new CXPoint(stateC.position.x, stateC.position.z));
+                    //this.printStateAndLocation("Free", new CXPoint(stateC.position.x, stateC.position.z));
                     if (pursuerC.taskList.size() != 0) {
                         CXAgentTask task = (CXAgentTask) pursuerC.taskList.getFirst();
                         pursuerC.setState(task.taskState);
@@ -412,7 +414,7 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
 
     private void printStateAndLocation(String state,CXPoint location){
         CXPoint point = CXPoint.converToGraphCoordination(location);
-        System.out.println("State: " + state + ",Current Location " + point.x + " " + point.y);
+        //System.out.println("State: " + state + ",Current Location " + point.x + " " + point.y);
     }
 
     private void movePursuer(Entity entity, float deltaTime) {
@@ -503,13 +505,17 @@ public class PursuerSystem extends IteratingSystem implements DebugRenderer {
 
         if (pursuer.detectionTime > DETECTION_TIME) {
             System.out.println("INTRUDER DETECTED");
+            initialEvaderCount--;
+            System.out.println("decrementing counter, counter = " + initialEvaderCount);
+            if (initialEvaderCount == 0)
+                printStats();
 
             evaderCounter++;
             finishTime = System.currentTimeMillis();
 
             //System.out.println("Captured " + evaderCounter + " in " + (finishTime-startTime) + " ms");
             stats += "\nCaptured " + evaderCounter + " in " + (finishTime-startTime) + " ms";
-            printStats();
+            //printStats();
 
             /*Vector3 start = new Vector3(pursuer.position.x, 0, pursuer.position.z);
             Vector3 end = new Vector3(pursuer.targetPosition.x, 0, pursuer.targetPosition.y);

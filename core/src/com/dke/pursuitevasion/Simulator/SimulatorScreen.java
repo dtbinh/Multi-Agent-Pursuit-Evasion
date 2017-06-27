@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.dke.pursuitevasion.CellDecompose.Graph.CXGraph;
 import com.dke.pursuitevasion.CellDecompose.Graph.CXGraphNode;
 import com.dke.pursuitevasion.CellDecompose.Graph.CXPoint;
@@ -149,7 +148,7 @@ public class SimulatorScreen implements Screen, InputProcessor{
         engine.addSystem(visionSystem);
         engine.addSystem(new EvaderSystem(visionSystem, map, engine, heatSize));
         engine.addSystem(new CCTvSystem(visionSystem, map));
-        engine.addSystem(new PursuerSystem(visionSystem, graph, map, map.getaI().length,AI,heatSize, visionSight, disComms));
+        engine.addSystem(new PursuerSystem(visionSystem, graph, map, map.getaI().length,AI,heatSize, visionSight, disComms, map.geteI().length));
 
 
 

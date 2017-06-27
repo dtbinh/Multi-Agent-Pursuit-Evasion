@@ -1,6 +1,5 @@
 package com.dke.pursuitevasion.Menu;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -66,7 +65,7 @@ public class NewSimulationWindow extends Window {
         aiGroup.setUncheckLast(false);
 
         final Label heatSizeInfo = new Label("Set PF size",skin);
-        final TextField heatSize = new TextField("19",skin);
+        final TextField heatSize = new TextField("25",skin);
         heatSize.setAlignment(1);
         final Label pursVision = new Label("Set Vision", skin);
         final TextField pursDist = new TextField("1.5",skin);
